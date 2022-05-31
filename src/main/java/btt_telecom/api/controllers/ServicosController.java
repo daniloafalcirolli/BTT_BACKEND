@@ -94,9 +94,6 @@ public class ServicosController {
 			s.setProtocolo(json.getString("protocolo"));
 			s.setDescricao(json.getString("descricao"));
 			s.setStatus(json.getString("status"));
-			String data_inicio = json.getString("data_inicio");
-			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_inicio);
-			s.setData_inicio(data);
 			
 			String data_finalizacao = json.getString("data_finalizacao");
 			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_finalizacao);

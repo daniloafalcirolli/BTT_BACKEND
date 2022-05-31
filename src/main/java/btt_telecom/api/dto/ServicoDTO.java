@@ -20,9 +20,7 @@ public class ServicoDTO {
 	private String observacoes;
 	
 	private String cod_quebra;
-	
-	private Date data_inicio;
-	
+		
 	private Date data_finalizacao;
 	
 	private Long id_cliente;
@@ -95,14 +93,6 @@ public class ServicoDTO {
 
 	public void setCod_quebra(String cod_quebra) {
 		this.cod_quebra = cod_quebra;
-	}
-
-	public Date getData_inicio() {
-		return data_inicio;
-	}
-
-	public void setData_inicio(Date data_inicio) {
-		this.data_inicio = data_inicio;
 	}
 
 	public Date getData_finalizacao() {
