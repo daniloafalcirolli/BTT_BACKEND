@@ -73,11 +73,7 @@ public class ServicosController {
 	@GetMapping(path = "/funcionario")
 	public ResponseEntity<List<Servico>> findServicosByStatusByFunc(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "status", required = false) String status){
 		try {
-			if(servicoRepository.existsById(id)) {
-				return new ResponseEntity<>(servicoRepository.findServicesInProgressByFunc(id, status), HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
+			return new ResponseEntity<>(servicoRepository.findServicesInProgressByFunc(id, status), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
