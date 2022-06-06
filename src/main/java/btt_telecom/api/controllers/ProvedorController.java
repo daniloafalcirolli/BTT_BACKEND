@@ -74,6 +74,20 @@ public class ProvedorController {
 		}
 	}
 	
+	@GetMapping(path = "/{id}/page")
+	public ResponseEntity<List<ServicoProvedor>> pageFindById(@PathVariable(name = "id") Long id){
+		try {
+			if(provedorRepository.existsById(id)){
+				return new ResponseEntity<>(provedorRepository.findById(id).get().getServicos(), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		 
+	}
+	
 	@PostMapping(path = "/create")
 	public ResponseEntity<HttpStatus> save(@RequestBody ProvedorDTO provedorDTO){
 		try {
