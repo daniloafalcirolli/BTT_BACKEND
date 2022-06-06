@@ -74,6 +74,19 @@ public class ProvedorController {
 		}
 	}
 	
+	@GetMapping(path = "/servico/{id}")
+	public ResponseEntity<ServicoProvedor> findServicoById(@PathVariable(name = "id") Long id){
+		try {
+			if(servicoProvedorRepository.existsById(id)) {
+				return new ResponseEntity<>(servicoProvedorRepository.findById(id).get(), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(path = "/{id}/page")
 	public ResponseEntity<List<ServicoProvedor>> pageFindById(@PathVariable(name = "id") Long id){
 		try {
