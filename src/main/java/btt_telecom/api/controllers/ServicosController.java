@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import btt_telecom.api.models.Servico;
 import btt_telecom.api.repositories.ClienteRepository;
 import btt_telecom.api.repositories.FuncionarioRepository;
+import btt_telecom.api.repositories.ProvedorRepository;
+import btt_telecom.api.repositories.ServicoProvedorRepository;
 import btt_telecom.api.repositories.ServicoRepository;
 
 @RestController
@@ -38,6 +40,12 @@ public class ServicosController {
 	
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
+	
+	@Autowired
+	private ServicoProvedorRepository servicoProvedorRepository;
+	
+	@Autowired
+	private ProvedorRepository provedorRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Servico>> findAll(){
@@ -94,6 +102,8 @@ public class ServicosController {
 			s.setProtocolo(json.getString("protocolo"));
 			s.setDescricao(json.getString("descricao"));
 			s.setStatus(json.getString("status"));
+			s.setProvedor(provedorRepository.findById(json.getLong("id_prov")).get());
+			s.setServicoProvedor(servicoProvedorRepository.findById(json.getLong("id_serv")).get());
 			
 			String data_finalizacao = json.getString("data_finalizacao");
 			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_finalizacao);

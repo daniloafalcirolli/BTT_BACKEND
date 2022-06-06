@@ -26,6 +26,12 @@ public class Servico {
 	@OneToOne(cascade = CascadeType.MERGE)
 	private Funcionario funcionario;
 	
+	@OneToOne(cascade = CascadeType.MERGE)
+	private Provedor provedor;
+	
+	@OneToOne(cascade = CascadeType.MERGE)
+	private ServicoProvedor servicoProvedor;
+	
 	private String contrato;
 	
 	private String protocolo;
@@ -68,6 +74,22 @@ public class Servico {
 
 	public void setFuncionario(Funcionario funcionario) {
 		this.funcionario = funcionario;
+	}
+
+	public Provedor getProvedor() {
+		return provedor;
+	}
+
+	public void setProvedor(Provedor provedor) {
+		this.provedor = provedor;
+	}
+
+	public ServicoProvedor getServicoProvedor() {
+		return servicoProvedor;
+	}
+
+	public void setServicoProvedor(ServicoProvedor servicoProvedor) {
+		this.servicoProvedor = servicoProvedor;
 	}
 
 	public String getContrato() {
