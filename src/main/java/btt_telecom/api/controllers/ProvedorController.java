@@ -111,7 +111,25 @@ public class ProvedorController {
 	@PutMapping(path = "/edit")
 	public ResponseEntity<HttpStatus> edit(@RequestBody String body){
 		try {
+			JSONObject json = new JSONObject(body);
+			Provedor p = provedorRepository.findById(json.getLong("id")).get();
+			p.setName(json.getString("name"));
 			
+			provedorRepository.save(p);			
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PutMapping(path = "/servico/edit")
+	public ResponseEntity<HttpStatus> editServico(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			ServicoProvedor sp = servicoProvedorRepository.findById(json.getLong("id_serv")).get();
+			sp.setServico(json.getString("servico"));
+			
+			servicoProvedorRepository.save(sp);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
