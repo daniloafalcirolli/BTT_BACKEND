@@ -35,9 +35,7 @@ public class Servico {
 	private String contrato;
 	
 	private String protocolo;
-	
-	private String descricao;
-	
+		
 	private String materiais; 
 	
 	private String status;
@@ -106,14 +104,6 @@ public class Servico {
 
 	public void setProtocolo(String protocolo) {
 		this.protocolo = protocolo;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
 	}
 
 	public String getMateriais() {

@@ -100,7 +100,6 @@ public class ServicosController {
 			s.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
 			s.setContrato(json.getString("contrato"));
 			s.setProtocolo(json.getString("protocolo"));
-			s.setDescricao(json.getString("descricao"));
 			s.setStatus(json.getString("status"));
 			s.setProvedor(provedorRepository.findById(json.getLong("id_prov")).get());
 			s.setServicoProvedor(servicoProvedorRepository.findById(json.getLong("id_serv")).get());
