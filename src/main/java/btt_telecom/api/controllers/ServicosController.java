@@ -2,9 +2,11 @@ package btt_telecom.api.controllers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.dto.ServicoDTO;
+import btt_telecom.api.dto.ServicoidDTO;
+import btt_telecom.api.models.Material;
 import btt_telecom.api.models.Servico;
 import btt_telecom.api.repositories.ClienteRepository;
 import btt_telecom.api.repositories.FuncionarioRepository;
+import btt_telecom.api.repositories.MaterialRepository;
 import btt_telecom.api.repositories.ProvedorRepository;
 import btt_telecom.api.repositories.ServicoProvedorRepository;
 import btt_telecom.api.repositories.ServicoRepository;
@@ -47,6 +53,9 @@ public class ServicosController {
 	@Autowired
 	private ProvedorRepository provedorRepository;
 	
+	@Autowired
+	private MaterialRepository materialRepository;
+	
 	@GetMapping
 	public ResponseEntity<List<Servico>> findAll(){
 		try {
@@ -66,10 +75,10 @@ public class ServicosController {
 	}
 	
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<Servico> findById(@PathVariable(name = "id") Long id){
+	public ResponseEntity<ServicoidDTO> findById(@PathVariable(name = "id") Long id){
 		try {
 			if(servicoRepository.existsById(id)) {
-				return new ResponseEntity<>(servicoRepository.findById(id).get(), HttpStatus.OK);
+				return new ResponseEntity<>(new ServicoidDTO(servicoRepository.findById(id).get()), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
@@ -145,10 +154,17 @@ public class ServicosController {
 	@PostMapping(path = "/materiais/{id}")
 	public ResponseEntity<HttpStatus> editMateriais(@RequestBody String body, @PathVariable(name = "id") Long id){
 		try {
-			if(servicoRepository.existsByFuncionario_id(id)) {
-				JSONObject json = new JSONObject(body);
+			if(servicoRepository.existsById(id)) {
+				JSONArray jsonarray = new JSONArray(body);
+				List<Material> list = new ArrayList<>();
+				JSONObject obj;
+				for(int i = 0; i < jsonarray.length(); i++) {
+					obj = new JSONObject(jsonarray.get(i).toString());
+					list.add(materialRepository.findById(obj.getLong("id")).get());
+				}
 				Servico s = servicoRepository.findById(id).get();
-				s.setMateriais(json.getString("materiais"));
+				s.setMateriais(list);
+				
 				if(servicoRepository.save(s) != null) {
 					return new ResponseEntity<>(HttpStatus.OK);
 				}else {
@@ -158,6 +174,7 @@ public class ServicosController {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		}catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

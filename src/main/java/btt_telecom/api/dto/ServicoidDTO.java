@@ -1,46 +1,25 @@
-package btt_telecom.api.models;
+package btt_telecom.api.dto;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
+import btt_telecom.api.models.Cliente;
+import btt_telecom.api.models.Material;
+import btt_telecom.api.models.Servico;
+import btt_telecom.api.models.ServicoProvedor;
 
-@Entity
-public class Servico {
-	
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
-    @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
+public class ServicoidDTO {
 	private Long id;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
 	private Cliente cliente;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
-	private Funcionario funcionario;
+	private ProvedorDTO provedor;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
-	private Provedor provedor;
-	
-	@OneToOne(cascade = CascadeType.MERGE)
 	private ServicoProvedor servicoProvedor;
 	
-	private String contrato;
-	
-	private String protocolo;
-	
-	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Material> materiais;
+	
+	private String contrato;
 	
 	private String status;
 	
@@ -49,9 +28,17 @@ public class Servico {
 	private String cod_quebra;
 	
 	private Date data_finalizacao;
-
-	public Servico() {
-		
+	
+	public ServicoidDTO(Servico servico) {
+		this.id = servico.getId();
+		this.cliente = servico.getCliente();
+		this.provedor = new ProvedorDTO(servico.getProvedor());
+		this.servicoProvedor = servico.getServicoProvedor();		
+		this.materiais = servico.getMateriais();
+		this.contrato = servico.getContrato();
+		this.status = servico.getStatus();
+		this.cod_quebra = servico.getCod_quebra();
+		this.data_finalizacao = servico.getData_finalizacao();
 	}
 
 	public Long getId() {
@@ -70,19 +57,11 @@ public class Servico {
 		this.cliente = cliente;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
-	}
-
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
-	}
-
-	public Provedor getProvedor() {
+	public ProvedorDTO getProvedor() {
 		return provedor;
 	}
 
-	public void setProvedor(Provedor provedor) {
+	public void setProvedor(ProvedorDTO provedor) {
 		this.provedor = provedor;
 	}
 
@@ -94,28 +73,20 @@ public class Servico {
 		this.servicoProvedor = servicoProvedor;
 	}
 
-	public String getContrato() {
-		return contrato;
-	}
-
-	public void setContrato(String contrato) {
-		this.contrato = contrato;
-	}
-
-	public String getProtocolo() {
-		return protocolo;
-	}
-
-	public void setProtocolo(String protocolo) {
-		this.protocolo = protocolo;
-	}
-
 	public List<Material> getMateriais() {
 		return materiais;
 	}
 
 	public void setMateriais(List<Material> materiais) {
 		this.materiais = materiais;
+	}
+
+	public String getContrato() {
+		return contrato;
+	}
+
+	public void setContrato(String contrato) {
+		this.contrato = contrato;
 	}
 
 	public String getStatus() {
