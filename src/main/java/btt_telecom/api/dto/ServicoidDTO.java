@@ -23,6 +23,8 @@ public class ServicoidDTO {
 	
 	private String status;
 	
+	private String protocolo;
+	
 	private String observacoes;
 	
 	private String cod_quebra;
@@ -36,6 +38,7 @@ public class ServicoidDTO {
 		this.servicoProvedor = servico.getServicoProvedor();		
 		this.materiais = servico.getMateriais();
 		this.contrato = servico.getContrato();
+		this.protocolo = servico.getProtocolo();
 		this.status = servico.getStatus();
 		this.cod_quebra = servico.getCod_quebra();
 		this.data_finalizacao = servico.getData_finalizacao();
@@ -97,6 +100,14 @@ public class ServicoidDTO {
 		this.status = status;
 	}
 
+	public String getProtocolo() {
+		return protocolo;
+	}
+
+	public void setProtocolo(String protocolo) {
+		this.protocolo = protocolo;
+	}
+
 	public String getObservacoes() {
 		return observacoes;
 	}
@@ -119,5 +130,5 @@ public class ServicoidDTO {
 
 	public void setData_finalizacao(Date data_finalizacao) {
 		this.data_finalizacao = data_finalizacao;
-	}
+	}	
 }

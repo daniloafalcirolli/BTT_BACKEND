@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.dto.ServicoDTO;
 import btt_telecom.api.dto.ServicoidDTO;
 import btt_telecom.api.models.Material;
 import btt_telecom.api.models.Servico;
@@ -96,7 +95,6 @@ public class ServicosController {
 		}
 	}
 
-	
 	//Arrumar esta porra
 	@PostMapping(path = "/create")
 	public ResponseEntity<HttpStatus> save(@RequestBody String body) throws ParseException, JSONException{
