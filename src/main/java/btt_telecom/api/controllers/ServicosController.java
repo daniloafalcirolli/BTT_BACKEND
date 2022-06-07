@@ -133,9 +133,12 @@ public class ServicosController {
 				
 				Servico s = servicoRepository.findById(id).get();
 				s.setStatus(status);
-				s.setObservacoes(json.getString("obs"));
-				s.setCod_quebra(json.getString("cod"));
 				
+				if(json.has("obs") && json.has("cod")) {
+					s.setObservacoes(json.getString("obs"));
+					s.setCod_quebra(json.getString("cod"));
+				}
+			
 				if(servicoRepository.save(s) != null) {
 					return new ResponseEntity<>(HttpStatus.OK);
 				}else {
