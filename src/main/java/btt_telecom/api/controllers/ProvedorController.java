@@ -118,7 +118,7 @@ public class ProvedorController {
 	public ResponseEntity<HttpStatus> addServicoProvedor(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
-			ServicoProvedor sp = new ServicoProvedor(json.getString("servico"));
+			ServicoProvedor sp = new ServicoProvedor(json.getString("servico"), json.getLong("id_provedor"));
 			
 			servicoProvedorRepository.save(sp);
 			
@@ -190,12 +190,26 @@ public class ProvedorController {
 	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
 			if(provedorRepository.existsById(id)) {
-				provedorRepository.deleteById(id);
+				Provedor p = provedorRepository.findById(id).get();
+				
+				List<ServicoProvedor> list_sp = p.getServicos();
+				p.getServicos().clear();
+				provedorRepository.save(p);	
+				
+				list_sp.forEach(x -> {
+					if(x.getId_prov() == id) {
+						servicoProvedorRepository.deleteById(x.getId());
+					}
+				});
+				
+				
+				
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}	

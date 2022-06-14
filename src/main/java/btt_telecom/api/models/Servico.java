@@ -28,10 +28,10 @@ public class Servico {
 	@OneToOne(cascade = CascadeType.MERGE)
 	private Funcionario funcionario;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private Provedor provedor;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private ServicoProvedor servicoProvedor;
 	
 	private String contrato;
