@@ -191,18 +191,9 @@ public class ProvedorController {
 		try {
 			if(provedorRepository.existsById(id)) {
 				Provedor p = provedorRepository.findById(id).get();
-				
-				List<ServicoProvedor> list_sp = p.getServicos();
 				p.getServicos().clear();
 				provedorRepository.save(p);	
-				
-				list_sp.forEach(x -> {
-					if(x.getId_prov() == id) {
-						servicoProvedorRepository.deleteById(x.getId());
-					}
-				});
-				
-				
+				provedorRepository.deleteById(id);
 				
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {

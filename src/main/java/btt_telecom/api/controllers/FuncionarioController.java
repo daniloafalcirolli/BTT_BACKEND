@@ -104,6 +104,8 @@ public class FuncionarioController {
 			func.setEndereco(json.getString("endereco"));
 			func.setKilometragem_por_litro(json.getString("km_por_litro"));
 			func.setPlaca(json.getString("placa"));
+			func.setLatitude(json.getString("latitude"));
+			func.setLongitude(json.getString("longitude"));
 			func.setStatus(true);
 			
 			if(funcionarioRepository.save(func) != null) {
