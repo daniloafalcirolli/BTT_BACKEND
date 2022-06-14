@@ -133,6 +133,8 @@ public class FuncionarioController {
 				f.setEndereco(json.getString("endereco"));
 				f.setKilometragem_por_litro(json.getString("km_por_litro"));
 				f.setPlaca(json.getString("placa"));
+				f.setLatitude(json.getString("latitude"));
+				f.setLongitude(json.getString("longitude"));
 				
 				funcionarioRepository.save(f);
 				
