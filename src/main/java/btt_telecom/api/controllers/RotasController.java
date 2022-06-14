@@ -1,6 +1,7 @@
 package btt_telecom.api.controllers;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.dto.RotaDTO;
 import btt_telecom.api.models.Rota;
 import btt_telecom.api.repositories.FuncionarioRepository;
 import btt_telecom.api.repositories.RotaRepository;
@@ -63,11 +65,15 @@ public class RotasController {
 	}
 	
 	@GetMapping(path = "/relatorio")
-	public ResponseEntity<List<Rota>> findByFuncAndDate(@RequestBody String body){
+	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
 			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
-			return new ResponseEntity<>(rotas, HttpStatus.OK);
+			List<RotaDTO> rotasDTO = new ArrayList<>();
+			rotas.forEach(x -> {
+				rotasDTO.add(new RotaDTO(x));
+			});
+			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
