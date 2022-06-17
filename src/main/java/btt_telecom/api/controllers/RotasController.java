@@ -64,7 +64,7 @@ public class RotasController {
 		}
 	}
 	
-	@GetMapping(path = "/relatorio")
+	@PostMapping(path = "/relatorio")
 	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
