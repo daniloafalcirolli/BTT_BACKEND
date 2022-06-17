@@ -1,10 +1,12 @@
 package btt_telecom.api.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -39,6 +41,9 @@ public class Funcionario {
 	private String kilometragem_por_litro;
 	
 	private String avatar;
+	
+	@OneToOne(cascade = CascadeType.MERGE)
+	private Cidade cidade;
 	
 	private boolean status;
 	
@@ -91,6 +96,14 @@ public class Funcionario {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Cidade getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(Cidade cidade) {
+		this.cidade = cidade;
 	}
 
 	public String getCpf() {
