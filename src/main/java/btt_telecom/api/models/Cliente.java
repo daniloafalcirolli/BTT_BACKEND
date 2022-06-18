@@ -24,6 +24,10 @@ public class Cliente {
 	
 	private String cpf;
 	
+	private String cnpj;
+	
+	private String contrato;
+	
 	private String latitude;
 	
 	private String longitude;
@@ -59,7 +63,23 @@ public class Cliente {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getContrato() {
+		return contrato;
+	}
+
+	public void setContrato(String contrato) {
+		this.contrato = contrato;
+	}
+
 	public String getLatitude() {
 		return latitude;
 	}

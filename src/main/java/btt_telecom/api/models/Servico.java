@@ -33,9 +33,7 @@ public class Servico {
 	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private ServicoProvedor servicoProvedor;
-	
-	private String contrato;
-	
+		
 	private String protocolo;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -91,14 +89,6 @@ public class Servico {
 
 	public void setServicoProvedor(ServicoProvedor servicoProvedor) {
 		this.servicoProvedor = servicoProvedor;
-	}
-
-	public String getContrato() {
-		return contrato;
-	}
-
-	public void setContrato(String contrato) {
-		this.contrato = contrato;
 	}
 
 	public String getProtocolo() {

@@ -7,5 +7,7 @@ import btt_telecom.api.models.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
-
+	boolean existsByCpf(String cpf);
+	
+	boolean existsByCnpj(String cnpj);
 }

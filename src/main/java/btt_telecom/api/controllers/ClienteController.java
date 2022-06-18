@@ -2,6 +2,7 @@ package btt_telecom.api.controllers;
 
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +68,36 @@ public class ClienteController {
 			}
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/validate")
+	private ResponseEntity<HttpStatus> existsByCpfOrCnpj(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			if(json.has("cpf") && json.has("cnpj")) {
+				if(clienteRepository.existsByCpf(json.getString("cpf")) || clienteRepository.existsByCnpj(json.getString("cnpj"))) {
+					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+				}else {
+					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+				}
+			}else if(json.has("cpf")) {
+				if(clienteRepository.existsByCpf(json.getString("cpf"))) {
+					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+				}else {
+					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+				}
+			}else if(json.has("cnpj")) {
+				if(clienteRepository.existsByCnpj(json.getString("cnpj"))) {
+					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+				}else {
+					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+				}
+			}else {
+				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+			}
+		}catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	

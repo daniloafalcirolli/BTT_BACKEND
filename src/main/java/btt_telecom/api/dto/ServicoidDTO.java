@@ -18,9 +18,7 @@ public class ServicoidDTO {
 	private ServicoProvedor servicoProvedor;
 	
 	private List<Material> materiais;
-	
-	private String contrato;
-	
+		
 	private String status;
 	
 	private String protocolo;
@@ -37,7 +35,6 @@ public class ServicoidDTO {
 		this.provedor = new ProvedorDTO(servico.getProvedor());
 		this.servicoProvedor = servico.getServicoProvedor();		
 		this.materiais = servico.getMateriais();
-		this.contrato = servico.getContrato();
 		this.protocolo = servico.getProtocolo();
 		this.status = servico.getStatus();
 		this.observacoes = servico.getObservacoes();
@@ -85,14 +82,6 @@ public class ServicoidDTO {
 		this.materiais = materiais;
 	}
 
-	public String getContrato() {
-		return contrato;
-	}
-
-	public void setContrato(String contrato) {
-		this.contrato = contrato;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -131,5 +120,5 @@ public class ServicoidDTO {
 
 	public void setData_finalizacao(Date data_finalizacao) {
 		this.data_finalizacao = data_finalizacao;
-	}	
+	}
 }
