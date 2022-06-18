@@ -40,6 +40,7 @@ public class ServicoidDTO {
 		this.contrato = servico.getContrato();
 		this.protocolo = servico.getProtocolo();
 		this.status = servico.getStatus();
+		this.observacoes = servico.getObservacoes();
 		this.cod_quebra = servico.getCod_quebra();
 		this.data_finalizacao = servico.getData_finalizacao();
 	}
