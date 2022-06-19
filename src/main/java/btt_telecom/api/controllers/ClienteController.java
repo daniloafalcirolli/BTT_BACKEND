@@ -72,32 +72,32 @@ public class ClienteController {
 	}
 	
 	@PostMapping(path = "/validate")
-	private ResponseEntity<HttpStatus> existsByCpfOrCnpj(@RequestBody String body){
+	private ResponseEntity<Cliente> existsByCpfOrCnpj(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
 			if(json.has("cpf") && json.has("cnpj")) {
 				if(clienteRepository.existsByCpf(json.getString("cpf")) || clienteRepository.existsByCnpj(json.getString("cnpj"))) {
-					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+					return new ResponseEntity<>(clienteRepository.findByCpf(json.getString("cpf")),HttpStatus.FOUND);
 				}else {
-					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			}else if(json.has("cpf")) {
 				if(clienteRepository.existsByCpf(json.getString("cpf"))) {
-					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+					return new ResponseEntity<>(clienteRepository.findByCpf(json.getString("cpf")), HttpStatus.FOUND);
 				}else {
-					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			}else if(json.has("cnpj")) {
 				if(clienteRepository.existsByCnpj(json.getString("cnpj"))) {
-					return new ResponseEntity<HttpStatus>(HttpStatus.FOUND);
+					return new ResponseEntity<>(clienteRepository.findByCnpj(json.getString("cnpj")), HttpStatus.FOUND);
 				}else {
-					return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			}else {
-				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e) {
-			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	

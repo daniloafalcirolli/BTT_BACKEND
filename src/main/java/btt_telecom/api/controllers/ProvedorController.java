@@ -163,45 +163,45 @@ public class ProvedorController {
 		}
 	}
 	
-	@DeleteMapping(path = "/{id_provedor}/{id_servico}")
-	public ResponseEntity<HttpStatus> deleteServicoProvedor(@PathVariable(name = "id_provedor") Long id_provedor, @PathVariable(name = "id_servico") Long id_servico){
-		try {
-			if(provedorRepository.existsById(id_provedor)) {
-				if(servicoProvedorRepository.existsById(id_servico)) {
-					Provedor p = provedorRepository.findById(id_provedor).get();
-					ServicoProvedor sp = servicoProvedorRepository.findById(id_servico).get();
-					p.getServicos().remove(sp);
-					provedorRepository.save(p);
-					servicoProvedorRepository.deleteById(id_servico);
-					return new ResponseEntity<>(HttpStatus.OK);
-				}else {
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-				}			
-			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	
-	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
-		try {
-			if(provedorRepository.existsById(id)) {
-				Provedor p = provedorRepository.findById(id).get();
-				p.getServicos().clear();
-				provedorRepository.save(p);	
-				provedorRepository.deleteById(id);
-				
-				return new ResponseEntity<>(HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}	
+//	@DeleteMapping(path = "/{id_provedor}/{id_servico}")
+//	public ResponseEntity<HttpStatus> deleteServicoProvedor(@PathVariable(name = "id_provedor") Long id_provedor, @PathVariable(name = "id_servico") Long id_servico){
+//		try {
+//			if(provedorRepository.existsById(id_provedor)) {
+//				if(servicoProvedorRepository.existsById(id_servico)) {
+//					Provedor p = provedorRepository.findById(id_provedor).get();
+//					ServicoProvedor sp = servicoProvedorRepository.findById(id_servico).get();
+//					p.getServicos().remove(sp);
+//					provedorRepository.save(p);
+//					servicoProvedorRepository.deleteById(id_servico);
+//					return new ResponseEntity<>(HttpStatus.OK);
+//				}else {
+//					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//				}			
+//			}else {
+//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//			}
+//		} catch (Exception e) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//	}
+//	
+//	
+//	@DeleteMapping(path = "/{id}")
+//	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
+//		try {
+//			if(provedorRepository.existsById(id)) {
+//				Provedor p = provedorRepository.findById(id).get();
+//				p.getServicos().clear();
+//				provedorRepository.save(p);	
+//				provedorRepository.deleteById(id);
+//				
+//				return new ResponseEntity<>(HttpStatus.OK);
+//			}else {
+//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//			}
+//		} catch (Exception e) {
+//			System.out.println(e);
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//	}	
 }
