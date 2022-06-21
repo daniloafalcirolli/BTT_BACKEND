@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -175,6 +176,34 @@ public class ServicosController {
 			}
 		}catch(Exception e) {
 			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PutMapping
+	public ResponseEntity<HttpStatus> edit(@RequestBody String body) throws ParseException, JSONException{
+		try {
+			JSONObject json = new JSONObject(body);
+			Servico s = servicoRepository.findById(json.getLong("id_servico")).get();
+			Date data;
+			
+			s.setCliente(clienteRepository.findById(json.getLong("id_cliente")).get());
+			s.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			s.setProtocolo(json.getString("protocolo"));
+			s.setStatus(json.getString("status"));
+			s.setProvedor(provedorRepository.findById(json.getLong("id_prov")).get());
+			s.setServicoProvedor(servicoProvedorRepository.findById(json.getLong("id_serv")).get());
+			
+			String data_finalizacao = json.getString("data_finalizacao");
+			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_finalizacao);
+			s.setData_finalizacao(data);
+			
+			if(servicoRepository.save(s) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+		}catch(JSONException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

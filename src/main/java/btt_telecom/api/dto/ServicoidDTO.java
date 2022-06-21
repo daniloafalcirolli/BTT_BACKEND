@@ -15,6 +15,8 @@ public class ServicoidDTO {
 	
 	private ProvedorDTO provedor;
 	
+	private FuncionarioDTO funcionario;
+	
 	private ServicoProvedor servicoProvedor;
 	
 	private List<Material> materiais;
@@ -32,6 +34,7 @@ public class ServicoidDTO {
 	public ServicoidDTO(Servico servico) {
 		this.id = servico.getId();
 		this.cliente = servico.getCliente();
+		this.funcionario = new FuncionarioDTO(servico.getFuncionario());
 		this.provedor = new ProvedorDTO(servico.getProvedor());
 		this.servicoProvedor = servico.getServicoProvedor();		
 		this.materiais = servico.getMateriais();
@@ -56,6 +59,14 @@ public class ServicoidDTO {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	public FuncionarioDTO getFuncionario() {
+		return funcionario;
+	}
+
+	public void setFuncionario(FuncionarioDTO funcionario) {
+		this.funcionario = funcionario;
 	}
 
 	public ProvedorDTO getProvedor() {
