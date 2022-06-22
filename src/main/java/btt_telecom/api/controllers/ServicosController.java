@@ -87,7 +87,7 @@ public class ServicosController {
 		}
 	}
 	
-	@GetMapping(path = "/funcionario")
+	@PostMapping(path = "/funcionario")
 	public ResponseEntity<List<Servico>> findServicosByStatusByFunc(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
