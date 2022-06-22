@@ -59,10 +59,10 @@ public class ClienteController {
 	}
 
 	@PostMapping
-	private ResponseEntity<HttpStatus> save(@RequestBody Cliente cliente){
+	private ResponseEntity<Cliente> save(@RequestBody Cliente cliente){
 		try {
 			if(clienteRepository.save(cliente) != null) {
-				return new ResponseEntity<>(HttpStatus.CREATED);
+				return new ResponseEntity<>(cliente, HttpStatus.CREATED);
 			}else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
