@@ -119,6 +119,7 @@ public class FuncionarioController {
 				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
 			}
 		}catch(JSONException e) {
+			System.out.println(e);
 			return new ResponseEntity<HttpStatus>(HttpStatus.PRECONDITION_FAILED);
 		}
 	}

@@ -112,7 +112,7 @@ public class ServicosController {
 			s.setServicoProvedor(servicoProvedorRepository.findById(json.getLong("id_serv")).get());
 			
 			String data_finalizacao = json.getString("data_finalizacao");
-			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_finalizacao);
+			data = new SimpleDateFormat("yyyy-MM-dd").parse(data_finalizacao);
 			s.setData_finalizacao(data);
 			
 			if(servicoRepository.save(s) != null) {
@@ -195,7 +195,7 @@ public class ServicosController {
 			s.setServicoProvedor(servicoProvedorRepository.findById(json.getLong("id_serv")).get());
 			
 			String data_finalizacao = json.getString("data_finalizacao");
-			data = new SimpleDateFormat("yyyyy-MM-dd").parse(data_finalizacao);
+			data = new SimpleDateFormat("yyyy-MM-dd").parse(data_finalizacao);
 			s.setData_finalizacao(data);
 			
 			if(servicoRepository.save(s) != null) {
