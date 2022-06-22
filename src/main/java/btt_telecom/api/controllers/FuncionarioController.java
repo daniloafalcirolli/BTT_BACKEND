@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import btt_telecom.api.dto.FuncionarioDTO;
 import btt_telecom.api.models.Funcionario;
 import btt_telecom.api.repositories.CidadeRepository;
+import btt_telecom.api.repositories.EmpresaRepository;
 import btt_telecom.api.repositories.FuncionarioRepository;
 
 @RestController
@@ -34,6 +35,9 @@ public class FuncionarioController {
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private EmpresaRepository empresaRepository;
 	
 	@GetMapping
 	private ResponseEntity<List<FuncionarioDTO>> findAll(){
@@ -112,6 +116,7 @@ public class FuncionarioController {
 			func.setLongitude(json.getString("longitude"));
 			func.setStatus(true);
 			func.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
+			func.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
 			
 			if(funcionarioRepository.save(func) != null) {
 				return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
@@ -142,6 +147,7 @@ public class FuncionarioController {
 				f.setLatitude(json.getString("latitude"));
 				f.setLongitude(json.getString("longitude"));
 				f.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
+				f.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
 				
 				funcionarioRepository.save(f);
 				

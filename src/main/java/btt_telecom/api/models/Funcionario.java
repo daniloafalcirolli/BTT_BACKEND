@@ -45,6 +45,9 @@ public class Funcionario {
 	@OneToOne(cascade = CascadeType.MERGE)
 	private Cidade cidade;
 	
+	@OneToOne(cascade = CascadeType.MERGE)
+	private Empresa empresa;
+	
 	private boolean status;
 	
 	public Funcionario() {
@@ -96,14 +99,6 @@ public class Funcionario {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public Cidade getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(Cidade cidade) {
-		this.cidade = cidade;
 	}
 
 	public String getCpf() {
@@ -176,6 +171,22 @@ public class Funcionario {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public Cidade getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(Cidade cidade) {
+		this.cidade = cidade;
+	}
+
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 
 	public boolean getStatus() {

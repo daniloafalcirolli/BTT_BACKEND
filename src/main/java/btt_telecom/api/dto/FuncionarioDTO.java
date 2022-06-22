@@ -1,6 +1,7 @@
 package btt_telecom.api.dto;
 
 import btt_telecom.api.models.Cidade;
+import btt_telecom.api.models.Empresa;
 import btt_telecom.api.models.Funcionario;
 
 public class FuncionarioDTO {
@@ -22,7 +23,9 @@ public class FuncionarioDTO {
 	
 	private Cidade cidade;
 	
-	public FuncionarioDTO(Long id, String primeiro_nome, String ultimo_nome, String username, String rg, String cpf, String telefone, boolean status, Cidade cidade) {
+	private Empresa empresa;
+	
+	public FuncionarioDTO(Long id, String primeiro_nome, String ultimo_nome, String username, String rg, String cpf, String telefone, boolean status, Cidade cidade, Empresa empresa) {
 		this.id = id;
 		this.primeiro_nome = primeiro_nome;
 		this.ultimo_nome = ultimo_nome;
@@ -32,6 +35,7 @@ public class FuncionarioDTO {
 		this.telefone = telefone;
 		this.status = status;
 		this.cidade = cidade;
+		this.empresa = empresa;
 	}
 	
 	public FuncionarioDTO(Funcionario func) {
@@ -44,6 +48,7 @@ public class FuncionarioDTO {
 		this.telefone = func.getTelefone();
 		this.status = func.getStatus();
 		this.cidade = func.getCidade();
+		this.empresa = func.getEmpresa();
 	}
 
 	public Long getId() {
@@ -116,5 +121,13 @@ public class FuncionarioDTO {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
 	}
 }
