@@ -87,10 +87,19 @@ public class ServicosController {
 		}
 	}
 	
-	@GetMapping(path = "/funcionario")
-	public ResponseEntity<List<Servico>> findServicosByStatusByFunc(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "status", required = false) String status){
+	@PostMapping(path = "/funcionario")
+	public ResponseEntity<List<Servico>> findServicosByStatusByFunc(@RequestBody String body){
 		try {
-			return new ResponseEntity<>(servicoRepository.findServicesInProgressByFunc(id, status), HttpStatus.OK);
+			JSONObject json = new JSONObject(body);
+			Long id = json.getLong("id_func");
+			String status = json.getString("status");
+			
+			if(json.has("data")) {
+				return new ResponseEntity<>(servicoRepository.findServicesInProgressByFuncAndDate(id, status, json.getString("data")), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(servicoRepository.findServicesInProgressByFunc(id, status), HttpStatus.OK);
+			}
+			
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
