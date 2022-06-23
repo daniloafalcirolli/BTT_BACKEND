@@ -2,11 +2,13 @@ package btt_telecom.api.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -24,6 +26,9 @@ public class Provedor {
 	
 	@OneToMany
 	private List<ServicoProvedor> servicos;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<CamposProvedor> campos;
 	
 	public Provedor(){
 		
@@ -56,5 +61,13 @@ public class Provedor {
 
 	public void setServicos(List<ServicoProvedor> servicos) {
 		this.servicos = servicos;
+	}
+
+	public List<CamposProvedor> getCampos() {
+		return campos;
+	}
+
+	public void setCampos(List<CamposProvedor> campos) {
+		this.campos = campos;
 	}
 }

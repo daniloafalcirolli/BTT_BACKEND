@@ -3,6 +3,7 @@ package btt_telecom.api.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.ProvedorDTO;
+import btt_telecom.api.models.CamposProvedor;
 import btt_telecom.api.models.Provedor;
 import btt_telecom.api.models.ServicoProvedor;
+import btt_telecom.api.repositories.CamposProvedorRepository;
 import btt_telecom.api.repositories.ProvedorRepository;
 import btt_telecom.api.repositories.ServicoProvedorRepository;
 
@@ -33,6 +36,9 @@ public class ProvedorController {
 	
 	@Autowired
 	private ProvedorRepository provedorRepository;
+	
+	@Autowired
+	private CamposProvedorRepository camposProvedorRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<ProvedorDTO>> findAll(){
@@ -135,6 +141,35 @@ public class ProvedorController {
 		}
 	}
 	
+	@PostMapping(path = "/campos/{id}")
+	public ResponseEntity<HttpStatus> editCampos(@RequestBody String body, @PathVariable(name = "id") Long id){
+		try {
+			if(provedorRepository.existsById(id)) {
+				JSONArray jsonarray = new JSONArray(body);
+				List<CamposProvedor> list = new ArrayList<CamposProvedor>();
+				JSONObject obj;
+				for(int i = 0; i < jsonarray.length(); i++) {
+					obj = new JSONObject(jsonarray.get(i).toString());
+					list.add(camposProvedorRepository.findById(obj.getLong("id")).get());
+				}
+				
+				Provedor p = provedorRepository.findById(id).get();
+				p.setCampos(list);
+				
+				if(provedorRepository.save(p) != null) {
+					return new ResponseEntity<>(HttpStatus.OK);
+				}else {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				}
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PutMapping(path = "/edit")
 	public ResponseEntity<HttpStatus> edit(@RequestBody String body){
 		try {
@@ -162,46 +197,46 @@ public class ProvedorController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
 	
-//	@DeleteMapping(path = "/{id_provedor}/{id_servico}")
-//	public ResponseEntity<HttpStatus> deleteServicoProvedor(@PathVariable(name = "id_provedor") Long id_provedor, @PathVariable(name = "id_servico") Long id_servico){
-//		try {
-//			if(provedorRepository.existsById(id_provedor)) {
-//				if(servicoProvedorRepository.existsById(id_servico)) {
-//					Provedor p = provedorRepository.findById(id_provedor).get();
-//					ServicoProvedor sp = servicoProvedorRepository.findById(id_servico).get();
-//					p.getServicos().remove(sp);
-//					provedorRepository.save(p);
-//					servicoProvedorRepository.deleteById(id_servico);
-//					return new ResponseEntity<>(HttpStatus.OK);
-//				}else {
-//					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//				}			
-//			}else {
-//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//			}
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
-//	
-//	
-//	@DeleteMapping(path = "/{id}")
-//	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
-//		try {
-//			if(provedorRepository.existsById(id)) {
-//				Provedor p = provedorRepository.findById(id).get();
-//				p.getServicos().clear();
-//				provedorRepository.save(p);	
-//				provedorRepository.deleteById(id);
-//				
-//				return new ResponseEntity<>(HttpStatus.OK);
-//			}else {
-//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//			}
-//		} catch (Exception e) {
-//			System.out.println(e);
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}	
+	@DeleteMapping(path = "/{id_provedor}/{id_servico}")
+	public ResponseEntity<HttpStatus> deleteServicoProvedor(@PathVariable(name = "id_provedor") Long id_provedor, @PathVariable(name = "id_servico") Long id_servico){
+		try {
+			if(provedorRepository.existsById(id_provedor)) {
+				if(servicoProvedorRepository.existsById(id_servico)) {
+					Provedor p = provedorRepository.findById(id_provedor).get();
+					ServicoProvedor sp = servicoProvedorRepository.findById(id_servico).get();
+					p.getServicos().remove(sp);
+					provedorRepository.save(p);
+					servicoProvedorRepository.deleteById(id_servico);
+					return new ResponseEntity<>(HttpStatus.OK);
+				}else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}			
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
+		try {
+			if(provedorRepository.existsById(id)) {
+				Provedor p = provedorRepository.findById(id).get();
+				p.getServicos().clear();
+				provedorRepository.save(p);	
+				provedorRepository.deleteById(id);
+				
+				return new ResponseEntity<>(HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}	
 }

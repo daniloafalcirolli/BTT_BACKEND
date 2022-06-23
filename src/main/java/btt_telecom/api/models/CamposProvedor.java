@@ -9,17 +9,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "master_users")
-public class MasterUser {
+@Table(name = "campos_provedor")
+public class CamposProvedor {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	private String User;
-	
-	private String Password;
+	private String campo;
 
 	public Long getId() {
 		return id;
@@ -29,19 +27,11 @@ public class MasterUser {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return User;
+	public String getCampo() {
+		return campo;
 	}
 
-	public void setUser(String user) {
-		User = user;
-	}
-
-	public String getPassword() {
-		return Password;
-	}
-
-	public void setPassword(String password) {
-		Password = password;
+	public void setCampo(String campo) {
+		this.campo = campo;
 	}
 }
