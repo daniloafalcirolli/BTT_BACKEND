@@ -33,3 +33,4 @@ build/
 .vscode/
 !**/src/main/java/btt_telecom/api/repositories/RotaRepository.java
 !**/src/main/java/btt_telecom/api/repositories/ServicoRepository.java
+!**/src/main/resources/application.properties

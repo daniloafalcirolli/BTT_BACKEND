@@ -31,6 +31,8 @@ public class ServicoidDTO {
 	
 	private Date data_finalizacao;
 	
+	private String relatorio;
+	
 	public ServicoidDTO(Servico servico) {
 		this.id = servico.getId();
 		this.cliente = servico.getCliente();
@@ -43,6 +45,7 @@ public class ServicoidDTO {
 		this.observacoes = servico.getObservacoes();
 		this.cod_quebra = servico.getCod_quebra();
 		this.data_finalizacao = servico.getData_finalizacao();
+		this.relatorio = servico.getRelatorio();
 	}
 
 	public Long getId() {
@@ -131,5 +134,13 @@ public class ServicoidDTO {
 
 	public void setData_finalizacao(Date data_finalizacao) {
 		this.data_finalizacao = data_finalizacao;
+	}
+
+	public String getRelatorio() {
+		return relatorio;
+	}
+
+	public void setRelatorio(String relatorio) {
+		this.relatorio = relatorio;
 	}
 }

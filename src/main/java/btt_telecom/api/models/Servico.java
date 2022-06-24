@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -47,6 +48,10 @@ public class Servico {
 	
 	private Date data_finalizacao;
 
+	@Lob
+	@Column(name = "relatorio", length = 2048)
+	private String relatorio;
+	
 	public Servico() {
 		
 	}
@@ -137,5 +142,13 @@ public class Servico {
 
 	public void setData_finalizacao(Date data_finalizacao) {
 		this.data_finalizacao = data_finalizacao;
+	}
+
+	public String getRelatorio() {
+		return relatorio;
+	}
+
+	public void setRelatorio(String relatorio) {
+		this.relatorio = relatorio;
 	}
 }

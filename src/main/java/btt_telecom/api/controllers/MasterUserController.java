@@ -2,6 +2,8 @@ package btt_telecom.api.controllers;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,44 +18,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.models.Cidade;
-import btt_telecom.api.models.Funcionario;
-import btt_telecom.api.repositories.CidadeRepository;
-import btt_telecom.api.repositories.FuncionarioRepository;
+import btt_telecom.api.models.MasterUser;
+import btt_telecom.api.repositories.MasterUserRepository;
 
 @RestController
-@RequestMapping(path = "/api/cidade")
-public class CidadeController {
-	@Autowired
-	private CidadeRepository cidadeRepository;
+@RequestMapping(path = "/api/master/user")
+public class MasterUserController {
 	
 	@Autowired
-	private FuncionarioRepository funcionarioRepository;
+	private MasterUserRepository masterUserRepository;
 	
 	@GetMapping
-	private ResponseEntity<List<Cidade>> findAll(){
+	private ResponseEntity<List<MasterUser>> findAll(){
 		try {
-			return new ResponseEntity<>(cidadeRepository.findAll(), HttpStatus.OK);
+			return new ResponseEntity<>(masterUserRepository.findAll(), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/page")
-	private ResponseEntity<Page<Cidade>> findAllWithPage(Pageable pageable){
+	private ResponseEntity<Page<MasterUser>> findAllWithPage(Pageable pageable){
 		try {
-			return new ResponseEntity<>(cidadeRepository.findAll(pageable), HttpStatus.OK);
+			return new ResponseEntity<>(masterUserRepository.findAll(pageable), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-
 	@GetMapping(path = "/{id}")
-	private ResponseEntity<Cidade> findById(@PathVariable(name = "id") Long id){
+	private ResponseEntity<MasterUser> findById(@PathVariable(name = "id") Long id){
 		try {
-			if(cidadeRepository.existsById(id)) {
-				return new ResponseEntity<>(cidadeRepository.findById(id).get(), HttpStatus.OK);
+			if(masterUserRepository.existsById(id)) {
+				return new ResponseEntity<>(masterUserRepository.findById(id).get(), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
@@ -63,18 +60,31 @@ public class CidadeController {
 	}
 	
 	@PostMapping
-	private ResponseEntity<HttpStatus> save(@RequestBody Cidade cidade){
-		if(cidadeRepository.save(cidade) != null) {
+	private ResponseEntity<HttpStatus> save(@RequestBody MasterUser masterUser){
+		if(masterUserRepository.save(masterUser) != null) {
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	@PostMapping(path = "/login")
+	private ResponseEntity<MasterUser> efetuarLogin(@RequestBody String body) {
+		try {
+			JSONObject json = new JSONObject(body);
+			if(masterUserRepository.findByUsernameAndPassword(json.getString("username"), json.getString("password")) != null) {
+				return new ResponseEntity<>(masterUserRepository.findByUsernameAndPassword(json.getString("username"), json.getString("password")), HttpStatus.OK);
+			}else{
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (JSONException e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	@PutMapping
-	private ResponseEntity<HttpStatus> edit(@RequestBody Cidade cidade){
-		if(cidadeRepository.existsById(cidade.getId())) {
-			if(cidadeRepository.save(cidade) != null) {
+	private ResponseEntity<HttpStatus> edit(@RequestBody MasterUser masterUser){
+		if(masterUserRepository.existsById(masterUser.getId())) {
+			if(masterUserRepository.save(masterUser) != null) {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -87,21 +97,8 @@ public class CidadeController {
 	@DeleteMapping(path = "/{id}")
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
-			if(cidadeRepository.existsById(id)) {				
-				List<Funcionario> funcs = funcionarioRepository.findAll();
-				
-				for(int i = 0; i < funcs.size(); i++) {
-					Funcionario f = funcs.get(i);
-					if(f.getCidade() == null) {
-						if(funcs.get(i).getCidade().equals(cidadeRepository.findById(id).get())) {
-							f.setCidade(null);
-							funcionarioRepository.save(f);
-						}
-					}	
-					System.out.println(f);
-				}
-				
-//				cidadeRepository.deleteById(id);
+			if(masterUserRepository.existsById(id)) {
+				masterUserRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

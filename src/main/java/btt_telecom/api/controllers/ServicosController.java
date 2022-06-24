@@ -189,6 +189,27 @@ public class ServicosController {
 		}
 	}
 	
+	@PostMapping(path = "/relatorio/{id}")
+	public ResponseEntity<HttpStatus> editRelatorio(@RequestBody String body, @PathVariable(name = "id") Long id){
+		try {
+			if(servicoRepository.existsById(id)) {
+				JSONObject json = new JSONObject(body);
+				Servico s = servicoRepository.findById(id).get();
+				
+				s.setRelatorio(json.getString("relatorio"));
+				if(servicoRepository.save(s) != null) {
+					return new ResponseEntity<>(HttpStatus.OK);
+				}else {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				}
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PutMapping
 	public ResponseEntity<HttpStatus> edit(@RequestBody String body) throws ParseException, JSONException{
 		try {

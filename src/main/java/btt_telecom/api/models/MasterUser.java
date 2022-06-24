@@ -17,9 +17,11 @@ public class MasterUser {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	private String User;
+	private String username;
 	
-	private String Password;
+	private String usuario;
+	
+	private String password;
 
 	public Long getId() {
 		return id;
@@ -29,19 +31,27 @@ public class MasterUser {
 		this.id = id;
 	}
 
-	public String getUser() {
-		return User;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUser(String user) {
-		User = user;
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
 }
