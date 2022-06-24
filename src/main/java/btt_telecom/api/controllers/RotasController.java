@@ -79,6 +79,19 @@ public class RotasController {
 		}
 	}
 	
+	@PostMapping(path = "/teste")
+	public ResponseEntity<HttpStatus> teste(){
+		try {
+			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
+			Date hora = formato2.parse(formato2.format(new Date()));
+
+			System.out.println(hora);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PostMapping(path = "/registrar")
 	public ResponseEntity<HttpStatus> register(@RequestBody String body){
 		try {
@@ -89,7 +102,7 @@ public class RotasController {
 			Date dia = formato.parse(formato.format(new Date()));
 			r.setData(dia);
 			
-			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss");
+			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
 			
