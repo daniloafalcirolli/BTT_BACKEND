@@ -88,20 +88,7 @@ public class CidadeController {
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
 			if(cidadeRepository.existsById(id)) {				
-				List<Funcionario> funcs = funcionarioRepository.findAll();
-				
-				for(int i = 0; i < funcs.size(); i++) {
-					Funcionario f = funcs.get(i);
-					if(f.getCidade() == null) {
-						if(funcs.get(i).getCidade().equals(cidadeRepository.findById(id).get())) {
-							f.setCidade(null);
-							funcionarioRepository.save(f);
-						}
-					}	
-					System.out.println(f);
-				}
-				
-//				cidadeRepository.deleteById(id);
+				cidadeRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
