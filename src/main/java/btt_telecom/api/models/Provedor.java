@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,11 +25,14 @@ public class Provedor {
 	
 	private String name;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ServicoProvedor> servicos;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<CamposProvedor> campos;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<Material> materiais;
 	
 	public Provedor(){
 		
@@ -69,5 +73,13 @@ public class Provedor {
 
 	public void setCampos(List<CamposProvedor> campos) {
 		this.campos = campos;
+	}
+
+	public List<Material> getMateriais() {
+		return materiais;
+	}
+
+	public void setMateriais(List<Material> materiais) {
+		this.materiais = materiais;
 	}
 }

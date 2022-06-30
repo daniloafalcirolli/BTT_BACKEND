@@ -16,18 +16,15 @@ public class ServicoProvedor {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "id_Sequence")
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
-	
-	private Long id_prov;
-	
+		
 	private String servico;
 	
 	public ServicoProvedor(){
 		
 	}
 	
-	public ServicoProvedor(String servico, Long id_prov){
+	public ServicoProvedor(String servico){
 		this.servico = servico;
-		this.id_prov = id_prov;
 	}
 
 	public Long getId() {
@@ -36,14 +33,6 @@ public class ServicoProvedor {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	public Long getId_prov() {
-		return id_prov;
-	}
-
-	public void setId_prov(Long id_prov) {
-		this.id_prov = id_prov;
 	}
 
 	public String getServico() {

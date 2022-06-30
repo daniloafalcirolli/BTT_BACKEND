@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.models.CamposProvedor;
+import btt_telecom.api.models.Provedor;
 import btt_telecom.api.repositories.CamposProvedorRepository;
+import btt_telecom.api.repositories.ProvedorRepository;
 
 @RestController
 @RequestMapping(path = "/api/campos/provedor")
@@ -25,6 +27,9 @@ public class CamposProvedorController {
 	@Autowired
 	private CamposProvedorRepository camposProvedorRepository;
 
+	@Autowired
+	private ProvedorRepository provedorRepository;
+	
 	@GetMapping
 	private ResponseEntity<List<CamposProvedor>> findAll(){
 		try {
@@ -82,6 +87,11 @@ public class CamposProvedorController {
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
 			if(camposProvedorRepository.existsById(id)) {
+				provedorRepository.findAll().forEach(x -> {
+					Provedor p = x;
+					p.getCampos().remove(camposProvedorRepository.findById(id).get());
+					provedorRepository.save(p);
+				});
 				camposProvedorRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {

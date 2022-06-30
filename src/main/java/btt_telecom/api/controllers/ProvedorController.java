@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.ProvedorDTO;
 import btt_telecom.api.models.CamposProvedor;
+import btt_telecom.api.models.Material;
 import btt_telecom.api.models.Provedor;
 import btt_telecom.api.models.ServicoProvedor;
 import btt_telecom.api.repositories.CamposProvedorRepository;
+import btt_telecom.api.repositories.MaterialRepository;
 import btt_telecom.api.repositories.ProvedorRepository;
 import btt_telecom.api.repositories.ServicoProvedorRepository;
 
@@ -39,6 +41,9 @@ public class ProvedorController {
 	
 	@Autowired
 	private CamposProvedorRepository camposProvedorRepository;
+	
+	@Autowired
+	private MaterialRepository materialRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<ProvedorDTO>> findAll(){
@@ -124,7 +129,7 @@ public class ProvedorController {
 	public ResponseEntity<HttpStatus> addServicoProvedor(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
-			ServicoProvedor sp = new ServicoProvedor(json.getString("servico"), json.getLong("id_provedor"));
+			ServicoProvedor sp = new ServicoProvedor(json.getString("servico"));
 			
 			servicoProvedorRepository.save(sp);
 			
@@ -134,7 +139,6 @@ public class ProvedorController {
 			p.setServicos(list);
 			
 			provedorRepository.save(p);
-			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -155,6 +159,35 @@ public class ProvedorController {
 				
 				Provedor p = provedorRepository.findById(id).get();
 				p.setCampos(list);
+				
+				if(provedorRepository.save(p) != null) {
+					return new ResponseEntity<>(HttpStatus.OK);
+				}else {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				}
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/materiais/{id}")
+	public ResponseEntity<HttpStatus> editMateriais(@RequestBody String body, @PathVariable(name = "id") Long id){
+		try {
+			if(provedorRepository.existsById(id)) {
+				JSONArray jsonarray = new JSONArray(body);
+				List<Material> list = new ArrayList<Material>();
+				JSONObject obj;
+				for(int i = 0; i < jsonarray.length(); i++) {
+					obj = new JSONObject(jsonarray.get(i).toString());
+					list.add(materialRepository.findById(obj.getLong("id")).get());
+				}
+				
+				Provedor p = provedorRepository.findById(id).get();
+				p.setMateriais(list);
 				
 				if(provedorRepository.save(p) != null) {
 					return new ResponseEntity<>(HttpStatus.OK);
@@ -226,10 +259,15 @@ public class ProvedorController {
 		try {
 			if(provedorRepository.existsById(id)) {
 				Provedor p = provedorRepository.findById(id).get();
-				p.getServicos().clear();
-				provedorRepository.save(p);	
+				List<ServicoProvedor> list = p.getServicos();
+				p.setServicos(null);
+				p.setMateriais(null);
+				p.setCampos(null);
+				provedorRepository.save(p);
+				list.forEach(x -> {
+					servicoProvedorRepository.deleteById(x.getId());
+				});
 				provedorRepository.deleteById(id);
-				
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);

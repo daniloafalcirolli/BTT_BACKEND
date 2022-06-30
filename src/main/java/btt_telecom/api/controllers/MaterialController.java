@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.models.Material;
+import btt_telecom.api.models.Provedor;
 import btt_telecom.api.repositories.MaterialRepository;
+import btt_telecom.api.repositories.ProvedorRepository;
 
 @RestController
 @RequestMapping(path = "/api/material")
@@ -26,6 +28,9 @@ public class MaterialController {
 	@Autowired
 	private MaterialRepository materialRepository;
 
+	@Autowired
+	private ProvedorRepository provedorRepository;
+	
 	@GetMapping
 	private ResponseEntity<List<Material>> findAll(){
 		try {
@@ -83,6 +88,11 @@ public class MaterialController {
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
 			if(materialRepository.existsById(id)) {
+				provedorRepository.findAll().forEach(x -> {
+					Provedor p = x;
+					p.getMateriais().remove(materialRepository.findById(id).get());
+					provedorRepository.save(p);
+				});
 				materialRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
