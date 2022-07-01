@@ -37,6 +37,8 @@ public class Rota {
 	
 	private String longitude;
 	
+	private String descricao;
+	
 	public Long getId() {
 		return id;
 	}
@@ -83,5 +85,13 @@ public class Rota {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 }

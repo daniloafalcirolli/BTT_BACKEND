@@ -79,19 +79,6 @@ public class RotasController {
 		}
 	}
 	
-	@PostMapping(path = "/teste")
-	public ResponseEntity<HttpStatus> teste(){
-		try {
-			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
-			Date hora = formato2.parse(formato2.format(new Date()));
-
-			System.out.println(hora);
-			return new ResponseEntity<>(HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
 	@PostMapping(path = "/registrar")
 	public ResponseEntity<HttpStatus> register(@RequestBody String body){
 		try {
@@ -120,5 +107,83 @@ public class RotasController {
 		}
 	}
 	
+	@PostMapping(path = "/iniciar")
+	public ResponseEntity<HttpStatus> iniciarDia(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			
+			Rota r = new Rota();
+			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
+			Date dia = formato.parse(formato.format(new Date()));
+			r.setData(dia);
+			
+			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
+			Date hora = formato2.parse(formato2.format(new Date()));
+			r.setHora(hora);
+			
+			r.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			r.setLatitude(json.getString("latitude"));
+			r.setLongitude(json.getString("longitude"));
+			r.setDescricao("iniciou");
+			if(rotaRepository.save(r) != null) {
+				return new ResponseEntity<>( HttpStatus.CREATED);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "finalizar")
+	public ResponseEntity<HttpStatus> finalizarDia(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			
+			Rota r = new Rota();
+			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
+			Date dia = formato.parse(formato.format(new Date()));
+			r.setData(dia);
+			
+			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
+			Date hora = formato2.parse(formato2.format(new Date()));
+			r.setHora(hora);
+			
+			r.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			r.setLatitude(json.getString("latitude"));
+			r.setLongitude(json.getString("longitude"));
+			r.setDescricao("finalizou");
+			if(rotaRepository.save(r) != null) {
+				return new ResponseEntity<>( HttpStatus.CREATED);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/validate")
+	public ResponseEntity<HttpStatus> validar(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
+			int x = 0;
+			
+			for(int i = 0; i < list.size(); i++) {
+				if(list.get(i).getDescricao().equals("iniciou")) {
+					x++;
+				}
+			}
+			
+			if(x >= 1) {
+				return new ResponseEntity<>(HttpStatus.FOUND);
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 }

@@ -15,12 +15,15 @@ public class RotaDTO {
 	
 	private String longitude;
 	
+	private String descricao;
+	
 	public RotaDTO(Rota rota) {
 		this.id = rota.getId();
 		this.data = rota.getData();
 		this.hora = rota.getHora();
 		this.latitude = rota.getLatitude();
 		this.longitude = rota.getLongitude();
+		this.descricao = rota.getDescricao();
 	}
 
 	public Long getId() {
@@ -61,5 +64,13 @@ public class RotaDTO {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 }
