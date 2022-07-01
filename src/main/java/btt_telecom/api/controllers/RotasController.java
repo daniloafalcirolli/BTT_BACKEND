@@ -135,7 +135,7 @@ public class RotasController {
 		}
 	}
 	
-	@PostMapping(path = "finalizar")
+	@PostMapping(path = "/finalizar")
 	public ResponseEntity<HttpStatus> finalizarDia(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
