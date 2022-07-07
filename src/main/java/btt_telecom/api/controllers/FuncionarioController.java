@@ -115,8 +115,13 @@ public class FuncionarioController {
 			func.setLatitude(json.getString("latitude"));
 			func.setLongitude(json.getString("longitude"));
 			func.setStatus(true);
-			func.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
-			func.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
+			if(json.has("id_cidade")) {
+				func.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
+			}
+			
+			if(json.has("id_empresa")) {
+				func.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
+			}
 			
 			if(funcionarioRepository.save(func) != null) {
 				return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
@@ -146,8 +151,14 @@ public class FuncionarioController {
 				f.setPlaca(json.getString("placa"));
 				f.setLatitude(json.getString("latitude"));
 				f.setLongitude(json.getString("longitude"));
-				f.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
-				f.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
+				
+				if(json.has("id_cidade")) {
+					f.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
+				}
+				
+				if(json.has("id_empresa")) {
+					f.setEmpresa(empresaRepository.findById(json.getLong("id_empresa")).get());
+				}
 				
 				funcionarioRepository.save(f);
 				
