@@ -17,6 +17,8 @@ public class Material {
 	private Long id;
 	
 	private String material;
+	
+	private boolean has_serial;
 
 	public Long getId() {
 		return id;
@@ -32,6 +34,14 @@ public class Material {
 
 	public void setMaterial(String material) {
 		this.material = material;
+	}
+
+	public boolean isHas_serial() {
+		return has_serial;
+	}
+
+	public void setHas_serial(boolean has_serial) {
+		this.has_serial = has_serial;
 	}
 
 	@Override
