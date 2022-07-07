@@ -131,6 +131,7 @@ public class RotasController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -169,19 +170,32 @@ public class RotasController {
 			JSONObject json = new JSONObject(body);
 			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
 			int x = 0;
-			
+			int y = 0;
 			for(int i = 0; i < list.size(); i++) {
-				if(list.get(i).getDescricao().equals("iniciou")) {
-					x++;
-				}
+				if(list.get(i).getDescricao() != null) {
+					if(list.get(i).getDescricao().equals("iniciou")) {
+						x++;
+					}
+					if(list.get(i).getDescricao().equals("finalizou")) {
+						y++;
+					}
+				}	
 			}
+			int sum = x + y;
 			
-			if(x >= 1) {
+			if(sum == 0) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else if(sum == 1) {
 				return new ResponseEntity<>(HttpStatus.FOUND);
 			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				if((sum % 2) == 1){
+					return new ResponseEntity<>(HttpStatus.FOUND);
+				}else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
 			}
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

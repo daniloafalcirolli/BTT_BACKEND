@@ -27,7 +27,6 @@ import btt_telecom.api.repositories.FuncionarioRepository;
 @RestController
 @RequestMapping(path = "/api/funcionario")
 public class FuncionarioController {
-
 	private JSONObject json;
 	
 	@Autowired
