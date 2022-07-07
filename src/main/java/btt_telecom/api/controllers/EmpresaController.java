@@ -17,13 +17,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.models.Empresa;
+import btt_telecom.api.models.Funcionario;
 import btt_telecom.api.repositories.EmpresaRepository;
+import btt_telecom.api.repositories.FuncionarioRepository;
 
 @RestController
 @RequestMapping(path = "/api/empresa")
 public class EmpresaController {
 	@Autowired
 	private EmpresaRepository empresaRepository;
+	
+	@Autowired
+	private FuncionarioRepository funcionarioRepository;
 	
 	@GetMapping
 	private ResponseEntity<List<Empresa>> findAll(){
@@ -83,6 +88,11 @@ public class EmpresaController {
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
 			if(empresaRepository.existsById(id)) {
+				List<Funcionario> list = funcionarioRepository.findAll();
+				list.forEach(x -> {
+					x.setEmpresa(null);
+					funcionarioRepository.save(x);
+				});
 				empresaRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {

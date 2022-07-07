@@ -87,7 +87,12 @@ public class CidadeController {
 	@DeleteMapping(path = "/{id}")
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
-			if(cidadeRepository.existsById(id)) {				
+			if(cidadeRepository.existsById(id)) {
+				List<Funcionario> list = funcionarioRepository.findAll();
+				list.forEach(x -> {
+					x.setCidade(null);
+					funcionarioRepository.save(x);
+				});
 				cidadeRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
