@@ -39,6 +39,10 @@ public class Rota {
 	
 	private String descricao;
 	
+	private String gasolina;
+	
+	private String consumo;
+	
 	public Long getId() {
 		return id;
 	}
@@ -93,5 +97,21 @@ public class Rota {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public String getGasolina() {
+		return gasolina;
+	}
+
+	public void setGasolina(String gasolina) {
+		this.gasolina = gasolina;
+	}
+
+	public String getConsumo() {
+		return consumo;
+	}
+
+	public void setConsumo(String consumo) {
+		this.consumo = consumo;
 	}
 }

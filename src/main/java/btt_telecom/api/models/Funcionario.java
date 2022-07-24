@@ -39,7 +39,7 @@ public class Funcionario {
 	private String placa;
 	
 	private String kilometragem_por_litro;
-	
+
 	private String avatar;
 	
 	@OneToOne(cascade = CascadeType.MERGE)

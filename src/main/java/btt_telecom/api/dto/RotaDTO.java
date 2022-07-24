@@ -17,6 +17,10 @@ public class RotaDTO {
 	
 	private String descricao;
 	
+	private String gasolina;
+	
+	private String consumo;
+	
 	public RotaDTO(Rota rota) {
 		this.id = rota.getId();
 		this.data = rota.getData();
@@ -24,6 +28,8 @@ public class RotaDTO {
 		this.latitude = rota.getLatitude();
 		this.longitude = rota.getLongitude();
 		this.descricao = rota.getDescricao();
+		this.gasolina = rota.getGasolina();
+		this.consumo = rota.getConsumo();
 	}
 
 	public Long getId() {
@@ -72,5 +78,21 @@ public class RotaDTO {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public String getGasolina() {
+		return gasolina;
+	}
+
+	public void setGasolina(String gasolina) {
+		this.gasolina = gasolina;
+	}
+
+	public String getConsumo() {
+		return consumo;
+	}
+
+	public void setConsumo(String consumo) {
+		this.consumo = consumo;
 	}
 }

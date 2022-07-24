@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.RotaDTO;
+import btt_telecom.api.models.Funcionario;
 import btt_telecom.api.models.Rota;
 import btt_telecom.api.repositories.FuncionarioRepository;
 import btt_telecom.api.repositories.RotaRepository;
@@ -92,8 +93,10 @@ public class RotasController {
 			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
-			
-			r.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
+			r.setFuncionario(f);
+			r.setConsumo(f.getKilometragem_por_litro());
+			r.setGasolina(f.getCidade().getPreco_gasolina());
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			
@@ -121,7 +124,10 @@ public class RotasController {
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
 			
-			r.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
+			r.setFuncionario(f);
+			r.setConsumo(f.getKilometragem_por_litro());
+			r.setGasolina(f.getCidade().getPreco_gasolina());
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("iniciou");
@@ -150,7 +156,10 @@ public class RotasController {
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
 			
-			r.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
+			r.setFuncionario(f);
+			r.setConsumo(f.getKilometragem_por_litro());
+			r.setGasolina(f.getCidade().getPreco_gasolina());
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("finalizou");

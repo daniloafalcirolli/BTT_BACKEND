@@ -24,7 +24,9 @@ public class FuncionarioDTO {
 	private Cidade cidade;
 	
 	private Empresa empresa;
-	
+	public FuncionarioDTO() {
+		
+	}
 	public FuncionarioDTO(Long id, String primeiro_nome, String ultimo_nome, String username, String rg, String cpf, String telefone, boolean status, Cidade cidade, Empresa empresa) {
 		this.id = id;
 		this.primeiro_nome = primeiro_nome;

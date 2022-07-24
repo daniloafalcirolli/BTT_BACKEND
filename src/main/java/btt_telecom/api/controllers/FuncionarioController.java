@@ -150,6 +150,7 @@ public class FuncionarioController {
 				f.setPlaca(json.getString("placa"));
 				f.setLatitude(json.getString("latitude"));
 				f.setLongitude(json.getString("longitude"));
+				f.setStatus(true);
 				
 				if(json.has("id_cidade")) {
 					f.setCidade(cidadeRepository.findById(json.getLong("id_cidade")).get());
@@ -160,9 +161,9 @@ public class FuncionarioController {
 				}
 				
 				funcionarioRepository.save(f);
-				
 				return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 			}else {
+				System.out.println("bad");
 				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
 			}
 		}catch(JSONException e) {

@@ -18,6 +18,7 @@ public class Material {
 	
 	private String material;
 	
+	@Column(nullable = true)
 	private boolean has_serial;
 
 	public Long getId() {
