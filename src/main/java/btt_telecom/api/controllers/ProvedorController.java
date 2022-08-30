@@ -209,7 +209,7 @@ public class ProvedorController {
 			JSONObject json = new JSONObject(body);
 			Provedor p = provedorRepository.findById(json.getLong("id")).get();
 			p.setName(json.getString("name"));
-			
+			p.setIdentificador(json.getString("identificador").toUpperCase());
 			provedorRepository.save(p);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -223,7 +223,8 @@ public class ProvedorController {
 			JSONObject json = new JSONObject(body);
 			ServicoProvedor sp = servicoProvedorRepository.findById(json.getLong("id_serv")).get();
 			sp.setServico(json.getString("servico"));
-			
+			sp.setIdentificador(json.getString("identificador").toUpperCase());
+	
 			servicoProvedorRepository.save(sp);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {

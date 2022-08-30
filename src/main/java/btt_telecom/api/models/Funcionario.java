@@ -18,11 +18,11 @@ public class Funcionario {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	private String primeiro_nome;
-	
-	private String ultimo_nome;
+	private String nome;
 	
 	private String username;
+	
+	private String login_provedor;
 	
 	private String cpf;
 	
@@ -54,11 +54,10 @@ public class Funcionario {
 		
 	}
 	
-	public Funcionario(Long id, String primeiro_nome, String ultimo_nome, String username, String cpf, String rg,
+	public Funcionario(Long id, String nome, String username, String cpf, String rg,
 			String telefone, String endereco, String placa, String kilometragem_por_litro, String avatar) {
 		this.id = id;
-		this.primeiro_nome = primeiro_nome;
-		this.ultimo_nome = ultimo_nome;
+		this.nome = nome;
 		this.username = username;
 		this.cpf = cpf;
 		this.rg = rg;
@@ -69,6 +68,14 @@ public class Funcionario {
 		this.avatar = avatar;
 	}
 
+	public String getLogin_provedor() {
+		return login_provedor;
+	}
+
+	public void setLogin_provedor(String login_provedor) {
+		this.login_provedor = login_provedor;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -77,20 +84,12 @@ public class Funcionario {
 		this.id = id;
 	}
 
-	public String getPrimeiro_nome() {
-		return primeiro_nome;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setPrimeiro_nome(String primeiro_nome) {
-		this.primeiro_nome = primeiro_nome;
-	}
-
-	public String getUltimo_nome() {
-		return ultimo_nome;
-	}
-
-	public void setUltimo_nome(String ultimo_nome) {
-		this.ultimo_nome = ultimo_nome;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getUsername() {

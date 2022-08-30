@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.dto.ServicoDTO;
 import btt_telecom.api.dto.ServicoidDTO;
 import btt_telecom.api.models.Material;
 import btt_telecom.api.models.Servico;
@@ -31,12 +32,15 @@ import btt_telecom.api.repositories.ClienteRepository;
 import btt_telecom.api.repositories.FuncionarioRepository;
 import btt_telecom.api.repositories.MaterialRepository;
 import btt_telecom.api.repositories.ProvedorRepository;
+import btt_telecom.api.repositories.RotaRepository;
 import btt_telecom.api.repositories.ServicoProvedorRepository;
 import btt_telecom.api.repositories.ServicoRepository;
 
 @RestController
 @RequestMapping(path = "/api/servico")
 public class ServicosController {
+	
+	private boolean validacao = false;
 	
 	@Autowired
 	private ServicoRepository servicoRepository;
@@ -55,6 +59,9 @@ public class ServicosController {
 	
 	@Autowired
 	private MaterialRepository materialRepository;
+	
+	@Autowired
+	private RotaRepository rotaRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Servico>> findAll(){
@@ -78,34 +85,70 @@ public class ServicosController {
 	public ResponseEntity<ServicoidDTO> findById(@PathVariable(name = "id") Long id){
 		try {
 			if(servicoRepository.existsById(id)) {
-				return new ResponseEntity<>(new ServicoidDTO(servicoRepository.findById(id).get()), HttpStatus.OK);
+				ServicoidDTO serv = new ServicoidDTO(servicoRepository.findById(id).get());
+				if(rotaRepository.findRotaById_serv(id) != (null)) {
+					serv.setHora_finalizacao(rotaRepository.findRotaById_serv(id).getHora().toString());
+				}
+				return new ResponseEntity<>(serv, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		}catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@PostMapping(path = "/funcionario")
-	public ResponseEntity<List<Servico>> findServicosByStatusByFunc(@RequestBody String body){
+	public ResponseEntity<List<Servico>> findServicosByStatusByFuncInExactlyDate(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
 			Long id = json.getLong("id_func");
 			String status = json.getString("status");
 			
 			if(json.has("data")) {
-				return new ResponseEntity<>(servicoRepository.findServicesInProgressByFuncAndDate(id, status, json.getString("data")), HttpStatus.OK);
+				return new ResponseEntity<>(servicoRepository.findByFuncAndExactlyDate(id, json.getString("data"), status), HttpStatus.OK);
 			}else {
-				return new ResponseEntity<>(servicoRepository.findServicesInProgressByFunc(id, status), HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 			}
-			
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@PostMapping(path = "/interval")
+	public ResponseEntity<List<ServicoDTO>> findServicosInInterval(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Servico> list;
+			if(json.has("data_inicio") && json.has("data_finalizacao") && json.has("id_funcionario") && json.has("status")) {
+				list = servicoRepository.findServicesInIntervalAndFuncAndStatus(json.getString("data_inicio"), json.getString("data_finalizacao"), json.getLong("id_funcionario"), json.getString("status"));
+			}else if(json.has("data_inicio") && json.has("data_finalizacao") && json.has("id_funcionario")){
+				list = servicoRepository.findServicesInProgressByFunc(json.getString("data_inicio"), json.getString("data_finalizacao"), json.getLong("id_funcionario"));
+			}else if(json.has("data_inicio") && json.has("data_finalizacao") && json.has("status")) {
+				list = servicoRepository.findServicesInProgressByStatus(json.getString("data_inicio"), json.getString("data_finalizacao"), json.getString("status"));
+			}else if(json.has("data_inicio") && json.has("data_finalizacao")) {
+				list = servicoRepository.findServicesInInterval(json.getString("data_inicio"), json.getString("data_finalizacao"));
+			}else if(json.has("id_funcionario") && json.has("status")) {
+				list = servicoRepository.findServicesByFuncAndStatus(json.getLong("id_funcionario"), json.getString("status"));
+			}else if(json.has("status")){
+				list = servicoRepository.findServiceByStatus(json.getString("status"));
+			}else if(json.has("id_funcionario")){
+				list = servicoRepository.findByFunc(json.getLong("id_funcionario"));
+			}else {
+				list = servicoRepository.findAll();
+			}
+			List<ServicoDTO> result = new ArrayList<>();
+			list.forEach(x -> {
+				result.add(new ServicoDTO(x));
+			});
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}catch(Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
-	//Arrumar esta porra
 	@PostMapping(path = "/create")
 	public ResponseEntity<HttpStatus> save(@RequestBody String body) throws ParseException, JSONException{
 		try {
@@ -139,10 +182,12 @@ public class ServicosController {
 		try {
 			if(servicoRepository.existsById(id)) {
 				JSONObject json = new JSONObject(body);
-				
+				System.out.println(json.toString());
 				Servico s = servicoRepository.findById(id).get();
 				s.setStatus(status);
-				
+				SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss aa");
+				Date hora = formato.parse(formato.format(new Date()));
+				s.setHora_finalizacao(hora);
 				if(json.has("obs") && json.has("cod")) {
 					s.setObservacoes(json.getString("obs"));
 					s.setCod_quebra(json.getString("cod"));
@@ -210,6 +255,73 @@ public class ServicosController {
 		}
 	}
 	
+	@PostMapping(path = "/import")
+	public ResponseEntity<HttpStatus> importCsv(@RequestBody String body){
+		try {
+			JSONArray jsonarray = new JSONArray(body);
+			for(int i = 0; i < jsonarray.length(); i++) {
+				JSONObject json = new JSONObject(jsonarray.get(i).toString());
+				
+				Servico servico = new Servico();
+				if(clienteRepository.existsByContrato(json.getString("contrato_cliente"))) {
+					servico.setFuncionario(funcionarioRepository.findByNomeProvedor(json.getString("cpf_funcionario")).get());
+
+					servico.setCliente(clienteRepository.findByContrato(json.getString("contrato_cliente")));
+					servico.setProtocolo(json.getString("protocolo"));
+					servico.setProvedor(provedorRepository.findByIdentificador(json.getString("nome_provedor").toUpperCase()).get());
+					
+					String nome_servico = json.getString("nome_servico").toUpperCase();
+
+					provedorRepository.findByIdentificador(json.getString("nome_provedor").toUpperCase()).get().getServicos().forEach(x -> {
+						servicoProvedorRepository.findByIdentificador(nome_servico).forEach(y -> {
+							if(x.equals(y)) {
+								servico.setServicoProvedor(x);
+							}
+						});
+					});
+					//servico.setServicoProvedor(servicoProvedorRepository.findByIdentificador(json.getString("nome_servico").toUpperCase()).get());
+
+					servico.setStatus(json.getString("status"));
+					
+					String data_finalizacao = json.getString("data_finalizacao");
+					String data_to_sql = "";
+					Date data;
+					if(data_finalizacao.contains("-")) {
+						data_to_sql = json.getString("data_finalizacao");
+						data = new SimpleDateFormat("yyyy-MM-dd").parse(data_finalizacao);
+					}else {
+						data = new SimpleDateFormat("dd/MM/yyyy").parse(data_finalizacao);
+						data_to_sql = data_finalizacao.split("/")[2] + "-" + data_finalizacao.split("/")[1] + "-" + data_finalizacao.split("/")[0];
+					}
+					servico.setData_finalizacao(data);
+				
+					List<Servico> servicos = servicoRepository.findServiceByProtocolAndDate(servico.getProtocolo(), data_to_sql);
+					
+					if(servicos.isEmpty()) {
+						servicoRepository.save(servico);
+					}else {
+						servicos.forEach(x -> {
+							if(x.getCliente().equals(servico.getCliente())) {
+								validacao = true;
+							}
+						});
+						
+						if(!validacao) {
+							servicoRepository.save(servico);
+						}
+						
+						validacao = false;
+					}
+				}
+			}
+		
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PutMapping
 	public ResponseEntity<HttpStatus> edit(@RequestBody String body) throws ParseException, JSONException{
 		try {
@@ -218,7 +330,7 @@ public class ServicosController {
 			Date data;
 			
 			s.setCliente(clienteRepository.findById(json.getLong("id_cliente")).get());
-			s.setFuncionario(funcionarioRepository.findById(json.getLong("id_func")).get());
+			s.setFuncionario(funcionarioRepository.findById(json.getLong("id_funcionario")).get());
 			s.setProtocolo(json.getString("protocolo"));
 			s.setStatus(json.getString("status"));
 			s.setProvedor(provedorRepository.findById(json.getLong("id_prov")).get());
@@ -234,6 +346,7 @@ public class ServicosController {
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 			}
 		}catch(JSONException e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

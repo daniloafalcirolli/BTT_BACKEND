@@ -1,113 +1,43 @@
 package btt_telecom.api.external;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLEncoder;
-import java.util.StringTokenizer;
-import org.wicketstuff.gmap.api.GLatLng;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
-/**
- * Geocoder. See: http://www.google.com/apis/maps/documentation/services.html# Geocoding_Direct
- *
- * @author Thijs Vonk
- */
-public class Geocoder implements Serializable
-{
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    private static final long serialVersionUID = 1L;
-    // Constants
-    public static final String OUTPUT_CSV = "csv";
-    public static final String OUTPUT_XML = "xml";
-    public static final String OUTPUT_KML = "kml";
-    public static final String OUTPUT_JSON = "json";
-    private final String output = OUTPUT_CSV;
+public class Geocoder {
 
-    public Geocoder()
-    {
+    private static final String GEOCODING_RESOURCE = "https://maps.googleapis.com/maps/api/geocode/json";
+    private static final String API_KEY = "AIzaSyD1j-aZgDYi3Wq7Na29lk45otM22aYF8uM";
+
+    public JSONObject GeocodeSync(String query) throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newHttpClient();
+
+        String encodedQuery = URLEncoder.encode(query,"UTF-8");
+        String requestUri = GEOCODING_RESOURCE + "?key=" + API_KEY + "&address=" + encodedQuery;
+
+        HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri))
+                .timeout(Duration.ofMillis(600)).build();
+
+        HttpResponse<?> geocodingResponse = httpClient.send(geocodingRequest,
+                HttpResponse.BodyHandlers.ofString());
+        try {
+			JSONObject json = new JSONObject(geocodingResponse.body().toString());
+			JSONArray jarr = json.getJSONArray("results");
+			JSONObject geometry = new JSONObject(jarr.get(0).toString());
+			JSONObject location = new JSONObject(geometry.get("geometry").toString());
+			JSONObject coord = new JSONObject(location.get("location").toString());
+			return coord;
+		} catch (JSONException e) {
+			System.out.println(e);
+			return null;
+		}
     }
 
-    public GLatLng decode(String response) throws GeocoderException
-    {
-
-        StringTokenizer gLatLng = new StringTokenizer(response, ",");
-
-        String status = gLatLng.nextToken();
-        gLatLng.nextToken(); // skip precision
-        String latitude = gLatLng.nextToken();
-        String longitude = gLatLng.nextToken();
-
-        if (Integer.parseInt(status) != GeocoderException.G_GEO_SUCCESS)
-        {
-            throw new GeocoderException(Integer.parseInt(status));
-        }
-
-        return new GLatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-    }
-
-    /**
-     * builds the google geo-coding url
-     *
-     * @param address
-     * @return
-     */
-    public String encode(final String address)
-    {
-        return "http://maps.google.com/maps/geo?q=" + urlEncode(address) + "&output=" + output;
-    }
-
-    /**
-     * @param address
-     * @return
-     * @throws IOException
-     */
-    public GLatLng geocode(final String address) throws IOException
-    {
-        InputStream is = invokeService(encode(address));
-        if (is != null)
-        {
-            try
-            {
-                String content = org.apache.wicket.util.io.IOUtils.toString(is);
-                return decode(content);
-            }
-            finally
-            {
-                is.close();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * fetches the url content
-     *
-     * @param address
-     * @return
-     * @throws IOException
-     */
-    protected InputStream invokeService(final String address) throws IOException
-    {
-        URL url = new URL(address);
-        return url.openStream();
-    }
-
-    /**
-     * url-encode a value
-     *
-     * @param value
-     * @return
-     */
-    private String urlEncode(final String value)
-    {
-        try
-        {
-            return URLEncoder.encode(value, "UTF-8");
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
 }

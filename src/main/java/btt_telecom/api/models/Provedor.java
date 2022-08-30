@@ -25,6 +25,8 @@ public class Provedor {
 	
 	private String name;
 	
+	private String identificador;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ServicoProvedor> servicos;
 	
@@ -41,6 +43,7 @@ public class Provedor {
 	public Provedor(ProvedorDTO provedorDTO) {
 		this.id = provedorDTO.getId();
 		this.name = provedorDTO.getName();
+		this.identificador = provedorDTO.getIdentificador();
 	}
 	
 	public Long getId() {
@@ -81,5 +84,13 @@ public class Provedor {
 
 	public void setMateriais(List<Material> materiais) {
 		this.materiais = materiais;
+	}
+
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 }

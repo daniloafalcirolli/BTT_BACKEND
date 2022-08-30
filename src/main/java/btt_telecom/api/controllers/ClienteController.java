@@ -2,6 +2,7 @@ package btt_telecom.api.controllers;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.external.Geocoder;
 import btt_telecom.api.models.Cliente;
 import btt_telecom.api.repositories.ClienteRepository;
 
@@ -67,6 +69,33 @@ public class ClienteController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/import")
+	private ResponseEntity<HttpStatus> importCsv(@RequestBody String body){
+		try {
+			JSONArray jsonarray = new JSONArray(body);
+			
+			Geocoder g = new Geocoder();
+			for(int i = 0; i < jsonarray.length(); i++) {
+				JSONObject json = new JSONObject(jsonarray.get(i).toString());
+				System.out.println(jsonarray.get(i).toString());
+				Cliente cliente = new Cliente();
+				cliente.setCnpj(json.getString("cnpj"));
+				cliente.setCpf(json.getString("cpf"));
+				cliente.setNome(json.getString("nome").toUpperCase());
+				cliente.setEndereco(json.getString("endereco").toUpperCase());
+				cliente.setContrato(json.getString("contrato"));
+				JSONObject j = g.GeocodeSync(json.getString("endereco"));
+				cliente.setLatitude(j.getString("lat"));
+				cliente.setLongitude(j.getString("lng"));
+				clienteRepository.save(cliente);
+			}
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

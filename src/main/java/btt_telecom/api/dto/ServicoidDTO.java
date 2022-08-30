@@ -33,6 +33,8 @@ public class ServicoidDTO {
 	
 	private String relatorio;
 	
+	private String hora_finalizacao;
+	
 	public ServicoidDTO(Servico servico) {
 		this.id = servico.getId();
 		this.cliente = servico.getCliente();
@@ -142,5 +144,13 @@ public class ServicoidDTO {
 
 	public void setRelatorio(String relatorio) {
 		this.relatorio = relatorio;
+	}
+
+	public String getHora_finalizacao() {
+		return hora_finalizacao;
+	}
+
+	public void setHora_finalizacao(String hora_finalizacao) {
+		this.hora_finalizacao = hora_finalizacao;
 	}
 }

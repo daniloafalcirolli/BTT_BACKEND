@@ -13,6 +13,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Servico {
@@ -47,6 +49,9 @@ public class Servico {
 	private String cod_quebra;
 	
 	private Date data_finalizacao;
+	
+	@Temporal(TemporalType.TIME)
+	private Date hora_finalizacao;
 
 	@Lob
 	@Column(name = "relatorio", length = 2048)
@@ -150,5 +155,13 @@ public class Servico {
 
 	public void setRelatorio(String relatorio) {
 		this.relatorio = relatorio;
+	}
+
+	public Date getHora_finalizacao() {
+		return hora_finalizacao;
+	}
+
+	public void setHora_finalizacao(Date hora_finalizacao) {
+		this.hora_finalizacao = hora_finalizacao;
 	}
 }

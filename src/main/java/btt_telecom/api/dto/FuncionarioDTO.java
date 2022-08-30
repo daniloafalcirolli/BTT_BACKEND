@@ -7,10 +7,8 @@ import btt_telecom.api.models.Funcionario;
 public class FuncionarioDTO {
 	private Long id;
 	
-	private String primeiro_nome;
-	
-	private String ultimo_nome;
-	
+	private String nome;
+		
 	private String username;
 	
 	private String rg;
@@ -21,16 +19,20 @@ public class FuncionarioDTO {
 	
 	private boolean status;
 	
+	private String codigo_status;
+	
 	private Cidade cidade;
 	
 	private Empresa empresa;
+	
+	private String endereco;
+	
 	public FuncionarioDTO() {
 		
 	}
-	public FuncionarioDTO(Long id, String primeiro_nome, String ultimo_nome, String username, String rg, String cpf, String telefone, boolean status, Cidade cidade, Empresa empresa) {
+	public FuncionarioDTO(Long id, String nome, String username, String rg, String cpf, String telefone, boolean status, Cidade cidade, Empresa empresa) {
 		this.id = id;
-		this.primeiro_nome = primeiro_nome;
-		this.ultimo_nome = ultimo_nome;
+		this.nome = nome;
 		this.username = username;
 		this.rg = rg;
 		this.cpf = cpf;
@@ -42,8 +44,7 @@ public class FuncionarioDTO {
 	
 	public FuncionarioDTO(Funcionario func) {
 		this.id = func.getId();
-		this.primeiro_nome = func.getPrimeiro_nome();
-		this.ultimo_nome = func.getUltimo_nome();
+		this.nome = func.getNome();
 		this.username = func.getUsername();
 		this.rg = func.getRg();
 		this.cpf = func.getCpf();
@@ -61,28 +62,20 @@ public class FuncionarioDTO {
 		this.id = id;
 	}
 
-	public String getPrimeiro_nome() {
-		return primeiro_nome;
+	public String getNome() {
+		return nome;
 	}
-
-	public void setPrimeiro_nome(String primeiro_nome) {
-		this.primeiro_nome = primeiro_nome;
+	
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
-
+	
 	public Cidade getCidade() {
 		return cidade;
 	}
 
 	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
-	}
-
-	public String getUltimo_nome() {
-		return ultimo_nome;
-	}
-
-	public void setUltimo_nome(String ultimo_nome) {
-		this.ultimo_nome = ultimo_nome;
 	}
 
 	public String getUsername() {
@@ -132,4 +125,16 @@ public class FuncionarioDTO {
 	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
+	public String getEndereco() {
+		return endereco;
+	}
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
+	}
+	public String getCodigo_status() {
+		return codigo_status;
+	}
+	public void setCodigo_status(String codigo_status) {
+		this.codigo_status = codigo_status;
+	}	
 }

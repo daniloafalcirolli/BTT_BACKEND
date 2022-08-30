@@ -19,6 +19,8 @@ public class ServicoProvedor {
 		
 	private String servico;
 	
+	private String identificador;
+	
 	public ServicoProvedor(){
 		
 	}
@@ -58,5 +60,13 @@ public class ServicoProvedor {
 			return false;
 		ServicoProvedor other = (ServicoProvedor) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 }

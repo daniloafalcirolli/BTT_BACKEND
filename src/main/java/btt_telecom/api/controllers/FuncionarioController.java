@@ -102,9 +102,9 @@ public class FuncionarioController {
 			json = new JSONObject(body);
 			Funcionario func = new Funcionario();
 			
-			func.setPrimeiro_nome(json.getString("primeiro_nome"));
-			func.setUltimo_nome(json.getString("ultimo_nome"));
+			func.setNome(json.getString("nome"));
 			func.setUsername(json.getString("username"));
+			func.setLogin_provedor(json.getString("login_provedor").toUpperCase());
 			func.setCpf(json.getString("cpf"));
 			func.setRg(json.getString("rg"));
 			func.setTelefone(json.getString("telefone"));
@@ -139,9 +139,9 @@ public class FuncionarioController {
 			json = new JSONObject(body);
 			Funcionario f = funcionarioRepository.findById(id).get();
 			if(f != null) {
-				f.setPrimeiro_nome(json.getString("primeiro_nome"));
-				f.setUltimo_nome(json.getString("ultimo_nome"));
+				f.setNome(json.getString("nome"));
 				f.setUsername(json.getString("username"));
+				f.setLogin_provedor(json.getString("login_provedor").toUpperCase());
 				f.setCpf(json.getString("cpf"));
 				f.setRg(json.getString("rg"));
 				f.setTelefone(json.getString("telefone"));

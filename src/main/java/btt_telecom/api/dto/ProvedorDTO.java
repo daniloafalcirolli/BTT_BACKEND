@@ -7,17 +7,21 @@ public class ProvedorDTO {
 	
 	private String name;
 	
+	private String identificador;
+	
 	public ProvedorDTO() {
 	}
 
 	public ProvedorDTO(Provedor provedor) {
 		this.id = provedor.getId();
 		this.name = provedor.getName();
+		this.identificador = provedor.getIdentificador();
 	}
 
-	public ProvedorDTO(Long id, String name) {
+	public ProvedorDTO(Long id, String name, String identificador) {
 		this.id = id;
 		this.name = name;
+		this.identificador = identificador;
 	}
 
 	public Long getId() {
@@ -34,5 +38,13 @@ public class ProvedorDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 }
