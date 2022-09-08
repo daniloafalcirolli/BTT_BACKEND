@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import btt_telecom.api.modules.funcionario.model.Funcionario;
+
 @Entity
 @Table(name = "rotas")
 public class Rota {

@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.models.Empresa;
-import btt_telecom.api.models.Funcionario;
+import btt_telecom.api.modules.funcionario.model.Funcionario;
+import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.repositories.EmpresaRepository;
-import btt_telecom.api.repositories.FuncionarioRepository;
 
 @RestController
 @RequestMapping(path = "/api/empresa")

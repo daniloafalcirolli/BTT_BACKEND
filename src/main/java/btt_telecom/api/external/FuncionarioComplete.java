@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.openjson.JSONObject;
 
-import btt_telecom.api.dto.FuncionarioDTO;
-import btt_telecom.api.models.Funcionario;
+import btt_telecom.api.modules.funcionario.dto.FuncionarioDTO;
+import btt_telecom.api.modules.funcionario.model.Funcionario;
+import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.repositories.CidadeRepository;
 import btt_telecom.api.repositories.EmpresaRepository;
-import btt_telecom.api.repositories.FuncionarioRepository;
 import btt_telecom.api.repositories.StatusFuncRepository;
 
 @RestController
