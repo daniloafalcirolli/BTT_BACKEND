@@ -2,8 +2,10 @@ package btt_telecom.api.controllers;
 
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +32,22 @@ public class EmpresaController {
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 	
-	@GetMapping
-	private ResponseEntity<List<Empresa>> findAll(){
+	@GetMapping("/page")
+	private ResponseEntity<Page<Empresa>> findAllWithPage(Pageable pageable){
 		try {
-			return new ResponseEntity<>(empresaRepository.findAll(), HttpStatus.OK);
+			return new ResponseEntity<>(empresaRepository.findAll(pageable), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@GetMapping("/page")
-	private ResponseEntity<Page<Empresa>> findAllWithPage(Pageable pageable){
+	@PostMapping("/search")
+	private ResponseEntity<Page<Empresa>> search(@RequestBody String body){
 		try {
-			return new ResponseEntity<>(empresaRepository.findAll(pageable), HttpStatus.OK);
+			JSONObject json = new JSONObject(body);
+			List<Empresa> result = empresaRepository.search(json.getString("value"));
+			Page<Empresa> page = new PageImpl<>(result);
+			return new ResponseEntity<>(page, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

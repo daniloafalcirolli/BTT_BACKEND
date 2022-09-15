@@ -1,5 +1,6 @@
 package btt_telecom.api.modules.funcionario.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,7 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>{
 	Optional<Funcionario> findByCpf(String cpf);
 	
 	Optional<Funcionario> findByNome(String nome);
+	
+	@Query(value = "select * from funcionario where nome like %?1% or cpf like %?1% or rg like %?1% or telefone like %?1%", nativeQuery = true)
+	List<Funcionario> search(String value);
 }

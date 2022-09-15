@@ -2,10 +2,13 @@ package btt_telecom.api.modules.funcionario.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +64,20 @@ public class FuncionarioController {
 			
 			return new ResponseEntity<>(page, HttpStatus.OK);
 		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/search")
+	private ResponseEntity<Page<FuncionarioDTO>> filter(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Funcionario> result = funcionarioRepository.search(json.getString("value"));
+			List<FuncionarioDTO> resultDTO = result.stream().map(x -> new FuncionarioDTO(x)).collect(Collectors.toList());
+			Page<FuncionarioDTO> page = new PageImpl<>(resultDTO);			
+			return new ResponseEntity<>(page, HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
