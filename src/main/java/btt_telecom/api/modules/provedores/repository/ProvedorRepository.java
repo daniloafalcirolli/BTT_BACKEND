@@ -16,4 +16,7 @@ public interface ProvedorRepository extends JpaRepository<Provedor, Long> {
 	
 	@Query(value = "SELECT id, name, identificador FROM provedor p inner join provedor_materiais_aplicados pma on pma.materiais_aplicados_id = ?1", nativeQuery = true)
 	List<Provedor> findByMaterialAplicado(Long id_material);
+	
+	@Query(value = "select * from provedor where name like %?1% or id_senior like %?1%", nativeQuery = true)
+	List<Provedor> search(String value);
 }

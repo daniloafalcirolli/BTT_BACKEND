@@ -52,6 +52,7 @@ public class Provedor {
 	public Provedor(ProvedorDTO provedorDTO) {
 		this.id = provedorDTO.getId();
 		this.name = provedorDTO.getName();
+		this.id_senior = provedorDTO.getId_senior();
 		this.identificador = provedorDTO.getIdentificador();
 	}
 	
