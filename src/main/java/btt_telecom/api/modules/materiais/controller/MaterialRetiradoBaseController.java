@@ -23,10 +23,30 @@ import btt_telecom.api.modules.materiais.repository.MaterialRetiradoBaseReposito
 
 @RestController
 @RequestMapping(path = "/api/material/retirado")
-public class MaterialRetiradoController {
+public class MaterialRetiradoBaseController {
 	
 	@Autowired
 	private MaterialRetiradoBaseRepository retiradoBaseRepository;
+	
+	@GetMapping
+	public ResponseEntity<List<MaterialRetiradoBase>> findAll() {
+		try {
+			return new ResponseEntity<>(retiradoBaseRepository.findAll(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/all/search")
+	public ResponseEntity<List<MaterialRetiradoBase>> allToSearch(@RequestBody String body) {
+		try {
+			JSONObject json = new JSONObject(body);
+			List<MaterialRetiradoBase> result = retiradoBaseRepository.search(json.getString("value"));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	@GetMapping(path = "/page")
 	public ResponseEntity<Page<MaterialRetiradoBase>> findAllWithPage(Pageable pageable) {
@@ -58,6 +78,12 @@ public class MaterialRetiradoController {
 	
 	@PostMapping
 	public ResponseEntity<HttpStatus> save(@RequestBody MaterialRetiradoBase materialRetiradoBase) {
+		retiradoBaseRepository.save(materialRetiradoBase);
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+	
+	@PutMapping
+	public ResponseEntity<HttpStatus> edit(@RequestBody MaterialRetiradoBase materialRetiradoBase) {
 		retiradoBaseRepository.save(materialRetiradoBase);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

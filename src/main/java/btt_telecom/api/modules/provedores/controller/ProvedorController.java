@@ -40,7 +40,7 @@ public class ProvedorController {
 	
 	@Autowired
 	private ProvedorRepository provedorRepository;
-//	
+	
 	@Autowired
 	private MaterialAplicadoBaseRepository aplicadoBaseRepository;
 
@@ -117,7 +117,7 @@ public class ProvedorController {
 		 
 	}
 	
-	@PostMapping(path = "/create")
+	@PostMapping
 	public ResponseEntity<HttpStatus> save(@RequestBody ProvedorDTO provedorDTO){
 		try {
 			if(provedorRepository.save(new Provedor(provedorDTO)) != null) {
@@ -214,7 +214,7 @@ public class ProvedorController {
 			for(int i = 0; i < jsonMatReti.length(); i++) {
 				JSONObject jsonReti = new JSONObject(jsonMatReti.get(i).toString());
 				
-				MaterialRetiradoBase materialRetirado = retiradoBaseRepository.findById(jsonReti.getLong("id")).get();
+				MaterialRetiradoBase materialRetirado = retiradoBaseRepository.findById(Long.parseLong(jsonReti.getString("id"))).get();
 				materiais_retirados.add(materialRetirado);
 			}
 			
@@ -231,16 +231,18 @@ public class ProvedorController {
 		}
 	}
 
-	@PutMapping(path = "/edit")
+	@PutMapping
 	public ResponseEntity<HttpStatus> edit(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
 			Provedor p = provedorRepository.findById(json.getLong("id")).get();
 			p.setName(json.getString("name"));
 			p.setIdentificador(json.getString("identificador").toUpperCase());
+			p.setId_senior(json.getString("id_senior").toUpperCase());
 			provedorRepository.save(p);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

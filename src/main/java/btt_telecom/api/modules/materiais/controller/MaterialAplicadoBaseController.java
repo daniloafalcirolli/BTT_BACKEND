@@ -27,9 +27,21 @@ public class MaterialAplicadoBaseController {
 	@Autowired
 	private MaterialAplicadoBaseRepository aplicadoBaseRepository;
 
-	@GetMapping(path = "/all")
+	@GetMapping
 	public ResponseEntity<List<MaterialAplicadoBase>> findAll() {
 		return new ResponseEntity<>(aplicadoBaseRepository.findAll(), HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/all/search")
+	public ResponseEntity<List<MaterialAplicadoBase>> allToSearch(@RequestBody String body) {
+		try {
+			JSONObject json = new JSONObject(body);
+			List<MaterialAplicadoBase> result = aplicadoBaseRepository.search(json.getString("value"));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(path = "/page")
@@ -62,8 +74,16 @@ public class MaterialAplicadoBaseController {
 	@PostMapping
 	public ResponseEntity<HttpStatus> save(@RequestBody MaterialAplicadoBase materialAplicadoBase) {
 		aplicadoBaseRepository.save(materialAplicadoBase);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+	
+	@PutMapping
+	public ResponseEntity<HttpStatus> edit(@RequestBody MaterialAplicadoBase materialAplicadoBase) {
+		aplicadoBaseRepository.save(materialAplicadoBase);
+		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
 
 	@PutMapping(path = "/status/{id}")
 	private ResponseEntity<HttpStatus> alterarStatus(@PathVariable(name = "id") Long id) {
