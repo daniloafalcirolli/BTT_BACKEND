@@ -86,9 +86,6 @@ public class ServicosController {
 		try {
 			if(servicoRepository.existsById(id)) {
 				ServicoidDTO serv = new ServicoidDTO(servicoRepository.findById(id).get());
-				if(rotaRepository.findRotaById_serv(id) != (null)) {
-					serv.setHora_finalizacao(rotaRepository.findRotaById_serv(id).getHora().toString());
-				}
 				return new ResponseEntity<>(serv, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
