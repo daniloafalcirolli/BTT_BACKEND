@@ -2,8 +2,10 @@ package btt_telecom.api.controllers;
 
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.models.Funcionario;
 import btt_telecom.api.models.StatusFunc;
 import btt_telecom.api.repositories.StatusFuncRepository;
 
@@ -25,15 +26,6 @@ import btt_telecom.api.repositories.StatusFuncRepository;
 public class StatusFuncController {
 	@Autowired
 	private StatusFuncRepository statusFuncRepository;
-	
-	@GetMapping
-	private ResponseEntity<List<StatusFunc>> findAll(){
-		try {
-			return new ResponseEntity<>(statusFuncRepository.findAll(), HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
 	
 	@GetMapping("/page")
 	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
@@ -44,6 +36,17 @@ public class StatusFuncController {
 		}
 	}
 	
+	@PostMapping(path = "/search")
+	private ResponseEntity<Page<StatusFunc>> search(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<StatusFunc> result = statusFuncRepository.search(json.getString("value"));
+			Page<StatusFunc> page = new PageImpl<>(result);
+			return new ResponseEntity<>(page, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@GetMapping(path = "/{id}")
 	private ResponseEntity<StatusFunc> findById(@PathVariable(name = "id") Long id){

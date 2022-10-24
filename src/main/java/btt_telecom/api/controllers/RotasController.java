@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.RotaDTO;
-import btt_telecom.api.models.Funcionario;
 import btt_telecom.api.models.Rota;
-import btt_telecom.api.repositories.FuncionarioRepository;
+import btt_telecom.api.modules.funcionario.model.Funcionario;
+import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.repositories.RotaRepository;
 
 @RestController
