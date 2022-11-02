@@ -130,26 +130,6 @@ public class ProvedorController {
 		}
 	}
 	
-	@PostMapping(path = "/add")
-	public ResponseEntity<HttpStatus> addServicoProvedor(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			ServicoProvedor sp = new ServicoProvedor(json.getString("servico"));
-			
-			servicoProvedorRepository.save(sp);
-			
-			Provedor p = provedorRepository.findById(json.getLong("id_provedor")).get();
-			List<ServicoProvedor> list = p.getServicos();
-			list.add(sp);
-			p.setServicos(list);
-			
-			provedorRepository.save(p);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
 	@PostMapping(path = "/campos")
 	public ResponseEntity<HttpStatus> camposAplicadosAoProvedor(@RequestBody String body){
 		try {
@@ -247,6 +227,53 @@ public class ProvedorController {
 		}
 	}
 	
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
+		try {
+			if(provedorRepository.existsById(id)) {
+				Provedor p = provedorRepository.findById(id).get();
+				List<ServicoProvedor> list = p.getServicos();
+				p.setServicos(null);
+				p.setMateriais_aplicados(null);
+				p.setMateriais_retirados(null);
+				p.setCampos(null);
+				provedorRepository.save(p);
+				list.forEach(x -> {
+					servicoProvedorRepository.deleteById(x.getId());
+				});
+				provedorRepository.deleteById(id);
+				return new ResponseEntity<>(HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}	
+	
+	@PostMapping(path = "/add")
+	public ResponseEntity<HttpStatus> addServicoProvedor(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			ServicoProvedor sp = new ServicoProvedor();
+			sp.setServico(json.getString("servico"));
+			sp.setIdentificador(json.getString("identificador").toUpperCase());
+			sp.setId_senior(json.getString("id_senior").toUpperCase());
+			servicoProvedorRepository.save(sp);
+			
+			Provedor p = provedorRepository.findById(json.getLong("id_provedor")).get();
+			List<ServicoProvedor> list = p.getServicos();
+			list.add(sp);
+			p.setServicos(list);
+			
+			provedorRepository.save(p);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PutMapping(path = "/servico/edit")
 	public ResponseEntity<HttpStatus> editServico(@RequestBody String body){
 		try {
@@ -254,7 +281,8 @@ public class ProvedorController {
 			ServicoProvedor sp = servicoProvedorRepository.findById(json.getLong("id_serv")).get();
 			sp.setServico(json.getString("servico"));
 			sp.setIdentificador(json.getString("identificador").toUpperCase());
-	
+			sp.setId_senior(json.getString("id_senior").toUpperCase());
+			
 			servicoProvedorRepository.save(sp);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -285,27 +313,5 @@ public class ProvedorController {
 		}
 	}
 	
-	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
-		try {
-			if(provedorRepository.existsById(id)) {
-				Provedor p = provedorRepository.findById(id).get();
-				List<ServicoProvedor> list = p.getServicos();
-				p.setServicos(null);
-//				p.setMateriais(null);
-				p.setCampos(null);
-				provedorRepository.save(p);
-				list.forEach(x -> {
-					servicoProvedorRepository.deleteById(x.getId());
-				});
-				provedorRepository.deleteById(id);
-				return new ResponseEntity<>(HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}	
+
 }
