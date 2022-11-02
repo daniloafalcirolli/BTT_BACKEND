@@ -2,7 +2,6 @@ package btt_telecom.api.modules.provedores.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,7 +251,18 @@ public class ProvedorController {
 		}
 	}	
 	
-	@PostMapping(path = "/add")
+	@PostMapping(path = "/servico/search")
+	public ResponseEntity<List<ServicoProvedor>> searchServicosByProvedor(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<ServicoProvedor> result = servicoProvedorRepository.search(json.getLong("id_provedor"), json.getString("value"));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/servico/add")
 	public ResponseEntity<HttpStatus> addServicoProvedor(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
