@@ -44,6 +44,10 @@ public class Funcionario {
 	private String placa;
 	
 	private String kilometragem_por_litro;
+	
+	private String id_senior;
+	
+	private String pis;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Imagem imagem;
@@ -199,5 +203,21 @@ public class Funcionario {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public String getId_senior() {
+		return id_senior;
+	}
+
+	public void setId_senior(String id_senior) {
+		this.id_senior = id_senior;
+	}
+
+	public String getPis() {
+		return pis;
+	}
+
+	public void setPis(String pis) {
+		this.pis = pis;
 	}
 }

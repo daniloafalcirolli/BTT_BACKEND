@@ -13,9 +13,9 @@ import com.github.openjson.JSONObject;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioDTO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
+import btt_telecom.api.modules.funcionario.repository.StatusFuncRepository;
 import btt_telecom.api.repositories.CidadeRepository;
 import btt_telecom.api.repositories.EmpresaRepository;
-import btt_telecom.api.repositories.StatusFuncRepository;
 
 @RestController
 @RequestMapping("/complete/funcionario")
@@ -76,15 +76,15 @@ public class FuncionarioComplete {
 			}
 
 			if(funcsDTO.get(i).getEmpresa().getId().equals(Long.parseLong("3"))) {
-				f.setEmpresa(empresaRepository.findById(Long.parseLong("3502")).get());
+				f.setEmpresa(empresaRepository.findById(Long.parseLong("20152")).get());
 			}else if(funcsDTO.get(i).getEmpresa().getId().equals(Long.parseLong("4"))){
-				f.setEmpresa(empresaRepository.findById(Long.parseLong("3602")).get());
+				f.setEmpresa(empresaRepository.findById(Long.parseLong("20153")).get());
 			}
 			
 			if(cidadeRepository.existsByCidade(funcsDTO.get(i).getCidade().getCidade())) {
 				f.setCidade(cidadeRepository.findByCidade(funcsDTO.get(i).getCidade().getCidade()));
 			}else {
-				f.setCidade(cidadeRepository.findById(Long.parseLong(String.valueOf("8303"))).get());
+				f.setCidade(cidadeRepository.findById(Long.parseLong(String.valueOf("20202"))).get());
 			}
 			
 			try {

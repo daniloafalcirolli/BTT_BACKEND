@@ -1,4 +1,4 @@
-package btt_telecom.api.controllers;
+package btt_telecom.api.modules.funcionario.controller;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.models.StatusFunc;
-import btt_telecom.api.repositories.StatusFuncRepository;
+import btt_telecom.api.modules.funcionario.model.StatusFunc;
+import btt_telecom.api.modules.funcionario.repository.StatusFuncRepository;
 
 @RestController
 @RequestMapping(path = "/api/status/func")

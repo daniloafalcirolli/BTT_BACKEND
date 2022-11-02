@@ -1,11 +1,11 @@
-package btt_telecom.api.repositories;
+package btt_telecom.api.modules.funcionario.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import btt_telecom.api.models.StatusFunc;
+import btt_telecom.api.modules.funcionario.model.StatusFunc;
 
 public interface StatusFuncRepository extends JpaRepository<StatusFunc, Long>{
 	boolean existsByCodigo(Long codigo);
