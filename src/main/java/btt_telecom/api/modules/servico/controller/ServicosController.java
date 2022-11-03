@@ -156,7 +156,10 @@ public class ServicosController {
 	@PostMapping(path = "/create")
 	public ResponseEntity<HttpStatus> save(@RequestBody String body) throws ParseException, JSONException{
 		try {
-			Date data = new Date();
+			SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
+			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+			Date hora = formatoHora.parse(formatoHora.format(new Date()));
+			Date data = formatoData.parse(formatoHora.format(new Date()));
 			Servico s = new Servico();
 			JSONObject json = new JSONObject(body);
 			Cliente c = clienteRepository.findById(json.getLong("id_cliente")).get();
@@ -171,6 +174,7 @@ public class ServicosController {
 			s.setStatus("em andamento");
 			s.setProtocolo(json.getString("protocolo"));
 			s.setData(data);
+			s.setHora(hora);
 
 			if(servicoRepository.save(s) != null) {
 				return new ResponseEntity<>(HttpStatus.CREATED);
