@@ -19,6 +19,8 @@ public class Meta {
 	private String meta_key;
 	
 	private String meta_value;
+	
+	private String description;
 
 	public Long getId() {
 		return id;
@@ -42,5 +44,13 @@ public class Meta {
 
 	public void setMeta_value(String meta_value) {
 		this.meta_value = meta_value;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
