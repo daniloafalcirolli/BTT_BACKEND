@@ -70,7 +70,7 @@ public class ImagensProvedorController {
 	private ResponseEntity<HttpStatus> save(@RequestBody ImagemProvedor imagemProvedor){
 		try {
 			if(imagensProvedorRepository.save(imagemProvedor) != null) {
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.CREATED);
 			}else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
