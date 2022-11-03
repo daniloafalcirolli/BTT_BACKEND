@@ -38,6 +38,9 @@ public class Provedor {
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<CamposProvedorBase> campos;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	private List<ImagemProvedor> imagens;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<MaterialAplicadoBase> materiais_aplicados;
@@ -94,6 +97,14 @@ public class Provedor {
 
 	public void setCampos(List<CamposProvedorBase> campos) {
 		this.campos = campos;
+	}
+
+	public List<ImagemProvedor> getImagens() {
+		return imagens;
+	}
+
+	public void setImagens(List<ImagemProvedor> imagens) {
+		this.imagens = imagens;
 	}
 
 	public String getIdentificador() {

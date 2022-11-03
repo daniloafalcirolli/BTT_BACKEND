@@ -24,9 +24,11 @@ import btt_telecom.api.modules.materiais.repository.MaterialAplicadoBaseReposito
 import btt_telecom.api.modules.materiais.repository.MaterialRetiradoBaseRepository;
 import btt_telecom.api.modules.provedores.dto.ProvedorDTO;
 import btt_telecom.api.modules.provedores.model.CamposProvedorBase;
+import btt_telecom.api.modules.provedores.model.ImagemProvedor;
 import btt_telecom.api.modules.provedores.model.Provedor;
 import btt_telecom.api.modules.provedores.model.ServicoProvedor;
 import btt_telecom.api.modules.provedores.repository.CamposProvedorBaseRepository;
+import btt_telecom.api.modules.provedores.repository.ImagensProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ServicoProvedorRepository;
 
@@ -48,6 +50,9 @@ public class ProvedorController {
 	
 	@Autowired
 	private CamposProvedorBaseRepository camposProvedorBaseRepository;
+	
+	@Autowired
+	private ImagensProvedorRepository imagensProvedorRepository;
 
 	@GetMapping
 	public ResponseEntity<List<ProvedorDTO>> findAll(){
@@ -152,6 +157,33 @@ public class ProvedorController {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+		}
+	}
+	
+	@PostMapping(path = "/imagens")
+	public ResponseEntity<HttpStatus> imagensAplicadasAoProvedor(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			JSONArray jsonImagens = json.getJSONArray("imagens");
+
+			List<ImagemProvedor> imagens_aplicadas = new ArrayList<>();
+			for(int i = 0; i < jsonImagens.length(); i++) {
+				JSONObject jsonImagem = new JSONObject(jsonImagens.get(i).toString());
+				
+				ImagemProvedor imagemProvedor = imagensProvedorRepository.findById(jsonImagem.getLong("id")).get();
+				imagens_aplicadas.add(imagemProvedor);
+			}
+			
+			Provedor p = provedorRepository.findById(json.getLong("id")).get();
+			p.setImagens(imagens_aplicadas);
+			
+			if(provedorRepository.save(p) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 		}
 	}
