@@ -159,7 +159,7 @@ public class ServicosController {
 			SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
 			Date hora = formatoHora.parse(formatoHora.format(new Date()));
-			Date data = formatoData.parse(formatoHora.format(new Date()));
+			Date data = formatoData.parse(formatoData.format(new Date()));
 			Servico s = new Servico();
 			JSONObject json = new JSONObject(body);
 			Cliente c = clienteRepository.findById(json.getLong("id_cliente")).get();
