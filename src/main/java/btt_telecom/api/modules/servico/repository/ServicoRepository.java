@@ -39,11 +39,5 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 	@Query(value = "select * from servico where data_finalizacao >= to_date(?1, 'yyyy-MM-dd') and data_finalizacao <= to_date(?2, 'yyyy-MM-dd') and funcionario_id = ?3 and status = ?4 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
 	List<Servico> findServicesInIntervalAndFuncAndStatus(String data_inicio, String data_final, Long id, String status);
 	
-	
 	boolean existsByFuncionario_id(Long funcionario_id);
-	
-	
-	
-//	@Query(value = "select * from servico where data >= to_date(?1, 'yyyy-MM-dd') ", nativeQuery = true)
-//	List<Servico> findServicesByDate
 }
