@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import btt_telecom.api.models.Cliente;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
+import btt_telecom.api.modules.imagens.model.Imagem;
+import btt_telecom.api.modules.imagens.repository.ImagemRepository;
 import btt_telecom.api.modules.materiais.model.MaterialAplicado;
 import btt_telecom.api.modules.materiais.model.MaterialRetirado;
 import btt_telecom.api.modules.materiais.repository.MaterialAplicadoBaseRepository;
@@ -70,6 +72,9 @@ public class ServicosController {
 
 	@Autowired
 	private CamposProvedorBaseRepository campoBaseRepository;
+	
+	@Autowired
+	private ImagemRepository imagemRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Servico>> findAll(){
@@ -202,6 +207,7 @@ public class ServicosController {
 				JSONArray jsonMatApli = json.getJSONArray("materiais_aplicados");
 				JSONArray jsonMatReti = json.getJSONArray("materiais_retirados");
 				JSONArray jsonCamposApli = json.getJSONArray("campos_aplicados");
+				JSONArray jsonImagens = json.getJSONArray("imagens");
 				
 				List<MaterialAplicado> materiais_aplicados = new ArrayList<>();
 				for(int i = 0; i < jsonMatApli.length(); i++) {
@@ -236,9 +242,24 @@ public class ServicosController {
 					campos_aplicados.add(campoAplicado);
 				}
 				
+				List<Imagem> imagens = new ArrayList<>();
+				for(int i = 0; i < jsonImagens.length(); i++) {
+					JSONObject campo = new JSONObject(jsonImagens.get(i).toString());
+					
+					Imagem imagem = new Imagem();
+					imagem.setContent(campo.getString("content").getBytes());
+					imagem.setFileName(campo.getString("fileName"));
+					imagem.setFileType(campo.getString("fileType"));
+					
+					imagem = imagemRepository.save(imagem);
+					
+					imagens.add(imagem);
+				}
+				
 				s.setMateriais_aplicados(materiais_aplicados);
 				s.setMateriais_retirados(materiais_retirados);
 				s.setCampos_aplicados(campos_aplicados);
+				s.setImagens(imagens);
 				SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
 				SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
 				Date hora = formatoHora.parse(formatoHora.format(new Date()));

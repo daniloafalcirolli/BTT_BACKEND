@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -17,47 +18,55 @@ public class Imagem {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	private String name;
+	private String fileName;
 	
-	private String type;
+	private String fileType;
 	
-	@Column(length = 5000000)
-	private byte[] picByte;
+	@Lob
+	private byte[] content;
 	
 	
 	public Imagem() {
 		
 	}
 
+
 	public Long getId() {
 		return id;
 	}
+
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+
+	public String getFileName() {
+		return fileName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
-	public String getType() {
-		return type;
+
+	public String getFileType() {
+		return fileType;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
 	}
 
-	public byte[] getPicByte() {
-		return picByte;
+
+	public byte[] getContent() {
+		return content;
 	}
 
-	public void setPicByte(byte[] picByte) {
-		this.picByte = picByte;
+
+	public void setContent(byte[] content) {
+		this.content = content;
 	}
 }
