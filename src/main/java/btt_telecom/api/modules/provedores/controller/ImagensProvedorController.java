@@ -33,6 +33,15 @@ public class ImagensProvedorController {
 	@Autowired
 	private ProvedorRepository provedorRepository;
 	
+	@GetMapping
+	private ResponseEntity<List<ImagemProvedor>> findAll(){
+		try {
+			return new ResponseEntity<>(imagensProvedorRepository.findAll(), HttpStatus.OK);
+		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(path = "/page")
 	private ResponseEntity<Page<ImagemProvedor>> findAllWithPage(Pageable pageable){
 		try {
