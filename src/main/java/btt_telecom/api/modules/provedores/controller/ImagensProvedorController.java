@@ -42,6 +42,17 @@ public class ImagensProvedorController {
 		}
 	}
 	
+	
+	@GetMapping(path = "/all")
+	private ResponseEntity<List<ImagemProvedor>> findAllWithoutPagination(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			return new ResponseEntity<>(imagensProvedorRepository.search(json.getString("value")), HttpStatus.OK);
+		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(path = "/page")
 	private ResponseEntity<Page<ImagemProvedor>> findAllWithPage(Pageable pageable){
 		try {
