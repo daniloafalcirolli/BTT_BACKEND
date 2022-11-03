@@ -16,9 +16,11 @@ public class Meta {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	private String meta_key;
+    @Column(name = "meta_key")
+	private String metaKey;
 	
-	private String meta_value;
+    @Column(name = "meta_value")
+	private String metaValue;
 	
 	private String description;
 
@@ -30,20 +32,20 @@ public class Meta {
 		this.id = id;
 	}
 
-	public String getMeta_key() {
-		return meta_key;
+	public String getMetaKey() {
+		return metaKey;
 	}
 
-	public void setMeta_key(String meta_key) {
-		this.meta_key = meta_key;
+	public void setMetaKey(String metaKey) {
+		this.metaKey = metaKey;
 	}
 
-	public String getMeta_value() {
-		return meta_value;
+	public String getMetaValue() {
+		return metaValue;
 	}
 
-	public void setMeta_value(String meta_value) {
-		this.meta_value = meta_value;
+	public void setMetaValue(String metaValue) {
+		this.metaValue = metaValue;
 	}
 
 	public String getDescription() {

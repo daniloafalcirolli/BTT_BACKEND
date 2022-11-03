@@ -13,7 +13,7 @@ public interface MetaRepository extends JpaRepository<Meta, Long>{
 	@Query(value = "SELECT * FROM META WHERE UPPER(META_KEY) LIKE %?1% OR UPPER(META_VALUE) LIKE %?1% OR UPPER(DESCRIPTION) LIKE %?1%", nativeQuery = true)
 	List<Meta> search(String value);
 	
-	boolean existsByMeta_key(String key);
-	
-	Optional<Meta> findByMeta_key(String key);
+	boolean existsByMetaKey(String meta_key);
+
+	Optional<Meta> findByMetaKey(String key);
 }

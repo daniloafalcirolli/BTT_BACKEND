@@ -66,8 +66,8 @@ public class MetaController {
 	@GetMapping(path = "/key/{key}")
 	private ResponseEntity<Meta> getByKey(@PathVariable(name = "key") String key){
 		try {
-			if(metaRepository.existsByMeta_key(key)) {
-				return new ResponseEntity<>(metaRepository.findByMeta_key(key).get(), HttpStatus.OK);
+			if(metaRepository.existsByMetaKey(key)) {
+				return new ResponseEntity<>(metaRepository.findByMetaKey(key).get(), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
