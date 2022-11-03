@@ -43,7 +43,7 @@ public class ImagensProvedorController {
 	}
 	
 	
-	@GetMapping(path = "/all")
+	@PostMapping(path = "/all")
 	private ResponseEntity<List<ImagemProvedor>> findAllWithoutPagination(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
