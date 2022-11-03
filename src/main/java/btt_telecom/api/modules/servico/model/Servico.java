@@ -67,7 +67,13 @@ public class Servico {
 	
 	@Temporal(TemporalType.TIME)
 	private Date hora;
+	
+	@Temporal(TemporalType.DATE)
+	private Date data_finalizacao;
 
+	@Temporal(TemporalType.TIME)
+	private Date hora_finalizacao;
+	
 	@Lob
 	@Column(name = "relatorio", length = 2048)
 	private String relatorio;
@@ -194,5 +200,21 @@ public class Servico {
 
 	public void setHora(Date hora) {
 		this.hora = hora;
+	}
+
+	public Date getData_finalizacao() {
+		return data_finalizacao;
+	}
+
+	public void setData_finalizacao(Date data_finalizacao) {
+		this.data_finalizacao = data_finalizacao;
+	}
+
+	public Date getHora_finalizacao() {
+		return hora_finalizacao;
+	}
+
+	public void setHora_finalizacao(Date hora_finalizacao) {
+		this.hora_finalizacao = hora_finalizacao;
 	}
 }

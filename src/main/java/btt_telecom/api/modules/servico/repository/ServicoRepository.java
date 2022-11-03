@@ -18,7 +18,7 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 	@Query(value = "select * from servico where funcionario_id = ?1 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
 	List<Servico> findByFunc(Long id);
 	
-	@Query(value = "select * from servico where funcionario_id = ?1 and data_finalizacao = to_date(?2, 'yyyy-MM-dd') and status = ?3 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico where funcionario_id = ?1 and data = to_date(?2, 'yyyy-MM-dd') and status = ?3 order by data asc, hora asc", nativeQuery = true)
 	List<Servico> findByFuncAndExactlyDate(Long id, String data, String status);
 	
 	@Query(value = "select * from servico where status = ?1 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
