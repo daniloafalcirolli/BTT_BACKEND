@@ -56,7 +56,7 @@ public class FuncionarioController {
 		}
 	}
 	
-	@GetMapping(path = "/all/search")
+	@PostMapping(path = "/all/search")
 	private ResponseEntity<List<FuncionarioDTO>> findAll(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
