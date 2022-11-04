@@ -56,6 +56,18 @@ public class FuncionarioController {
 		}
 	}
 	
+	@GetMapping(path = "/all/search")
+	private ResponseEntity<List<FuncionarioDTO>> findAll(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Funcionario> result = funcionarioRepository.search(json.getString("value"));
+			List<FuncionarioDTO> resultDTO = result.stream().map(x -> new FuncionarioDTO(x)).collect(Collectors.toList());
+			return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping(path = "/page")
 	private ResponseEntity<Page<FuncionarioDTO>> findAllWithPage(Pageable pageable){
 		try {
