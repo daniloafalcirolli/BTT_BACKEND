@@ -247,7 +247,7 @@ public class ServicosController {
 					JSONObject campo = new JSONObject(jsonImagens.get(i).toString());
 					
 					Imagem imagem = new Imagem();
-					imagem.setContent(campo.getString("content").getBytes());
+					imagem.setContent(campo.getString("content"));
 					imagem.setFileName(campo.getString("fileName"));
 					imagem.setFileType(campo.getString("fileType"));
 					
