@@ -16,6 +16,8 @@ public class ServicoDTO {
 	private String protocolo;
 
 	private String provedor;	
+
+	private String servico;
 	
 	private String status;
 		
@@ -30,6 +32,7 @@ public class ServicoDTO {
 		this.protocolo = servico.getProtocolo();
 		this.status = servico.getStatus();
 		this.provedor = servico.getProvedor().getName();
+		this.servico = servico.getServicoProvedor().getServico();
 		if(servico.getHora_finalizacao() != (null)) {
 			this.hora_finalizacao = servico.getHora_finalizacao().toString();
 		}
@@ -61,6 +64,10 @@ public class ServicoDTO {
 
 	public String getProvedor() {
 		return provedor;
+	}
+
+	public String getServico() {
+		return servico;
 	}
 
 	public String getStatus() {
@@ -97,6 +104,10 @@ public class ServicoDTO {
 
 	public void setProvedor(String provedor) {
 		this.provedor = provedor;
+	}
+
+	public void setServico(String servico) {
+		this.servico = servico;
 	}
 
 	public void setStatus(String status) {
