@@ -36,6 +36,7 @@ import btt_telecom.api.modules.provedores.model.CamposProvedor;
 import btt_telecom.api.modules.provedores.model.Provedor;
 import btt_telecom.api.modules.provedores.model.ServicoProvedor;
 import btt_telecom.api.modules.provedores.repository.CamposProvedorBaseRepository;
+import btt_telecom.api.modules.provedores.repository.ImagensProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ServicoProvedorRepository;
 import btt_telecom.api.modules.servico.dto.ServicoDTO;
@@ -75,6 +76,9 @@ public class ServicosController {
 	
 	@Autowired
 	private ImagemRepository imagemRepository;
+	
+	@Autowired
+	private ImagensProvedorRepository imagensProvedorRepository;
 	
 	@GetMapping
 	public ResponseEntity<List<Servico>> findAll(){
@@ -250,6 +254,7 @@ public class ServicosController {
 					imagem.setContent(campo.getString("content"));
 					imagem.setFileName(campo.getString("fileName"));
 					imagem.setFileType(campo.getString("fileType"));
+					imagem.setImagem_provedor(imagensProvedorRepository.findById(campo.getLong("id_imagem_provedor")).get());
 					
 					imagem = imagemRepository.save(imagem);
 					

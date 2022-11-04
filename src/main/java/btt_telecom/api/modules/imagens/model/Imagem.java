@@ -6,8 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import btt_telecom.api.modules.provedores.model.ImagemProvedor;
 
 @Entity
 @Table(name = "imagens")
@@ -24,6 +27,9 @@ public class Imagem {
 	
 	@Lob
 	private String content;
+	
+	@OneToOne
+	private ImagemProvedor imagem_provedor;
 	
 	public Imagem() {
 		
@@ -67,5 +73,15 @@ public class Imagem {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+
+	public ImagemProvedor getImagem_provedor() {
+		return imagem_provedor;
+	}
+
+
+	public void setImagem_provedor(ImagemProvedor imagem_provedor) {
+		this.imagem_provedor = imagem_provedor;
 	}
 }
