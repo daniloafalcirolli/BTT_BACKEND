@@ -9,34 +9,34 @@ import btt_telecom.api.modules.servico.model.Servico;
 
 
 public interface ServicoRepository extends JpaRepository<Servico, Long>{
-	@Query(value = "select * from servico where protocolo = ?1 and data_finalizacao = to_date(?2, 'yyyy-MM-dd') order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.protocolo = ?1 and s.data = to_date(?2, 'yyyy-MM-dd') order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServiceByProtocolAndDate(String protocolo, String data);
 	
-	@Query(value = "select * from servico where funcionario_id = ?1 and status = ?2 and data_finalizacao >= to_date(?3, 'yyyy-MM-dd') and data_finalizacao <= to_date(?4, 'yyyy-MM-dd') order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.funcionario_id = ?1 and s.status = ?2 and s.data >= to_date(?3, 'yyyy-MM-dd') and s.data <= to_date(?4, 'yyyy-MM-dd') order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInProgressByFuncAndDate(Long id, String status, String data_inicio, String data_final);
 	
-	@Query(value = "select * from servico where funcionario_id = ?1 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.funcionario_id = ?1 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findByFunc(Long id);
 	
-	@Query(value = "select * from servico where funcionario_id = ?1 and data = to_date(?2, 'yyyy-MM-dd') and status = ?3 order by data asc, hora asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.funcionario_id = ?1 and s.data = to_date(?2, 'yyyy-MM-dd') and s.status = ?3 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findByFuncAndExactlyDate(Long id, String data, String status);
 	
-	@Query(value = "select * from servico where status = ?1 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.status = ?1 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServiceByStatus(String status);
 	
-	@Query(value = "select * from servico where data_finalizacao >= to_date(?1, 'yyyy-MM-dd') and data_finalizacao <= to_date(?2, 'yyyy-MM-dd') order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.data >= to_date(?1, 'yyyy-MM-dd') and s.data <= to_date(?2, 'yyyy-MM-dd') order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInInterval(String data_inicio, String data_final);
 	
-	@Query(value = "select * from servico where funcionario_id = ?1 and status = ?2 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.funcionario_id = ?1 and s.status = ?2 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesByFuncAndStatus(Long id, String status);
 	
-	@Query(value = "select * from servico where data_finalizacao >= to_date(?1, 'yyyy-MM-dd') and data_finalizacao <= to_date(?2, 'yyyy-MM-dd') and status = ?3 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.data >= to_date(?1, 'yyyy-MM-dd') and s.data <= to_date(?2, 'yyyy-MM-dd') and s.status = ?3 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInProgressByStatus(String data_inicio, String data_final, String status);
 	
-	@Query(value = "select * from servico where data_finalizacao >= to_date(?1, 'yyyy-MM-dd') and data_finalizacao <= to_date(?2, 'yyyy-MM-dd') and funcionario_id = ?3 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.data >= to_date(?1, 'yyyy-MM-dd') and s.data <= to_date(?2, 'yyyy-MM-dd') and s.funcionario_id = ?3 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInProgressByFunc(String data_inicio, String data_final, Long id);
 	
-	@Query(value = "select * from servico where data_finalizacao >= to_date(?1, 'yyyy-MM-dd') and data_finalizacao <= to_date(?2, 'yyyy-MM-dd') and funcionario_id = ?3 and status = ?4 order by data_finalizacao asc, hora_finalizacao asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.data >= to_date(?1, 'yyyy-MM-dd') and s.data <= to_date(?2, 'yyyy-MM-dd') and s.funcionario_id = ?3 and s.status = ?4 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInIntervalAndFuncAndStatus(String data_inicio, String data_final, Long id, String status);
 	
 	boolean existsByFuncionario_id(Long funcionario_id);

@@ -260,14 +260,15 @@ public class ServicosController {
 				s.setMateriais_retirados(materiais_retirados);
 				s.setCampos_aplicados(campos_aplicados);
 				s.setImagens(imagens);
-				SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
-				SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
-				Date hora = formatoHora.parse(formatoHora.format(new Date()));
-				Date data = formatoData.parse(formatoHora.format(new Date()));
-				s.setHora_finalizacao(hora);
-				s.setData_finalizacao(data);
 				s.setStatus("finalizado");
 			}
+			
+			SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
+			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
+			Date hora = formatoHora.parse(formatoHora.format(new Date()));
+			Date data = formatoData.parse(formatoHora.format(new Date()));
+			s.setHora_finalizacao(hora);
+			s.setData_finalizacao(data);
 						
 			if(servicoRepository.save(s) != null) {
 				return new ResponseEntity<>(HttpStatus.OK);
