@@ -266,7 +266,7 @@ public class ServicosController {
 			SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss aa");
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
 			Date hora = formatoHora.parse(formatoHora.format(new Date()));
-			Date data = formatoData.parse(formatoHora.format(new Date()));
+			Date data = formatoData.parse(formatoData.format(new Date()));
 			s.setHora_finalizacao(hora);
 			s.setData_finalizacao(data);
 						
