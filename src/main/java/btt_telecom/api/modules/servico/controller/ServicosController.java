@@ -149,7 +149,7 @@ public class ServicosController {
 			}else if(json.has("id_funcionario")){
 				list = servicoRepository.findByFunc(json.getLong("id_funcionario"));
 			}else {
-				list = servicoRepository.findAll();
+				list = servicoRepository.findAllServicos();
 			}
 			List<ServicoDTO> result = new ArrayList<>();
 			list.forEach(x -> {

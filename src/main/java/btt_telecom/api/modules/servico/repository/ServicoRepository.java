@@ -40,7 +40,7 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 	List<Servico> findServicesInIntervalAndFuncAndStatus(String data_inicio, String data_final, Long id, String status);
 	
 	@Query(value = "SELECT * FROM SERVICO s ORDERY BY s.DATA ASC, s.HORA ASC")
-	List<Servico> findAll();
+	List<Servico> findAllServicos();
 	
 	boolean existsByFuncionario_id(Long funcionario_id);
 }
