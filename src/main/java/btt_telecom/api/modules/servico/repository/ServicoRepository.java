@@ -39,5 +39,8 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 	@Query(value = "select * from servico s where s.data >= to_date(?1, 'yyyy-MM-dd') and s.data <= to_date(?2, 'yyyy-MM-dd') and s.funcionario_id = ?3 and s.status = ?4 order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findServicesInIntervalAndFuncAndStatus(String data_inicio, String data_final, Long id, String status);
 	
+	@Query(value = "SELECT * FROM SERVICO s ORDERY BY s.DATA ASC, s.HORA ASC")
+	List<Servico> findAll();
+	
 	boolean existsByFuncionario_id(Long funcionario_id);
 }
