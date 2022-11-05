@@ -18,7 +18,7 @@ public class Empresa {
 	private Long id;
 	
 	private String empresa;
-
+	
 	public Long getId() {
 		return id;
 	}

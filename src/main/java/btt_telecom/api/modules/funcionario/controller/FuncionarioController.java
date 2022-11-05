@@ -1,5 +1,6 @@
 package btt_telecom.api.modules.funcionario.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.modules.funcionario.dto.FuncionarioDTO;
+import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
+import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.repositories.CidadeRepository;
@@ -40,6 +43,13 @@ public class FuncionarioController {
 	
 	@Autowired
 	private EmpresaRepository empresaRepository;
+	
+	@GetMapping(path = "/teste")
+	private ResponseEntity<List<FuncionarioRubi>> findAllFromView() throws SQLException{
+		FuncionarioDAO func = new FuncionarioDAO();
+		List<FuncionarioRubi> result = func.findAll();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 	@GetMapping
 	private ResponseEntity<List<FuncionarioDTO>> findAll(){
@@ -64,6 +74,8 @@ public class FuncionarioController {
 			List<FuncionarioDTO> resultDTO = result.stream().map(x -> new FuncionarioDTO(x)).collect(Collectors.toList());
 			return new ResponseEntity<>(resultDTO, HttpStatus.OK);
 		} catch (Exception e) {
+			
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
