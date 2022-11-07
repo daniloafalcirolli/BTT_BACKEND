@@ -13,26 +13,24 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioDTO;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
-import btt_telecom.api.repositories.CidadeRepository;
-import btt_telecom.api.repositories.EmpresaRepository;
+
 
 @RestController
 @RequestMapping(path = "/api/funcionario")
-public class FuncionarioController {
+public class FuncionarioController extends AbstractMethods{
 	private JSONObject json;
 	
 	@Autowired
@@ -42,10 +40,7 @@ public class FuncionarioController {
 	private ResponseEntity<Page<FuncionarioRubi>> findAllFromView(Pageable pageable) throws SQLException{
 		FuncionarioDAO func = new FuncionarioDAO();
 		List<FuncionarioRubi> result = func.findAll();
-		Integer size = result.size();
-		result = result.stream().skip(pageable.getPageSize() * pageable.getPageNumber()).limit(pageable.getPageSize()).collect(Collectors.toList());
-
-		Page<FuncionarioRubi> page = new PageImpl<>(result, pageable, size);
+		Page<FuncionarioRubi> page = convertListToPage(result, pageable);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
 	
