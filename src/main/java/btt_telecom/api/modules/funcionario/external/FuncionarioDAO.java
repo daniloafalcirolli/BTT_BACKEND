@@ -20,7 +20,7 @@ public class FuncionarioDAO {
 	public List<FuncionarioRubi> findAll() throws SQLException{
 		String query = "SELECT \r\n"
 				+ "DISTINCT\r\n"
-				+ "	a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, \r\n"
+				+ "	a.NUMEMP, a.NOMFUN, a.NUMPIS, a.SITAFA, \r\n"
 				+ "	LPAD(a.NUMCPF, 11, '0') AS NUMCPF, LPAD(e.NUMCID, 9, '0') AS NUMCID, a.NUMCAD, \r\n"
 				+ "	b.NOMEXB, c.DATCRE, e.TIPLGR, \r\n"
 				+ "	e.ENDRUA, e.ENDNUM, e.ENDCPL, \r\n"
@@ -33,10 +33,8 @@ public class FuncionarioDAO {
 				+ "		RUBI.R034USU d, \r\n"
 				+ "		RUBI.R034CPL e, \r\n"
 				+ "		RUBI.R074CID f, \r\n"
-				+ "		RUBI.R074BAI g,\r\n"
-				+ "		RUBI.R030FIL h\r\n"
+				+ "		RUBI.R074BAI g	\r\n"
 				+ "	WHERE\r\n"
-				+ "		a.NUMEMP = h.NUMEMP and\r\n"
 				+ "		d.NUMEMP = a.NUMEMP and\r\n"
 				+ "		a.NUMEMP = e.NUMEMP and\r\n"
 				+ "				a.NUMCAD = d.NUMCAD and\r\n"
@@ -62,6 +60,7 @@ public class FuncionarioDAO {
 			func.setCpf(rs.getString("NUMCPF"));
 			func.setRg(rs.getString("NUMCID"));
 			func.setTelefone(rs.getString("NUMTEL"));
+			func.setPis(rs.getString("NUMPIS"));
 			result.add(func);
 		}
 

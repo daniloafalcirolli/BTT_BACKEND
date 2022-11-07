@@ -11,6 +11,8 @@ public class FuncionarioRubi {
 	private String rg;
 	
 	private String telefone;
+	
+	private String pis;
 
 	public FuncionarioRubi() {
 	}
@@ -53,5 +55,13 @@ public class FuncionarioRubi {
 
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+
+	public String getPis() {
+		return pis;
+	}
+
+	public void setPis(String pis) {
+		this.pis = pis;
 	}
 }

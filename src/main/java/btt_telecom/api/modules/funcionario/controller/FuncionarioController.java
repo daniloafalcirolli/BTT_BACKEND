@@ -42,7 +42,10 @@ public class FuncionarioController {
 	private ResponseEntity<Page<FuncionarioRubi>> findAllFromView(Pageable pageable) throws SQLException{
 		FuncionarioDAO func = new FuncionarioDAO();
 		List<FuncionarioRubi> result = func.findAll();
-		Page<FuncionarioRubi> page = new PageImpl<>(result, pageable, result.size());
+		Integer size = result.size();
+		result = result.stream().skip(pageable.getPageSize() * pageable.getPageNumber()).limit(pageable.getPageSize()).collect(Collectors.toList());
+
+		Page<FuncionarioRubi> page = new PageImpl<>(result, pageable, size);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
 	
