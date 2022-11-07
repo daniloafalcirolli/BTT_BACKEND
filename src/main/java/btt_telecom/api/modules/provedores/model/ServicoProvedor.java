@@ -1,12 +1,11 @@
 package btt_telecom.api.modules.provedores.model;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -23,12 +22,11 @@ public class ServicoProvedor {
 	
 	private String identificador;
 	
+	@OneToOne
+	private CategoriaServicoProvedor categoria;
+	
 	public ServicoProvedor(){
 		
-	}
-	
-	public ServicoProvedor(String servico){
-		this.servico = servico;
 	}
 
 	public Long getId() {
@@ -46,7 +44,7 @@ public class ServicoProvedor {
 	public void setServico(String servico) {
 		this.servico = servico;
 	}
-	
+
 	public String getId_senior() {
 		return id_senior;
 	}
@@ -55,28 +53,19 @@ public class ServicoProvedor {
 		this.id_senior = id_senior;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ServicoProvedor other = (ServicoProvedor) obj;
-		return Objects.equals(id, other.id);
-	}
-
 	public String getIdentificador() {
 		return identificador;
 	}
 
 	public void setIdentificador(String identificador) {
 		this.identificador = identificador;
+	}
+
+	public CategoriaServicoProvedor getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaServicoProvedor categoria) {
+		this.categoria = categoria;
 	}
 }

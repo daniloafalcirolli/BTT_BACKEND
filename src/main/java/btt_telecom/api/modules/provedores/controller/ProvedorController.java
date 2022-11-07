@@ -28,6 +28,7 @@ import btt_telecom.api.modules.provedores.model.ImagemProvedor;
 import btt_telecom.api.modules.provedores.model.Provedor;
 import btt_telecom.api.modules.provedores.model.ServicoProvedor;
 import btt_telecom.api.modules.provedores.repository.CamposProvedorBaseRepository;
+import btt_telecom.api.modules.provedores.repository.CategoriaServicoProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ImagensProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ServicoProvedorRepository;
@@ -53,6 +54,9 @@ public class ProvedorController {
 	
 	@Autowired
 	private ImagensProvedorRepository imagensProvedorRepository;
+	
+	@Autowired
+	private CategoriaServicoProvedorRepository categoriaServicoProvedorRepository;
 
 	@GetMapping
 	public ResponseEntity<List<ProvedorDTO>> findAll(){
@@ -302,6 +306,7 @@ public class ProvedorController {
 			sp.setServico(json.getString("servico"));
 			sp.setIdentificador(json.getString("identificador").toUpperCase());
 			sp.setId_senior(json.getString("id_senior").toUpperCase());
+			sp.setCategoria(categoriaServicoProvedorRepository.findById(json.getLong("id_categoria")).get());
 			servicoProvedorRepository.save(sp);
 			
 			Provedor p = provedorRepository.findById(json.getLong("id_provedor")).get();
@@ -324,7 +329,8 @@ public class ProvedorController {
 			sp.setServico(json.getString("servico"));
 			sp.setIdentificador(json.getString("identificador").toUpperCase());
 			sp.setId_senior(json.getString("id_senior").toUpperCase());
-			
+			sp.setCategoria(categoriaServicoProvedorRepository.findById(json.getLong("id_categoria")).get());
+
 			servicoProvedorRepository.save(sp);			
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -342,6 +348,8 @@ public class ProvedorController {
 					ServicoProvedor sp = servicoProvedorRepository.findById(id_servico).get();
 					p.getServicos().remove(sp);
 					provedorRepository.save(p);
+					sp.setCategoria(null);
+					servicoProvedorRepository.save(sp);
 					servicoProvedorRepository.deleteById(id_servico);
 					return new ResponseEntity<>(HttpStatus.OK);
 				}else {
