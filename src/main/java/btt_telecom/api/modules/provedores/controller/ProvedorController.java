@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,22 @@ public class ProvedorController {
 			});
 			
 			return new ResponseEntity<>(provedores, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping(path = "/search")
+	public ResponseEntity<Page<ProvedorDTO>> search(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Provedor> result = provedorRepository.search(json.getString("value"));
+			List<ProvedorDTO> provedores = new ArrayList<>();
+			result.forEach(x -> {
+				provedores.add(new ProvedorDTO(x));
+			});
+			Page<ProvedorDTO> page = new PageImpl<>(provedores);
+			return new ResponseEntity<>(page, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
