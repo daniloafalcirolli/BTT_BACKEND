@@ -74,7 +74,7 @@ public class ProvedorController {
 		}
 	}
 	
-	@GetMapping(path = "/search")
+	@PostMapping(path = "/search")
 	public ResponseEntity<Page<ProvedorDTO>> search(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
