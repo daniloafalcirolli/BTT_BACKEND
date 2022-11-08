@@ -82,7 +82,7 @@ public class ServicoDAO extends AbstractMethods{
 			servico.setServico_provedor(rs.getString("SERVICO"));
 			servico.setStatus(rs.getString("STATUS"));
 			servico.setData_inicio(rs.getString("DATA_INICIO").split(" ")[0]);
-			servico.setHora_finalizacao(!rs.getString("HORA_FINALIZACAO").equals("") ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
+			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO") != null ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
 			System.out.println(rs.getString("FUNCIONARIO"));
 			result.add(servico);
 		}
