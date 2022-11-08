@@ -109,9 +109,9 @@ public class FuncionarioDAO {
 		
 		try {
 			if(!rs.isBeforeFirst()) {
-				return true;
-			}else {
 				return false;
+			}else {
+				return true;
 			}
 		} finally {
 			con.close();
