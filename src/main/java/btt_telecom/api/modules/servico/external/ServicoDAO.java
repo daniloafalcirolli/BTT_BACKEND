@@ -64,15 +64,25 @@ public class ServicoDAO extends AbstractMethods{
 			
 		System.out.println(query);
 		con = ConnectionDB.getConnection();
-//		ps = con.prepareStatement(query);
-//		rs = ps.executeQuery();
-//		
-//		List<ServicoRubi> result = new ArrayList<>();
-//		while(rs.next()) {
-//			
-//		}
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		List<ServicoRubi> result = new ArrayList<>();
+		while(rs.next()) {
+			servico = new ServicoRubi();
+			servico.setFuncionario(rs.getString("FUNCIONARIO"));
+			servico.setCliente(rs.getString("CLIENTE"));
+			servico.setContrato(rs.getString("CONTRATO"));
+			servico.setProtocolo(rs.getString("PROTOCOLO"));
+			servico.setProvedor(rs.getString("PROVEDOR"));
+			servico.setServico_provedor(rs.getString("SERVICO"));
+			servico.setStatus(rs.getString("STATUS"));
+			servico.setData_inicio(rs.getString("DATA_INICIO"));
+			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO"));
+			result.add(servico);
+		}
 		
 		con.close();
-		return null; 
+		return result; 
 	}
 }
