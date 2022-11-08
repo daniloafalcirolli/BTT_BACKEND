@@ -128,7 +128,7 @@ public class ServicosController {
 		}
 	}
 	
-	@PostMapping(path = "/interval")
+	@PostMapping(path = "/filter")
 	public ResponseEntity<List<ServicoRubi>> findServicosInInterval(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
