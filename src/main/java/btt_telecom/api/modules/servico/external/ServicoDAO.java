@@ -21,6 +21,7 @@ public class ServicoDAO extends AbstractMethods{
 		String query = ""
 				+ "SELECT "
 				+ "	rubi_func.NOMFUN AS FUNCIONARIO,"
+				+ "	rubi_emp.RAZSOC,"
 				+ "	b2tc.NOME AS CLIENTE,"
 				+ "	b2tc.CONTRATO,"
 				+ "	b2ts.PROTOCOLO,"
@@ -32,6 +33,8 @@ public class ServicoDAO extends AbstractMethods{
 				+ "	FROM B2TTELECOM_DB.SERVICO b2ts"
 				+ "	INNER JOIN RUBI.R034FUN rubi_func ON "
 				+ "		(rubi_func.NUMCPF = b2ts.CPF_FUNCIONARIO)"
+				+ "	INNER JOIN RUBI.R030FIL rubi_emp ON "
+				+ "		(rubi_emp.NUMEMP = rubi_func.NUMEMP)"
 				+ "	INNER JOIN B2TTELECOM_DB.CLIENTE b2tc ON"
 				+ "		(b2tc.ID = b2ts.CLIENTE_ID)"
 				+ "	INNER JOIN B2TTELECOM_DB.PROVEDOR b2tp ON "
@@ -71,14 +74,15 @@ public class ServicoDAO extends AbstractMethods{
 		while(rs.next()) {
 			servico = new ServicoRubi();
 			servico.setFuncionario(rs.getString("FUNCIONARIO"));
+			servico.setEmpresa(rs.getString("RAZSOC"));
 			servico.setCliente(rs.getString("CLIENTE"));
 			servico.setContrato(rs.getString("CONTRATO"));
 			servico.setProtocolo(rs.getString("PROTOCOLO"));
 			servico.setProvedor(rs.getString("PROVEDOR"));
 			servico.setServico_provedor(rs.getString("SERVICO"));
 			servico.setStatus(rs.getString("STATUS"));
-			servico.setData_inicio(rs.getString("DATA_INICIO"));
-			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO"));
+			servico.setData_inicio(rs.getString("DATA_INICIO").split(" ")[0]);
+			servico.setHora_finalizacao(!rs.getString("HORA_FINALIZACAO").equals("") ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
 			System.out.println(rs.getString("FUNCIONARIO"));
 			result.add(servico);
 		}
