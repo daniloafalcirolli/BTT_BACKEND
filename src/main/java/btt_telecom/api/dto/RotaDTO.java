@@ -34,8 +34,6 @@ public class RotaDTO {
 		this.descricao = rota.getDescricao();
 		this.gasolina = rota.getGasolina();
 		this.consumo = rota.getConsumo();
-		this.id_cidade = rota.getId_cidade();
-		this.id_funcionario = rota.getFuncionario().getId();
 	}
 
 	public Long getId() {

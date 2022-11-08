@@ -2,19 +2,15 @@ package btt_telecom.api.models;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import btt_telecom.api.modules.funcionario.model.Funcionario;
 
 @Entity
 @Table(name = "rotas")
@@ -26,8 +22,7 @@ public class Rota {
     @SequenceGenerator(name = "id_Sequence", sequenceName = "ID_SEQ")
 	private Long id;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
-	private Funcionario funcionario;
+	private String cpf_funcionario;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
@@ -44,9 +39,7 @@ public class Rota {
 	private String gasolina;
 	
 	private String consumo;
-	
-	private Long id_cidade;
-	
+		
 	private Long id_servico;
 	
 	public Long getId() {
@@ -57,12 +50,12 @@ public class Rota {
 		this.id = id;
 	}
 
-	public Funcionario getFuncionario() {
-		return funcionario;
+	public String getCpf_funcionario() {
+		return cpf_funcionario;
 	}
 
-	public void setFuncionario(Funcionario funcionario) {
-		this.funcionario = funcionario;
+	public void setCpf_funcionario(String cpf_funcionario) {
+		this.cpf_funcionario = cpf_funcionario;
 	}
 
 	public Date getData() {
@@ -119,14 +112,6 @@ public class Rota {
 
 	public void setConsumo(String consumo) {
 		this.consumo = consumo;
-	}
-
-	public Long getId_cidade() {
-		return id_cidade;
-	}
-
-	public void setId_cidade(Long id_cidade) {
-		this.id_cidade = id_cidade;
 	}
 
 	public Long getId_servico() {

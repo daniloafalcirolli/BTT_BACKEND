@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.RotaDTO;
 import btt_telecom.api.models.Rota;
-import btt_telecom.api.modules.funcionario.model.Funcionario;
-import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
+import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
+import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.repositories.RotaRepository;
 
 @RestController
@@ -35,8 +35,7 @@ public class RotasController {
 	@Autowired
 	private RotaRepository rotaRepository;
 	
-	@Autowired
-	private FuncionarioRepository funcionarioRepository;
+	private FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 	
 	@GetMapping
 	public ResponseEntity<List<Rota>> findAll(){
@@ -96,16 +95,17 @@ public class RotasController {
 			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
-			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
-			r.setFuncionario(f);
-			r.setConsumo(f.getKilometragem_por_litro());
-			r.setGasolina(f.getCidade().getPreco_gasolina());
-			r.setId_cidade(f.getCidade().getId());
+			r.setCpf_funcionario(json.getString("cpf_funcionario"));
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			if(json.has("id_servico")) {
 				r.setId_servico(json.getLong("id_servico"));
 			}
+
+			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			r.setConsumo(fr.getConsumo());
+			r.setGasolina(fr.getPreco_gasolina());
+			
 			if(rotaRepository.save(r) != null) {
 				return new ResponseEntity<>( HttpStatus.CREATED);
 			}else {
@@ -129,15 +129,14 @@ public class RotasController {
 			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
-			
-			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
-			r.setFuncionario(f);
-			r.setConsumo(f.getKilometragem_por_litro());
-			r.setGasolina(f.getCidade().getPreco_gasolina());
-			r.setId_cidade(f.getCidade().getId());
+			r.setCpf_funcionario(json.getString("cpf_funcionario"));
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("iniciou");
+			
+			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			r.setConsumo(fr.getConsumo());
+			r.setGasolina(fr.getPreco_gasolina());
 			if(rotaRepository.save(r) != null) {
 				return new ResponseEntity<>( HttpStatus.CREATED);
 			}else {
@@ -163,14 +162,14 @@ public class RotasController {
 			Date hora = formato2.parse(formato2.format(new Date()));
 			r.setHora(hora);
 			
-			Funcionario f = funcionarioRepository.findById(json.getLong("id_func")).get();
-			r.setFuncionario(f);
-			r.setConsumo(f.getKilometragem_por_litro());
-			r.setGasolina(f.getCidade().getPreco_gasolina());
-			r.setId_cidade(f.getCidade().getId());
+			r.setCpf_funcionario(json.getString("cpf_funcionario"));
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("finalizou");
+			
+			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			r.setConsumo(fr.getConsumo());
+			r.setGasolina(fr.getPreco_gasolina());
 			if(rotaRepository.save(r) != null) {
 				return new ResponseEntity<>( HttpStatus.CREATED);
 			}else {
