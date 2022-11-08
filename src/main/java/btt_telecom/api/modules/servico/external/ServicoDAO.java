@@ -20,6 +20,7 @@ public class ServicoDAO extends AbstractMethods{
 	public List<ServicoRubi> getServicos(String data_inicio, String data_final, String cpf_funcionario, String status) throws SQLException{
 		String query = ""
 				+ "SELECT "
+				+ " DISTINCT"
 				+ "	rubi_func.NOMFUN AS FUNCIONARIO,"
 				+ "	rubi_emp.RAZSOC,"
 				+ "	b2tc.NOME AS CLIENTE,"
@@ -65,7 +66,6 @@ public class ServicoDAO extends AbstractMethods{
 				
 				query += " ORDER BY b2ts.\"DATA\" ASC, b2ts.HORA_FINALIZACAO ASC "; 
 			
-		System.out.println(query);
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
 		rs = ps.executeQuery();
@@ -83,7 +83,6 @@ public class ServicoDAO extends AbstractMethods{
 			servico.setStatus(rs.getString("STATUS"));
 			servico.setData_inicio(rs.getString("DATA_INICIO").split(" ")[0]);
 			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO") != null ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
-			System.out.println(rs.getString("FUNCIONARIO"));
 			result.add(servico);
 		}
 		
