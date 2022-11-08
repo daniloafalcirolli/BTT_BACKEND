@@ -128,6 +128,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ " SELECT "
 				+ "	vr.RAZSOC,"
 				+ "	vr.NOMFUN,"
+				+ "	vr.NOMEXB,"
 				+ "	vr.SITAFA,"
 				+ "	vr.NUMCPF,"
 				+ "	vr.NUMCID,"
@@ -149,7 +150,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NOT NULL THEN f2.KILOMETRAGEM_POR_LITRO"
 				+ "		END"
 				+ "	) AS CONSUMO"
-				+ "FROM ("
+				+ " FROM ("
 				+ "	SELECT "
 				+ "	DISTINCT"
 				+ "		a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, "
@@ -199,6 +200,9 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setUsername(rs.getString("NOMEXB"));
 				funcionario.setEmpresa(rs.getString("RAZSOC"));
 				funcionario.setCpf(rs.getString("NUMCPF"));
+				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
+				funcionario.setConsumo(rs.getString("CONSUMO"));
+				
 
 				String formattedAddress = getFormattedAddress(
 						rs.getString("TIPLGR"), 
@@ -208,13 +212,10 @@ public class FuncionarioDAO extends AbstractMethods{
 						rs.getString("NOMCID"),
 						rs.getString("ESTCID"),
 						rs.getString("ENDCEP"));
-						
 				JSONObject cords = getLatAndLng(formattedAddress);
 
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
-				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
-				funcionario.setConsumo(rs.getString("CONSUMO"));
 			}
 			
 			return funcionario;
