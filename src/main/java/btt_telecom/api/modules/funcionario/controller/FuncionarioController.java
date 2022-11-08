@@ -2,7 +2,6 @@ package btt_telecom.api.modules.funcionario.controller;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
+import btt_telecom.api.modules.funcionario.dto.FuncionarioRubiList;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
@@ -36,28 +36,28 @@ public class FuncionarioController extends AbstractMethods{
 	private FuncionarioRepository funcionarioRepository;
 	
 	@GetMapping
-	private ResponseEntity<List<FuncionarioRubi>> findAll() throws SQLException{
-		List<FuncionarioRubi> result = funcionarioDAO.findAll();
+	private ResponseEntity<List<FuncionarioRubiList>> findAll() throws SQLException{
+		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@PostMapping(path = "/search")
-	private ResponseEntity<List<FuncionarioRubi>> searchFindAll() throws SQLException{
-		List<FuncionarioRubi> result = funcionarioDAO.findAll();
+	private ResponseEntity<List<FuncionarioRubiList>> searchFindAll() throws SQLException{
+		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/page")
-	private ResponseEntity<Page<FuncionarioRubi>> findAllWithPage(Pageable pageable) throws SQLException{
-		Page<FuncionarioRubi> page = convertListToPage(funcionarioDAO.findAll(), pageable);
+	private ResponseEntity<Page<FuncionarioRubiList>> findAllWithPage(Pageable pageable) throws SQLException{
+		Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/page/search")
-	private ResponseEntity<Page<FuncionarioRubi>> searchWithPage(Pageable pageable) throws SQLException{
+	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(Pageable pageable) throws SQLException{
 		FuncionarioDAO func = new FuncionarioDAO();
-		List<FuncionarioRubi> result = func.findAll();
-		Page<FuncionarioRubi> page = convertListToPage(result, pageable);
+		List<FuncionarioRubiList> result = func.findAll();
+		Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
 
