@@ -62,11 +62,10 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
-	@PostMapping(path = "/page/search")
-	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestBody String body, Pageable pageable) throws SQLException{
+	@PostMapping(path = "/page/search/{value}")
+	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(Pageable pageable, @PathVariable(name = "value") String value) throws SQLException{
 		try {
-			JSONObject json = new JSONObject(body);
-			List<FuncionarioRubiList> result = funcionarioDAO.search(json.getString("value"));
+			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
 			Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
 			return new ResponseEntity<>(page, HttpStatus.OK);
 		} catch (Exception e) {
