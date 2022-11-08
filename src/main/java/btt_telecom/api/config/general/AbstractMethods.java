@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,14 +39,13 @@ public class AbstractMethods {
 		}
 		
 		String finalAddress = String.format("%s %s, %s - %s, %s - %s", tipo_logradouro, rua, numero, bairro, cidade, estado);
-		System.out.println(finalAddress);
 		return finalAddress;
 	}
 	
-	public JSONObject getLatAndLng(String endereco) {
+	public JSONObject getLatAndLng(String endereco) throws JSONException {
 		Geocoder geo = new Geocoder();
 		try {
-			return new JSONObject(geo.GeocodeSync(endereco));
+			return new JSONObject(geo.GeocodeSync(endereco).toString());
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return null;

@@ -179,7 +179,8 @@ public class FuncionarioDAO extends AbstractMethods{
 						rs.getString("ESTCID"),
 						rs.getString("ENDCEP"));
 						
-				JSONObject cords = new JSONObject(getLatAndLng(formattedAddress).toString());
+				JSONObject cords = getLatAndLng(formattedAddress);
+
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
 			}
