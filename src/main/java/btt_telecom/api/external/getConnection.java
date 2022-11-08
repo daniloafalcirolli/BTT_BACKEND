@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import btt_telecom.api.models.Cidade;
-import btt_telecom.api.models.Empresa;
+import btt_telecom.api.modules.empresa.Empresa;
 
 public class getConnection {
 	private String url;
