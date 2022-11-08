@@ -77,6 +77,10 @@ public class FuncionarioController extends AbstractMethods{
 	@PostMapping
 	private ResponseEntity<HttpStatus> editAndSave(@RequestBody Funcionario funcionario){
 		try {
+			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+				funcionario.setId(funcionarioRepository.findByCpf(funcionario.getCpf()).get().getId());
+			}
+
 			if(funcionarioRepository.save(funcionario) != null) {
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
