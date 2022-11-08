@@ -45,8 +45,7 @@ public class AbstractMethods {
 	public JSONObject getLatAndLng(String endereco) {
 		Geocoder geo = new Geocoder();
 		try {
-			JSONObject cords = new JSONObject(geo.GeocodeSync(endereco));
-			return cords;
+			return new JSONObject(geo.GeocodeSync(endereco));
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 			return null;
