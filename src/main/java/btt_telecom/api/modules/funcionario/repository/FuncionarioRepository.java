@@ -22,8 +22,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long>{
 	
 	Optional<Funcionario> findByCpf(String cpf);
 	
-	Optional<Funcionario> findByNome(String nome);
-	
 	@Query(value = "select * from funcionario where UPPER(nome) like %?1% or UPPER(cpf) like %?1% or UPPER(rg) like %?1% or UPPER(telefone) like %?1%", nativeQuery = true)
 	List<Funcionario> search(String value);
 

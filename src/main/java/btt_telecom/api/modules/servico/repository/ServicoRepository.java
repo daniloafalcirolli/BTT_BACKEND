@@ -41,6 +41,4 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 	
 	@Query(value = "SELECT * FROM SERVICO s ORDER BY s.DATA ASC, s.HORA ASC", nativeQuery = true)
 	List<Servico> findAllServicos();
-	
-	boolean existsByFuncionario_id(Long funcionario_id);
 }
