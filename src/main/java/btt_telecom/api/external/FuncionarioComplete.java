@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.openjson.JSONObject;
 
-import btt_telecom.api.modules.empresa.EmpresaRepository;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.modules.funcionario.repository.StatusFuncRepository;
@@ -23,8 +22,8 @@ public class FuncionarioComplete {
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 
-	@Autowired
-	private EmpresaRepository empresaRepository;
+//	@Autowired
+//	private EmpresaRepository empresaRepository;
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
