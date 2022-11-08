@@ -3,6 +3,8 @@ package btt_telecom.api.modules.servico.dto;
 import btt_telecom.api.modules.servico.model.Servico;
 
 public class ServicoDTO {
+	private Long id;
+	
 	private String cliente_nome;
 	
 	private String cliente_endereco;
@@ -22,6 +24,7 @@ public class ServicoDTO {
 	private String provedor_servico;
 
 	public ServicoDTO(Servico servico) {
+		this.id = servico.getId();
 		this.cliente_nome = servico.getCliente().getNome();
 		this.cliente_endereco = servico.getCliente().getEndereco();
 		this.cliente_contrato = servico.getCliente().getContrato();
@@ -33,6 +36,14 @@ public class ServicoDTO {
 		this.provedor_servico = servico.getServicoProvedor().getServico();
 	}
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getCliente_nome() {
 		return cliente_nome;
 	}

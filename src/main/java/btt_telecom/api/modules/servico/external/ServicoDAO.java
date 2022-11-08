@@ -21,6 +21,7 @@ public class ServicoDAO extends AbstractMethods{
 		String query = ""
 				+ "SELECT "
 				+ " DISTINCT"
+				+ "	b2ts.ID"
 				+ "	rubi_func.NOMFUN AS FUNCIONARIO,"
 				+ "	rubi_emp.RAZSOC,"
 				+ "	b2tc.NOME AS CLIENTE,"
@@ -73,6 +74,7 @@ public class ServicoDAO extends AbstractMethods{
 		List<ServicoRubi> result = new ArrayList<>();
 		while(rs.next()) {
 			servico = new ServicoRubi();
+			servico.setId(rs.getLong("ID"));
 			servico.setFuncionario(rs.getString("FUNCIONARIO"));
 			servico.setEmpresa(rs.getString("RAZSOC"));
 			servico.setCliente(rs.getString("CLIENTE"));

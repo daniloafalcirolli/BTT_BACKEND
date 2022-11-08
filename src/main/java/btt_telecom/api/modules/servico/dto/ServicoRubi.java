@@ -1,6 +1,8 @@
 package btt_telecom.api.modules.servico.dto;
 
 public class ServicoRubi {
+	private Long id;
+	
 	private String funcionario;
 	
 	private String empresa;
@@ -20,6 +22,14 @@ public class ServicoRubi {
 	private String data_inicio;
 	
 	private String hora_finalizacao;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getFuncionario() {
 		return funcionario;
