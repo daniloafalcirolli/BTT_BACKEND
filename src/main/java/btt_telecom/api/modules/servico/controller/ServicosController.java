@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,7 @@ import btt_telecom.api.modules.provedores.repository.CamposProvedorBaseRepositor
 import btt_telecom.api.modules.provedores.repository.ImagensProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ServicoProvedorRepository;
+import btt_telecom.api.modules.servico.dto.ServicoDTO;
 import btt_telecom.api.modules.servico.dto.ServicoRubi;
 import btt_telecom.api.modules.servico.external.ServicoDAO;
 import btt_telecom.api.modules.servico.model.Servico;
@@ -112,11 +114,12 @@ public class ServicosController {
 	}
 	
 	@GetMapping(path = "/funcionario/{cpf}")
-	public ResponseEntity<List<Servico>> findServicosByStatusByFuncInExactlyDate(@PathVariable(name = "cpf") String cpf){
+	public ResponseEntity<List<ServicoDTO>> findServicosByStatusByFuncInExactlyDate(@PathVariable(name = "cpf") String cpf){
 		try {
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
-			String data = formatoData.format(new Date());
-			return new ResponseEntity<>(servicoRepository.findByFuncUsingSysdate(cpf, data), HttpStatus.OK);
+			List<Servico> result = servicoRepository.findByFuncUsingSysdate(cpf, formatoData.format(new Date()));
+			List<ServicoDTO> response = result.stream().map(x -> new ServicoDTO(x)).collect(Collectors.toList());
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
