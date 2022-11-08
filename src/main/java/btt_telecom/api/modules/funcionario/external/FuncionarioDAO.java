@@ -18,35 +18,37 @@ public class FuncionarioDAO {
 	private FuncionarioRubi func;
 	
 	public List<FuncionarioRubi> findAll() throws SQLException{
-		String query = "SELECT \r\n"
-				+ "DISTINCT\r\n"
-				+ "	a.NUMEMP, a.NOMFUN, a.NUMPIS, a.SITAFA, \r\n"
-				+ "	LPAD(a.NUMCPF, 11, '0') AS NUMCPF, LPAD(e.NUMCID, 9, '0') AS NUMCID, a.NUMCAD, \r\n"
-				+ "	b.NOMEXB, c.DATCRE, e.TIPLGR, \r\n"
-				+ "	e.ENDRUA, e.ENDNUM, e.ENDCPL, \r\n"
-				+ "	'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL, g.NOMBAI, \r\n"
-				+ "	f.NOMCID, f.ESTCID, e.ENDCEP \r\n"
-				+ "	FROM\r\n"
-				+ "		RUBI.R034FUN a, \r\n"
-				+ "		RUBI.R910ENT b, \r\n"
-				+ "		RUBI.R910USU c, \r\n"
-				+ "		RUBI.R034USU d, \r\n"
-				+ "		RUBI.R034CPL e, \r\n"
-				+ "		RUBI.R074CID f, \r\n"
-				+ "		RUBI.R074BAI g	\r\n"
-				+ "	WHERE\r\n"
-				+ "		d.NUMEMP = a.NUMEMP and\r\n"
-				+ "		a.NUMEMP = e.NUMEMP and\r\n"
-				+ "				a.NUMCAD = d.NUMCAD and\r\n"
-				+ "				a.NUMCAD = e.NUMCAD and\r\n"
-				+ "				d.CODUSU = b.CODENT and\r\n"
-				+ "				c.CODENT = b.CODENT and\r\n"
-				+ "				f.CODCID = e.CODCID and\r\n"
-				+ "				f.CODCID = g.CODCID and\r\n"
-				+ "				g.CODBAI = e.CODBAI and\r\n"
-				+ "				f.CODEST = e.CODEST and\r\n"
-				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and\r\n"
-				+ "				a.TIPCOL= '1' order by a.NOMFUN ASC";
+		String query = ""
+				+ " SELECT "
+				+ " DISTINCT "
+				+ " a.NOMFUN,"
+				+ " a.SITAFA, "
+				+ " LPAD(a.NUMCPF, 11, '0') AS NUMCPF, "
+				+ " e.NUMCID, "
+				+ " b.NOMEXB, "
+				+ " '('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL "
+				+ " FROM "
+				+ "	RUBI.R034FUN a, "
+				+ "	RUBI.R910ENT b, "
+				+ "	RUBI.R910USU c, "
+				+ "	RUBI.R034USU d, "
+				+ "	RUBI.R034CPL e, "
+				+ "	RUBI.R074CID f, "
+				+ "	RUBI.R074BAI g"
+				+ "	WHERE"
+				+ "		d.NUMEMP = a.NUMEMP and"
+				+ "		a.NUMEMP = e.NUMEMP and"
+				+ "				a.NUMCAD = d.NUMCAD and"
+				+ "				a.NUMCAD = e.NUMCAD and"
+				+ "				d.CODUSU = b.CODENT and"
+				+ "				c.CODENT = b.CODENT and"
+				+ "				f.CODCID = e.CODCID and"
+				+ "				f.CODCID = g.CODCID and"
+				+ "				g.CODBAI = e.CODBAI and"
+				+ "				f.CODEST = e.CODEST and"
+				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "				a.TIPCOL= '1' "
+				+ "				ORDER BY a.NOMFUN ASC";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
@@ -60,11 +62,63 @@ public class FuncionarioDAO {
 			func.setCpf(rs.getString("NUMCPF"));
 			func.setRg(rs.getString("NUMCID"));
 			func.setTelefone(rs.getString("NUMTEL"));
-			func.setPis(rs.getString("NUMPIS"));
 			result.add(func);
 		}
 
 		con.close();
 		return result;
+	}
+	
+	public boolean existsFuncionarioByCpf(String cpf) throws SQLException {
+		String query = ""
+				+ " SELECT "
+				+ " DISTINCT "
+				+ " a.NOMFUN, "
+				+ "	b.NOMEXB, "
+				+ "	e.NUMCID, "
+				+ "	LPAD(a.NUMCPF, 11, '0') AS NUMCPF, "
+				+ "	'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL, "
+				+ "	a.SITAFA "
+				+ " FROM "
+				+ "	RUBI.R034FUN a, "
+				+ "	RUBI.R910ENT b, "
+				+ "	RUBI.R910USU c, "
+				+ "	RUBI.R034USU d, "
+				+ "	RUBI.R034CPL e, "
+				+ "	RUBI.R074CID f, "
+				+ "	RUBI.R074BAI g"
+				+ "	WHERE"
+				+ "		d.NUMEMP = a.NUMEMP and"
+				+ "		a.NUMEMP = e.NUMEMP and"
+				+ "				a.NUMCAD = d.NUMCAD and"
+				+ "				a.NUMCAD = e.NUMCAD and"
+				+ "				d.CODUSU = b.CODENT and"
+				+ "				c.CODENT = b.CODENT and"
+				+ "				f.CODCID = e.CODCID and"
+				+ "				f.CODCID = g.CODCID and"
+				+ "				g.CODBAI = e.CODBAI and"
+				+ "				f.CODEST = e.CODEST and"
+				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "				a.TIPCOL = '1' and"
+				+ "				a.NUMCPF = '" + cpf + "'"
+				+ "				ORDER BY a.NOMFUN ASC";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		try {
+			if(!rs.isBeforeFirst()) {
+				return true;
+			}else {
+				return false;
+			}
+		} finally {
+			con.close();
+		}
+	}
+	
+	public FuncionarioRubi findByCpf(String cpf) {
+		return null;
 	}
 }

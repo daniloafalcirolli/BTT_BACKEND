@@ -1,7 +1,6 @@
 package btt_telecom.api.modules.funcionario.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
-import btt_telecom.api.modules.funcionario.dto.FuncionarioDTO;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
@@ -33,77 +30,42 @@ import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 public class FuncionarioController extends AbstractMethods{
 	private JSONObject json;
 	
+	private FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+	
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
 	
-	@GetMapping(path = "/teste")
-	private ResponseEntity<Page<FuncionarioRubi>> findAllFromView(Pageable pageable) throws SQLException{
+	@GetMapping
+	private ResponseEntity<List<FuncionarioRubi>> findAll() throws SQLException{
+		List<FuncionarioRubi> result = funcionarioDAO.findAll();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@PostMapping(path = "/search")
+	private ResponseEntity<List<FuncionarioRubi>> searchFindAll() throws SQLException{
+		List<FuncionarioRubi> result = funcionarioDAO.findAll();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/page")
+	private ResponseEntity<Page<FuncionarioRubi>> findAllWithPage(Pageable pageable) throws SQLException{
+		Page<FuncionarioRubi> page = convertListToPage(funcionarioDAO.findAll(), pageable);
+		return new ResponseEntity<>(page, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/page/search")
+	private ResponseEntity<Page<FuncionarioRubi>> searchWithPage(Pageable pageable) throws SQLException{
 		FuncionarioDAO func = new FuncionarioDAO();
 		List<FuncionarioRubi> result = func.findAll();
 		Page<FuncionarioRubi> page = convertListToPage(result, pageable);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
-	
-	@GetMapping
-	private ResponseEntity<List<FuncionarioDTO>> findAll(){
-		try {
-			List<Funcionario> result = funcionarioRepository.findAll();
-			List<FuncionarioDTO> funcionarios = new ArrayList<>();
-			result.forEach(x -> {
-				funcionarios.add(new FuncionarioDTO(x));
-			});
-			
-			return new ResponseEntity<>(funcionarios, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping(path = "/all/search")
-	private ResponseEntity<List<FuncionarioDTO>> findAll(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<Funcionario> result = funcionarioRepository.search(json.getString("value"));
-			List<FuncionarioDTO> resultDTO = result.stream().map(x -> new FuncionarioDTO(x)).collect(Collectors.toList());
-			return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-		} catch (Exception e) {
-			
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(path = "/page")
-	private ResponseEntity<Page<FuncionarioDTO>> findAllWithPage(Pageable pageable){
-		try {
-			Page<Funcionario> result = funcionarioRepository.findAll(pageable);
-			Page<FuncionarioDTO> page = result.map(x -> new FuncionarioDTO(x));
-			
-			return new ResponseEntity<>(page, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping(path = "/search")
-	private ResponseEntity<Page<FuncionarioDTO>> filter(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<Funcionario> result = funcionarioRepository.search(json.getString("value"));
-			List<FuncionarioDTO> resultDTO = result.stream().map(x -> new FuncionarioDTO(x)).collect(Collectors.toList());
-			Page<FuncionarioDTO> page = new PageImpl<>(resultDTO);			
-			return new ResponseEntity<>(page, HttpStatus.OK);
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
 
-	@GetMapping(path = "/{id}")
-	private ResponseEntity<Funcionario> findById(@PathVariable(name = "id") Long id) {
+	@GetMapping(path = "/{cpf}")
+	private ResponseEntity<FuncionarioRubi> findById(@PathVariable(name = "cpf") String cpf) {
 		try {
-			if(funcionarioRepository.existsById(id)) {
-				return new ResponseEntity<>(funcionarioRepository.findById(id).get(), HttpStatus.OK);
+			if(funcionarioDAO.existsFuncionarioByCpf(cpf)) {
+				return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
@@ -116,6 +78,7 @@ public class FuncionarioController extends AbstractMethods{
 	private ResponseEntity<Funcionario> efetuarLogin(@RequestBody String body) {
 		try {
 			json = new JSONObject(body);
+			
 			if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")) != null) {
 				if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")).getStatus()){
 					return new ResponseEntity<>(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")), HttpStatus.OK);
