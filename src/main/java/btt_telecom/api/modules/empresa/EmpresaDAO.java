@@ -16,7 +16,7 @@ public class EmpresaDAO {
 	private EmpresaRubi empresa;
 	
 	public List<EmpresaRubi> findAll() throws SQLException{
-		String query = " SELECT x.RAZSOC, x.NOMFIL FROM RUBI.R030FIL x";
+		String query = " SELECT x.RAZSOC, x.NOMFIL FROM RUBI.R030FIL x ORDER BY x.RAZSOC";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
