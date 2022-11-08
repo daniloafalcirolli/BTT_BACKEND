@@ -79,6 +79,7 @@ public class ServicoDAO extends AbstractMethods{
 			servico.setStatus(rs.getString("STATUS"));
 			servico.setData_inicio(rs.getString("DATA_INICIO"));
 			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO"));
+			System.out.println(rs.getString("FUNCIONARIO"));
 			result.add(servico);
 		}
 		
