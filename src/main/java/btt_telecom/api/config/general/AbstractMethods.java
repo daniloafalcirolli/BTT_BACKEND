@@ -10,10 +10,13 @@ import org.springframework.data.domain.Pageable;
 public class AbstractMethods {
 	
 	public <T> Page<T> convertListToPage(List<T> list, Pageable pageable){
-		list.stream()
+		Integer size = list.size();
+		
+		List<T> pageList = list.stream()
 			.skip(pageable.getPageSize() * pageable.getPageNumber())
 			.limit(pageable.getPageSize())
 			.collect(Collectors.toList());
-		return new PageImpl<>(list, pageable, list.size());
+		
+		return new PageImpl<>(pageList, pageable, size);
 	}
 }
