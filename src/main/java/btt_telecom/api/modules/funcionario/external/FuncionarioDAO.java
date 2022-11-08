@@ -126,37 +126,66 @@ public class FuncionarioDAO extends AbstractMethods{
 	public FuncionarioRubi findByCpf(String cpf) throws SQLException, JSONException {
 		String query = ""
 				+ " SELECT "
-				+ " DISTINCT"
-				+ "	a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, "
-				+ "	LPAD(a.NUMCPF, 11, '0') AS NUMCPF, e.NUMCID, a.NUMCAD, "
-				+ "	b.NOMEXB, c.DATCRE, e.TIPLGR, "
-				+ "	e.ENDRUA, e.ENDNUM, e.ENDCPL, "
-				+ "	e.DDDTEL, e.NUMTEL, g.NOMBAI, "
-				+ "	f.NOMCID, f.ESTCID, e.ENDCEP "
-				+ "	FROM"
-				+ "		RUBI.R034FUN a, "
-				+ "		RUBI.R910ENT b, "
-				+ "		RUBI.R910USU c, "
-				+ "		RUBI.R034USU d, "
-				+ "		RUBI.R034CPL e, "
-				+ "		RUBI.R074CID f, "
-				+ "		RUBI.R074BAI g, "
-				+ "		RUBI.R030FIL h"
-				+ "	WHERE"
-				+ "		a.NUMEMP = h.NUMEMP and"
-				+ "		d.NUMEMP = a.NUMEMP and"
-				+ "		a.NUMEMP = e.NUMEMP and"
-				+ "				a.NUMCAD = d.NUMCAD and"
-				+ "				a.NUMCAD = e.NUMCAD and"
-				+ "				d.CODUSU = b.CODENT and"
-				+ "				c.CODENT = b.CODENT and"
-				+ "				f.CODCID = e.CODCID and"
-				+ "				f.CODCID = g.CODCID and"
-				+ "				g.CODBAI = e.CODBAI and"
-				+ "				f.CODEST = e.CODEST and"
-				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
-				+ "				a.NUMCPF = '" + cpf + "' and"
-				+ "				a.TIPCOL= '1' order by a.NOMFUN ASC";
+				+ "	vr.RAZSOC,"
+				+ "	vr.NOMFUN,"
+				+ "	vr.SITAFA,"
+				+ "	vr.NUMCPF,"
+				+ "	vr.NUMCID,"
+				+ "	vr.TIPLGR,"
+				+ "	vr.ENDRUA,"
+				+ "	vr.ENDNUM,"
+				+ "	vr.NOMBAI,"
+				+ "	vr.NOMCID,"
+				+ "	vr.ESTCID,"
+				+ "	vr.ENDCEP,"
+				+ "	vr.NUMTEL,"
+				+ "	(CASE"
+				+ "		WHEN c2.PRECO_GASOLINA IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'preco_gasolina_padrao')"
+				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
+				+ "		END"
+				+ "	) AS PRECO_GASOLINA,"
+				+ "	(CASE "
+				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'consumo_padrao')"
+				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NOT NULL THEN f2.KILOMETRAGEM_POR_LITRO"
+				+ "		END"
+				+ "	) AS CONSUMO"
+				+ "FROM ("
+				+ "	SELECT "
+				+ "	DISTINCT"
+				+ "		a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, "
+				+ "		LPAD(a.NUMCPF, 11, '0') AS NUMCPF, e.NUMCID, a.NUMCAD, "
+				+ "		b.NOMEXB, c.DATCRE, e.TIPLGR, "
+				+ "		e.ENDRUA, e.ENDNUM, e.ENDCPL, "
+				+ "		'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL, g.NOMBAI, "
+				+ "		f.NOMCID, f.ESTCID, e.ENDCEP "
+				+ "		FROM"
+				+ "			RUBI.R034FUN a, "
+				+ "			RUBI.R910ENT b, "
+				+ "			RUBI.R910USU c, "
+				+ "			RUBI.R034USU d, "
+				+ "			RUBI.R034CPL e, "
+				+ "			RUBI.R074CID f, "
+				+ "			RUBI.R074BAI g,"
+				+ "			RUBI.R030FIL h"
+				+ "		WHERE"
+				+ "			a.NUMEMP = h.NUMEMP and"
+				+ "			d.NUMEMP = a.NUMEMP and"
+				+ "			a.NUMEMP = e.NUMEMP and"
+				+ "					a.NUMCAD = d.NUMCAD and"
+				+ "					a.NUMCAD = e.NUMCAD and"
+				+ "					d.CODUSU = b.CODENT and"
+				+ "					c.CODENT = b.CODENT and"
+				+ "					f.CODCID = e.CODCID and"
+				+ "					f.CODCID = g.CODCID and"
+				+ "					g.CODBAI = e.CODBAI and"
+				+ "					f.CODEST = e.CODEST and"
+				+ "					(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "					a.TIPCOL= '1') vr"
+				+ "	LEFT JOIN B2TTELECOM_DB.CIDADES c2 ON"
+				+ "		(UPPER(c2.CIDADE) = UPPER(NOMCID))"
+				+ "	LEFT JOIN B2TTELECOM_DB.FUNCIONARIO f2 ON"
+				+ "		(f2.CPF = vr.NUMCPF)"
+				+ "	ORDER BY NOMFUN";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
@@ -170,6 +199,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setUsername(rs.getString("NOMEXB"));
 				funcionario.setEmpresa(rs.getString("RAZSOC"));
 				funcionario.setCpf(rs.getString("NUMCPF"));
+
 				String formattedAddress = getFormattedAddress(
 						rs.getString("TIPLGR"), 
 						rs.getString("ENDRUA"), 
@@ -183,6 +213,8 @@ public class FuncionarioDAO extends AbstractMethods{
 
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
+				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
+				funcionario.setConsumo(rs.getString("CONSUMO"));
 			}
 			
 			return funcionario;

@@ -90,7 +90,7 @@ public class MetaController {
 		}
 	}
 	
-	@PutMapping(path = "/{id}")
+	@PutMapping
 	private ResponseEntity<HttpStatus> edit(@RequestBody Meta meta){
 		try {
 			if(metaRepository.existsById(meta.getId())) {
