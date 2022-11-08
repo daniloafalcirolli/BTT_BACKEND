@@ -111,18 +111,10 @@ public class ServicosController {
 		}
 	}
 	
-	@PostMapping(path = "/funcionario")
-	public ResponseEntity<List<Servico>> findServicosByStatusByFuncInExactlyDate(@RequestBody String body){
+	@GetMapping(path = "/funcionario/{cpf}")
+	public ResponseEntity<List<Servico>> findServicosByStatusByFuncInExactlyDate(@PathVariable(name = "cpf") String cpf){
 		try {
-			JSONObject json = new JSONObject(body);
-			Long id = json.getLong("id_func");
-			String status = json.getString("status");
-			
-			if(json.has("data")) {
-				return new ResponseEntity<>(servicoRepository.findByFuncAndExactlyDate(id, json.getString("data"), status), HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-			}
+			return new ResponseEntity<>(servicoRepository.findByFuncAndStatus(cpf), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
