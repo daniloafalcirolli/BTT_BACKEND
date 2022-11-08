@@ -74,6 +74,60 @@ public class FuncionarioDAO extends AbstractMethods{
 		return result;
 	}
 	
+	public List<FuncionarioRubiList> search(String value) throws SQLException{
+		String query = ""
+				+ " SELECT "
+				+ " DISTINCT "
+				+ " a.NOMFUN,"
+				+ " a.SITAFA, "
+				+ " LPAD(a.NUMCPF, 11, '0') AS NUMCPF, "
+				+ " e.NUMCID, "
+				+ " b.NOMEXB, "
+				+ " '('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL "
+				+ " FROM "
+				+ "	RUBI.R034FUN a, "
+				+ "	RUBI.R910ENT b, "
+				+ "	RUBI.R910USU c, "
+				+ "	RUBI.R034USU d, "
+				+ "	RUBI.R034CPL e, "
+				+ "	RUBI.R074CID f, "
+				+ "	RUBI.R074BAI g"
+				+ "	WHERE"
+				+ "		d.NUMEMP = a.NUMEMP and"
+				+ "		a.NUMEMP = e.NUMEMP and"
+				+ "				a.NUMCAD = d.NUMCAD and"
+				+ "				a.NUMCAD = e.NUMCAD and"
+				+ "				d.CODUSU = b.CODENT and"
+				+ "				c.CODENT = b.CODENT and"
+				+ "				f.CODCID = e.CODCID and"
+				+ "				f.CODCID = g.CODCID and"
+				+ "				g.CODBAI = e.CODBAI and"
+				+ "				f.CODEST = e.CODEST and"
+				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "				a.TIPCOL= '1' and"
+				+ "				a.NOMFUN LIKE '%" + value + "%' OR"
+				+ "				a.NUMCPF LIKE '%" + value + "%'"
+				+ "				ORDER BY a.NOMFUN ASC";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		List<FuncionarioRubiList> result = new ArrayList<>();
+		while(rs.next()) {
+			func = new FuncionarioRubiList();
+			func.setNome(rs.getString("NOMFUN"));
+			func.setUsername(rs.getString("NOMEXB"));
+			func.setCpf(rs.getString("NUMCPF"));
+			func.setRg(rs.getString("NUMCID"));
+			func.setTelefone(rs.getString("NUMTEL"));
+			result.add(func);
+		}
+
+		con.close();
+		return result;
+	}
+	
 	public boolean existsFuncionarioByCpf(String cpf) throws SQLException {
 		String query = ""
 				+ " SELECT "

@@ -42,22 +42,36 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/search")
-	private ResponseEntity<List<FuncionarioRubiList>> searchFindAll() throws SQLException{
-		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	private ResponseEntity<List<FuncionarioRubiList>> searchFindAll(@RequestBody String body) throws SQLException{
+		try {
+			JSONObject json = new JSONObject(body);
+			List<FuncionarioRubiList> result = funcionarioDAO.search(json.getString("value"));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@GetMapping(path = "/page")
 	private ResponseEntity<Page<FuncionarioRubiList>> findAllWithPage(Pageable pageable) throws SQLException{
-		Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
-		return new ResponseEntity<>(page, HttpStatus.OK);
+		try {
+			Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
+			return new ResponseEntity<>(page, HttpStatus.OK);
+		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@GetMapping(path = "/page/search")
-	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(Pageable pageable) throws SQLException{
-		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
-		Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
-		return new ResponseEntity<>(page, HttpStatus.OK);
+	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestBody String body, Pageable pageable) throws SQLException{
+		try {
+			JSONObject json = new JSONObject(body);
+			List<FuncionarioRubiList> result = funcionarioDAO.search(json.getString("value"));
+			Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
+			return new ResponseEntity<>(page, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@GetMapping(path = "/{cpf}")
