@@ -63,7 +63,7 @@ public class ServicoDAO extends AbstractMethods{
 				query += " ORDER BY b2ts.\"DATA\" ASC, b2ts.HORA_FINALIZACAO ASC "; 
 			
 		System.out.println(query);
-//		con = ConnectionDB.getConnection();
+		con = ConnectionDB.getConnection();
 //		ps = con.prepareStatement(query);
 //		rs = ps.executeQuery();
 //		
