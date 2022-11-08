@@ -62,7 +62,7 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
-	@GetMapping(path = "/page/search")
+	@PostMapping(path = "/page/search")
 	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestBody String body, Pageable pageable) throws SQLException{
 		try {
 			JSONObject json = new JSONObject(body);
