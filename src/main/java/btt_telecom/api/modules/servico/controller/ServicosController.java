@@ -132,10 +132,10 @@ public class ServicosController {
 	public ResponseEntity<List<ServicoRubi>> findServicosInInterval(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
-			String data_inicio 		= json.has("data_inicio") ? json.getString("data_inicio") : "";
-			String data_final 		= json.has("data_final") ? json.getString("data_final") : "";
-			String cpf_funcionario 	= json.has("cpf_funcionario") ? json.getString("cpf_funcionario") : "";
-			String status 			= json.has("status") ? json.getString("status") : "";
+			String data_inicio = json.getString("data_inicio");
+			String data_final = json.getString("data_final");
+			String cpf_funcionario = json.getString("cpf_funcionario");
+			String status = json.getString("status") ;
 
 			List<ServicoRubi> list = servicoDAO.getServicos(data_inicio, data_final, cpf_funcionario, status);
 			return new ResponseEntity<>(list, HttpStatus.OK);
