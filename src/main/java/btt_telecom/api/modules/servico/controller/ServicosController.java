@@ -114,9 +114,9 @@ public class ServicosController {
 	@GetMapping(path = "/funcionario/{cpf}")
 	public ResponseEntity<List<Servico>> findServicosByStatusByFuncInExactlyDate(@PathVariable(name = "cpf") String cpf){
 		try {
-			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
-			Date data = formatoData.parse(formatoData.format(new Date()));
-			return new ResponseEntity<>(servicoRepository.findByFuncAndStatus(cpf, data.toString()), HttpStatus.OK);
+			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
+			String data = formatoData.format(new Date());
+			return new ResponseEntity<>(servicoRepository.findByFuncUsingSysdate(cpf, data), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
