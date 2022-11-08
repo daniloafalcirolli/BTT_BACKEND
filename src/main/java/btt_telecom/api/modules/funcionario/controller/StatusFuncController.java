@@ -18,19 +18,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
+import btt_telecom.api.modules.funcionario.external.StatusFuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.StatusFunc;
 import btt_telecom.api.modules.funcionario.repository.StatusFuncRepository;
 
 @RestController
 @RequestMapping(path = "/api/status/func")
-public class StatusFuncController {
+public class StatusFuncController extends AbstractMethods{
 	@Autowired
 	private StatusFuncRepository statusFuncRepository;
+	
+	private StatusFuncionarioDAO statusDAO = new StatusFuncionarioDAO();
 	
 	@GetMapping("/page")
 	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
 		try {
-			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
+			return new ResponseEntity<>(convertListToPage(statusDAO.findAll(), pageable) , HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

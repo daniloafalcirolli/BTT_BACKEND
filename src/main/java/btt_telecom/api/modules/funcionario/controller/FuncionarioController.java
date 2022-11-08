@@ -55,14 +55,13 @@ public class FuncionarioController extends AbstractMethods{
 	
 	@GetMapping(path = "/page/search")
 	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(Pageable pageable) throws SQLException{
-		FuncionarioDAO func = new FuncionarioDAO();
-		List<FuncionarioRubiList> result = func.findAll();
+		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
 		Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
 		return new ResponseEntity<>(page, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/{cpf}")
-	private ResponseEntity<FuncionarioRubi> findById(@PathVariable(name = "cpf") String cpf) {
+	private ResponseEntity<FuncionarioRubi> findByCpf(@PathVariable(name = "cpf") String cpf) {
 		try {
 			if(funcionarioDAO.existsFuncionarioByCpf(cpf)) {
 				return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
@@ -75,17 +74,31 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
+	@PostMapping
+	private ResponseEntity<HttpStatus> editAndSave(@RequestBody Funcionario funcionario){
+		try {
+			if(funcionarioRepository.save(funcionario) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
+			System.out.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PostMapping(path = "/login")
 	private ResponseEntity<Funcionario> efetuarLogin(@RequestBody String body) {
 		try {
 			json = new JSONObject(body);
 			
 			if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")) != null) {
-				if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")).getStatus()){
+//				if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")).getStatus()){
 					return new ResponseEntity<>(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")), HttpStatus.OK);
-				}else{
-					return new ResponseEntity<Funcionario>(HttpStatus.NOT_ACCEPTABLE);
-				}
+//				}else{
+//					return new ResponseEntity<Funcionario>(HttpStatus.NOT_ACCEPTABLE);
+//				}
 			}else{
 				return new ResponseEntity<Funcionario>(HttpStatus.NOT_FOUND);
 			}

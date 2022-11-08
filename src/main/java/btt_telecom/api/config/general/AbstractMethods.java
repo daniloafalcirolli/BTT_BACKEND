@@ -28,17 +28,17 @@ public class AbstractMethods {
 	public String getFormattedAddress(String tipo_logradouro, String rua, String numero, String bairro, String cidade, String estado, String cep) {		
 		switch(tipo_logradouro) {
 			case "R": 
-				tipo_logradouro = "Rua ";
+				tipo_logradouro = "RUA ";
 				break;
 			case "AV":
-				tipo_logradouro = "Avenida ";
+				tipo_logradouro = "AVENIDA ";
 				break;
 			case "EST":
-				tipo_logradouro = "Estrada ";
+				tipo_logradouro = "ESTRADA ";
 				break;
 		}
 		
-		String finalAddress = String.format("%s %s, %s - %s, %s - %s", tipo_logradouro, rua, numero, bairro, cidade, estado);
+		String finalAddress = String.format("%s %s, %s - %s, %s - %s", tipo_logradouro, rua.toUpperCase(), numero, bairro.toUpperCase(), cidade.toUpperCase(), estado.toUpperCase());
 		return finalAddress;
 	}
 	

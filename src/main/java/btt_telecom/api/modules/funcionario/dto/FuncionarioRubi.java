@@ -7,16 +7,22 @@ public class FuncionarioRubi {
 	
 	private String cpf;
 	
-	private String empresa;
+	private String pis;
 	
+	private String empresa;
+
+	private String placa; 
+
 	private String consumo;
 	
 	private String preco_gasolina;
+	
+	private String endereco;
 
 	private String latitude;
 	
 	private String longitude;
-	
+
 	public String getNome() {
 		return nome;
 	}
@@ -41,12 +47,28 @@ public class FuncionarioRubi {
 		this.cpf = cpf;
 	}
 
+	public String getPis() {
+		return pis;
+	}
+
+	public void setPis(String pis) {
+		this.pis = pis;
+	}
+
 	public String getEmpresa() {
 		return empresa;
 	}
 
 	public void setEmpresa(String empresa) {
 		this.empresa = empresa;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
 	}
 
 	public String getConsumo() {
@@ -63,6 +85,14 @@ public class FuncionarioRubi {
 
 	public void setPreco_gasolina(String preco_gasolina) {
 		this.preco_gasolina = preco_gasolina;
+	}
+
+	public String getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(String endereco) {
+		this.endereco = endereco;
 	}
 
 	public String getLatitude() {

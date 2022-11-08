@@ -132,6 +132,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "	vr.SITAFA,"
 				+ "	vr.NUMCPF,"
 				+ "	vr.NUMCID,"
+				+ "	vr.NUMPIS,"
 				+ "	vr.TIPLGR,"
 				+ "	vr.ENDRUA,"
 				+ "	vr.ENDNUM,"
@@ -140,6 +141,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "	vr.ESTCID,"
 				+ "	vr.ENDCEP,"
 				+ "	vr.NUMTEL,"
+				+ " f2.PLACA,"
 				+ "	(CASE"
 				+ "		WHEN c2.PRECO_GASOLINA IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'preco_gasolina_padrao')"
 				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
@@ -154,7 +156,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "	SELECT "
 				+ "	DISTINCT"
 				+ "		a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, "
-				+ "		LPAD(a.NUMCPF, 11, '0') AS NUMCPF, e.NUMCID, a.NUMCAD, "
+				+ "		LPAD(a.NUMCPF, 11, '0') AS NUMCPF, a.NUMPIS, e.NUMCID, a.NUMCAD, "
 				+ "		b.NOMEXB, c.DATCRE, e.TIPLGR, "
 				+ "		e.ENDRUA, e.ENDNUM, e.ENDCPL, "
 				+ "		'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL, g.NOMBAI, "
@@ -181,10 +183,11 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "					g.CODBAI = e.CODBAI and"
 				+ "					f.CODEST = e.CODEST and"
 				+ "					(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "					a.NUMCPF = '" + cpf + "' and"
 				+ "					a.TIPCOL= '1') vr"
 				+ "	LEFT JOIN B2TTELECOM_DB.CIDADES c2 ON"
 				+ "		(UPPER(c2.CIDADE) = UPPER(NOMCID))"
-				+ "	LEFT JOIN B2TTELECOM_DB.FUNCIONARIO f2 ON"
+				+ "	LEFT JOIN B2TTELECOM_DB.FUNCIONARIOS f2 ON"
 				+ "		(f2.CPF = vr.NUMCPF)"
 				+ "	ORDER BY NOMFUN";
 		
@@ -200,9 +203,10 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setUsername(rs.getString("NOMEXB"));
 				funcionario.setEmpresa(rs.getString("RAZSOC"));
 				funcionario.setCpf(rs.getString("NUMCPF"));
+				funcionario.setPis(rs.getString("NUMPIS"));
 				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
 				funcionario.setConsumo(rs.getString("CONSUMO"));
-				
+				funcionario.setPlaca(rs.getString("PLACA"));
 
 				String formattedAddress = getFormattedAddress(
 						rs.getString("TIPLGR"), 
@@ -214,6 +218,7 @@ public class FuncionarioDAO extends AbstractMethods{
 						rs.getString("ENDCEP"));
 				JSONObject cords = getLatAndLng(formattedAddress);
 
+				funcionario.setEndereco(formattedAddress);
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
 			}

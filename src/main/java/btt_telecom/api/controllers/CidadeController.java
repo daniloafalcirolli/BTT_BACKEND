@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.models.Cidade;
-import btt_telecom.api.modules.funcionario.model.Funcionario;
-import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
 import btt_telecom.api.repositories.CidadeRepository;
 
 @RestController
@@ -28,9 +26,6 @@ import btt_telecom.api.repositories.CidadeRepository;
 public class CidadeController {
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
-	@Autowired
-	private FuncionarioRepository funcionarioRepository;
 	
 	@GetMapping("/page")
 	private ResponseEntity<Page<Cidade>> findAllWithPage(Pageable pageable){
@@ -92,12 +87,7 @@ public class CidadeController {
 	@DeleteMapping(path = "/{id}")
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {
-			if(cidadeRepository.existsById(id)) {
-				List<Funcionario> list = funcionarioRepository.findAll();
-				list.forEach(x -> {
-					x.setCidade(null);
-					funcionarioRepository.save(x);
-				});
+			if(cidadeRepository.existsById(id)) {			
 				cidadeRepository.deleteById(id);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}else {
