@@ -21,10 +21,11 @@ public class StatusFuncionarioDAO {
 		String query = ""
 				+ " SELECT "
 				+ "	x.CODSIT, "
-				+ " x.DESSIT, "
-				+ " x.DESABR "
-				+ " FROM RUBI.R010SIT x "
-				+ " ORDER BY x.CODSIT";
+				+ "	x.DESSIT, "
+				+ "	x.DESABR "
+				+ "	FROM RUBI.R010SIT x "
+				+ "	WHERE "
+				+ "	x.CODSIT NOT IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf)";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
