@@ -31,6 +31,7 @@ public class StatusFuncionarioDAO {
 		
 		List<StatusFunc> result = new ArrayList<>();
 		while(rs.next()) {
+			status = new StatusFunc();
 			status.setCodigo(rs.getLong("CODSIT"));
 			status.setDescricao(rs.getString("DESSIT"));
 			status.setAbreviatura(rs.getString("DESABR"));
