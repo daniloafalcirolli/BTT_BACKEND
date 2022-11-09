@@ -69,6 +69,19 @@ public class StatusFuncController extends AbstractMethods{
 		}
 	}
 	
+	@PostMapping
+	private ResponseEntity<HttpStatus> save(@RequestBody StatusFunc status){
+		try {
+			if(statusFuncRepository.save(status) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@DeleteMapping(path = "/{id}")
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
 		try {

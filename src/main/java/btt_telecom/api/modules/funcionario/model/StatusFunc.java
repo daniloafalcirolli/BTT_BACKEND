@@ -21,8 +21,6 @@ public class StatusFunc {
 	
 	private String descricao;
 	
-	private boolean situacao;
-
 	public Long getId() {
 		return id;
 	}
@@ -45,14 +43,6 @@ public class StatusFunc {
 
 	public void setAbreviatura(String abreviatura) {
 		this.abreviatura = abreviatura;
-	}
-
-	public boolean isSituacao() {
-		return situacao;
-	}
-
-	public void setSituacao(boolean situacao) {
-		this.situacao = situacao;
 	}
 
 	public String getDescricao() {
