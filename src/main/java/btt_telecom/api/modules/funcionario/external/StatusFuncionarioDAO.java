@@ -25,7 +25,8 @@ public class StatusFuncionarioDAO {
 				+ "	x.DESABR "
 				+ "	FROM RUBI.R010SIT x "
 				+ "	WHERE "
-				+ "	x.CODSIT NOT IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf)";
+				+ "	x.CODSIT NOT IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf)"
+				+ " ORDER BY x.CODSIT";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
