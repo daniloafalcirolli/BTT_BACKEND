@@ -35,6 +35,8 @@ public class StatusFuncionarioDAO {
 			status.setCodigo(rs.getLong("CODSIT"));
 			status.setDescricao(rs.getString("DESSIT"));
 			status.setAbreviatura(rs.getString("DESABR"));
+
+			result.add(status);
 		}
 
 		con.close();
