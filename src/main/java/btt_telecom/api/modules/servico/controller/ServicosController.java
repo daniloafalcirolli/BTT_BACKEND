@@ -190,7 +190,27 @@ public class ServicosController {
 				s.setObservacoes(json.getString("obs"));
 				s.setCod_quebra(json.getString("cod"));
 				s.setStatus(json.getString("status"));
-			}else {
+
+				if(json.has("imagens")) {
+					JSONArray jsonImagens = json.getJSONArray("imagens");
+					List<Imagem> imagens = new ArrayList<>();
+					for(int i = 0; i < jsonImagens.length(); i++) {
+						JSONObject campo = new JSONObject(jsonImagens.get(i).toString());
+						
+						Imagem imagem = new Imagem();
+						imagem.setContent(campo.getString("content"));
+						imagem.setFileName(campo.getString("fileName"));
+						imagem.setFileType(campo.getString("fileType"));
+						imagem.setImagem_provedor(imagensProvedorRepository.findById(campo.getLong("id_imagem_provedor")).get());
+						
+						imagem = imagemRepository.save(imagem);
+						
+						imagens.add(imagem);
+					}
+					
+					s.setImagens(imagens);
+				}
+			} else {
 				JSONArray jsonMatApli = json.getJSONArray("materiais_aplicados");
 				JSONArray jsonMatReti = json.getJSONArray("materiais_retirados");
 				JSONArray jsonCamposApli = json.getJSONArray("campos_aplicados");

@@ -106,17 +106,13 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/login")
-	private ResponseEntity<Funcionario> efetuarLogin(@RequestBody String body) {
+	private ResponseEntity<Funcionario> efetuarLogin(@RequestBody String body) throws SQLException {
 		try {
 			json = new JSONObject(body);
 			
-			if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")) != null) {
-//				if(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")).getStatus()){
-					return new ResponseEntity<>(funcionarioRepository.findByUsernameCpf(json.getString("username"), json.getString("cpf")), HttpStatus.OK);
-//				}else{
-//					return new ResponseEntity<Funcionario>(HttpStatus.NOT_ACCEPTABLE);
-//				}
-			}else{
+			if(funcionarioDAO.login(json.getString("cpf"), json.getString("username").toLowerCase())) {
+				return new ResponseEntity<Funcionario>(HttpStatus.OK);
+			} else{
 				return new ResponseEntity<Funcionario>(HttpStatus.NOT_FOUND);
 			}
 		} catch (JSONException e) {

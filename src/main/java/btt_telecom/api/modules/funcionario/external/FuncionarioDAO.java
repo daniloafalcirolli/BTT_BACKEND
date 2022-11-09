@@ -370,4 +370,57 @@ public class FuncionarioDAO extends AbstractMethods{
 			con.close();
 		}
 	}
+	
+	
+	public boolean login(String cpf, String username) throws SQLException {
+		String query = ""
+				+ " SELECT "
+				+ "DISTINCT"
+				+ "	a.NOMFUN,"
+				+ "	a.SITAFA, "
+				+ "	e.NUMCID,"
+				+ "	LPAD(a.NUMCPF, 11, '0') AS NUMCPF,"
+				+ "	b.NOMEXB,"
+				+ "	'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL"
+				+ "	FROM"
+				+ "		RUBI.R034FUN a, "
+				+ "		RUBI.R910ENT b, "
+				+ "		RUBI.R910USU c, "
+				+ "		RUBI.R034USU d, "
+				+ "		RUBI.R034CPL e, "
+				+ "		RUBI.R074CID f, "
+				+ "		RUBI.R074BAI g"
+				+ "	WHERE"
+				+ "		d.NUMEMP = a.NUMEMP and"
+				+ "		a.NUMEMP = e.NUMEMP and"
+				+ "				a.NUMCAD = d.NUMCAD and"
+				+ "				a.NUMCAD = e.NUMCAD and"
+				+ "				d.CODUSU = b.CODENT and"
+				+ "				c.CODENT = b.CODENT and"
+				+ "				f.CODCID = e.CODCID and"
+				+ "				f.CODCID = g.CODCID and"
+				+ "				g.CODBAI = e.CODBAI and"
+				+ "				f.CODEST = e.CODEST and"
+				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "				a.TIPCOL= '1' AND "
+				+ "				a.NUMCPF = '" + cpf + "' AND "
+				+ "				b.NOMEXB = '" + username + "' AND "
+				+ "				a.SITAFA IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf)"
+				+ "				ORDER BY a.NOMFUN ASC";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		try {
+			if(!rs.isBeforeFirst()) {
+				return false;
+			}else {
+				return true;
+			}
+		} finally {
+			con.close();
+		}
+	}
+
 }
