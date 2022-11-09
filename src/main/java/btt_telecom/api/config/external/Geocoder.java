@@ -1,4 +1,4 @@
-package btt_telecom.api.external;
+package btt_telecom.api.config.external;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;

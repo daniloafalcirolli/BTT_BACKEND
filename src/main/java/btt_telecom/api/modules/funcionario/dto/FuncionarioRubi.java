@@ -17,6 +17,8 @@ public class FuncionarioRubi {
 	
 	private String preco_gasolina;
 	
+	private Long id_cidade;
+	
 	private String endereco;
 
 	private String latitude;
@@ -85,6 +87,14 @@ public class FuncionarioRubi {
 
 	public void setPreco_gasolina(String preco_gasolina) {
 		this.preco_gasolina = preco_gasolina;
+	}
+
+	public Long getId_cidade() {
+		return id_cidade;
+	}
+
+	public void setId_cidade(Long id_cidade) {
+		this.id_cidade = id_cidade;
 	}
 
 	public String getEndereco() {

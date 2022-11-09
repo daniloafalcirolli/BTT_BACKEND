@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import btt_telecom.api.external.Geocoder;
+import btt_telecom.api.config.external.Geocoder;
 
 public class AbstractMethods {
 	

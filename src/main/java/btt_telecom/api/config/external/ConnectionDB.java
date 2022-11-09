@@ -1,4 +1,4 @@
-package btt_telecom.api.external;
+package btt_telecom.api.config.external;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,10 +30,28 @@ public class StatusFuncController extends AbstractMethods{
 	
 	private StatusFuncionarioDAO statusDAO = new StatusFuncionarioDAO();
 	
-	@GetMapping("/page")
-	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
+	@GetMapping("/rubi")
+	private ResponseEntity<List<StatusFunc>> findAllFromRubiWithoutPage(){
+		try {
+			return new ResponseEntity<>(statusDAO.findAll(), HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/rubi/page")
+	private ResponseEntity<Page<StatusFunc>> findAllFromRubiWithPage(Pageable pageable){
 		try {
 			return new ResponseEntity<>(convertListToPage(statusDAO.findAll(), pageable) , HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping(path = "/page")
+	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
+		try {
+			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -51,41 +68,6 @@ public class StatusFuncController extends AbstractMethods{
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-
-	@GetMapping(path = "/{id}")
-	private ResponseEntity<StatusFunc> findById(@PathVariable(name = "id") Long id){
-		try {
-			if(statusFuncRepository.existsById(id)) {
-				return new ResponseEntity<>(statusFuncRepository.findById(id).get(), HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping
-	private ResponseEntity<HttpStatus> save(@RequestBody StatusFunc StatusFunc){
-		if(statusFuncRepository.save(StatusFunc) != null) {
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		}else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PutMapping
-	private ResponseEntity<HttpStatus> edit(@RequestBody StatusFunc StatusFunc){
-		if(statusFuncRepository.existsById(StatusFunc.getId())) {
-			if(statusFuncRepository.save(StatusFunc) != null) {
-				return new ResponseEntity<>(HttpStatus.OK);
-			}else {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-		}else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
 	
 	@DeleteMapping(path = "/{id}")
 	private ResponseEntity<HttpStatus> delete(@PathVariable(name = "id") Long id){
@@ -98,21 +80,6 @@ public class StatusFuncController extends AbstractMethods{
 			}
 		}catch(Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PutMapping(path = "/status/{id}")
-	private ResponseEntity<HttpStatus> alterarStatus(@PathVariable(name = "id") Long id){
-		try {
-			StatusFunc f = statusFuncRepository.findById(id).get();
-			f.setSituacao(!f.isSituacao());	
-			if(statusFuncRepository.save(f) != null) {
-				return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-			}else {
-				return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
-			}
-		}catch(Exception e) {
-			return new ResponseEntity<HttpStatus>(HttpStatus.PRECONDITION_FAILED);
 		}
 	}
 }

@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import btt_telecom.api.config.general.AbstractMethods;
-import btt_telecom.api.external.ConnectionDB;
+import btt_telecom.api.config.external.ConnectionDB;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubiList;
 
@@ -201,6 +201,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
 				+ "		END"
 				+ "	) AS PRECO_GASOLINA,"
+				+ " c2.ID AS ID_CIDADE,"
 				+ "	(CASE "
 				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'consumo_padrao')"
 				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NOT NULL THEN f2.KILOMETRAGEM_POR_LITRO"
@@ -259,6 +260,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setCpf(rs.getString("NUMCPF"));
 				funcionario.setPis(rs.getString("NUMPIS"));
 				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
+				funcionario.setId_cidade(rs.getLong("ID_CIDADE"));
 				funcionario.setConsumo(rs.getString("CONSUMO"));
 				funcionario.setPlaca(rs.getString("PLACA"));
 

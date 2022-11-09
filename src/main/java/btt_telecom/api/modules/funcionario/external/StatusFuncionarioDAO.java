@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import btt_telecom.api.external.ConnectionDB;
+import btt_telecom.api.config.external.ConnectionDB;
 import btt_telecom.api.modules.funcionario.model.StatusFunc;
 
 public class StatusFuncionarioDAO {
