@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
 import org.json.JSONArray;
@@ -22,9 +23,12 @@ public class Geocoder {
         String encodedQuery = URLEncoder.encode(query,"UTF-8");
         String requestUri = GEOCODING_RESOURCE + "?key=" + API_KEY + "&address=" + encodedQuery;
 
-        HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri))
-                .timeout(Duration.ofMillis(600)).build();
-
+        HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri)).build();
+        
+        httpClient.sendAsync(geocodingRequest, BodyHandlers.ofString())
+        		.thenApply(HttpResponse::body)
+        		.thenAccept(System.out::println);
+        
         HttpResponse<?> geocodingResponse = httpClient.send(geocodingRequest,
                 HttpResponse.BodyHandlers.ofString());
         try {
