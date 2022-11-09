@@ -23,7 +23,8 @@ public class StatusFuncionarioDAO {
 				+ "	x.CODSIT, "
 				+ " x.DESSIT, "
 				+ " x.DESABR "
-				+ " FROM RUBI.R010SIT x";
+				+ " FROM RUBI.R010SIT x "
+				+ " ORDER BY x.CODSIT";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
