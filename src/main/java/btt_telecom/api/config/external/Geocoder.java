@@ -16,6 +16,7 @@ public class Geocoder {
 
     private static final String GEOCODING_RESOURCE = "https://maps.googleapis.com/maps/api/geocode/json";
     private static final String API_KEY = "AIzaSyD1j-aZgDYi3Wq7Na29lk45otM22aYF8uM";
+    private static String responseBody = "";
 
     public JSONObject GeocodeSync(String query) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -27,12 +28,12 @@ public class Geocoder {
         
         httpClient.sendAsync(geocodingRequest, BodyHandlers.ofString())
         		.thenApply(HttpResponse::body)
-        		.thenAccept(System.out::println);
+        		.thenAccept(response -> responseBody = response);
         
-        HttpResponse<?> geocodingResponse = httpClient.send(geocodingRequest,
-                HttpResponse.BodyHandlers.ofString());
+//        HttpResponse<?> geocodingResponse = httpClient.send(geocodingRequest,
+//                HttpResponse.BodyHandlers.ofString());
         try {
-			JSONObject json = new JSONObject(geocodingResponse.body().toString());
+			JSONObject json = new JSONObject(responseBody);
 			JSONArray jarr = json.getJSONArray("results");
 			JSONObject geometry = new JSONObject(jarr.get(0).toString());
 			JSONObject location = new JSONObject(geometry.get("geometry").toString());
