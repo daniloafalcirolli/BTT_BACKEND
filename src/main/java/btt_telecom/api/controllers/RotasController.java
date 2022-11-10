@@ -163,7 +163,7 @@ public class RotasController {
 			JSONObject json = new JSONObject(body);
 			Long id_cidade = json.getLong("id_cidade");
 			Cidade cidade = cidadeRepository.findById(id_cidade).get();
-			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getLong("id_cidade"), json.getString("data_inicio"), json.getString("data_final"));
+			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getLong("id_cidade"), json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
 				x.setGasolina(cidade.getPreco_gasolina());
 			});
