@@ -7,6 +7,10 @@ public class FuncionarioRubi {
 	
 	private String cpf;
 	
+	private String rg;
+	
+	private String telefone;
+	
 	private String pis;
 	
 	private String empresa;
@@ -47,6 +51,22 @@ public class FuncionarioRubi {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getRg() {
+		return rg;
+	}
+
+	public void setRg(String rg) {
+		this.rg = rg;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
 	public String getPis() {

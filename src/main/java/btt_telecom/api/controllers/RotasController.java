@@ -22,7 +22,6 @@ import btt_telecom.api.dto.RotaDTO;
 import btt_telecom.api.models.Cidade;
 import btt_telecom.api.models.Rota;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioConsumo;
-import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.repositories.CidadeRepository;
 import btt_telecom.api.repositories.RotaRepository;
@@ -56,7 +55,7 @@ public class RotasController {
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 
-			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
 			r.setId_cidade(fr.getId_cidade());
 			r.setGasolina(fr.getPreco_gasolina());
@@ -89,7 +88,7 @@ public class RotasController {
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("iniciou");
 
-			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
 			r.setId_cidade(fr.getId_cidade());
 			r.setGasolina(fr.getPreco_gasolina());
@@ -124,7 +123,7 @@ public class RotasController {
 			r.setLongitude(json.getString("longitude"));
 			r.setDescricao("finalizou");
 
-			FuncionarioRubi fr = funcionarioDAO.findByCpf(r.getCpf_funcionario());
+			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
 			r.setId_cidade(fr.getId_cidade());
 			r.setGasolina(fr.getPreco_gasolina());
