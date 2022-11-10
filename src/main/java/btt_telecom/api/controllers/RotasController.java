@@ -1,5 +1,6 @@
 package btt_telecom.api.controllers;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.RotaDTO;
 import btt_telecom.api.models.Rota;
+import btt_telecom.api.modules.funcionario.dto.FuncionarioConsumo;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.repositories.RotaRepository;
@@ -132,15 +134,15 @@ public class RotasController {
 		}
 	}
 
-	@PostMapping(path = "/recalculo")
-	private ResponseEntity<HttpStatus> recalculo(@RequestBody String body) {
+	@PostMapping(path = "/recalculo/consumo")
+	private ResponseEntity<HttpStatus> recalculoConsumo(@RequestBody String body) throws SQLException {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasOfAllFuncsByCityInInterval(json.getString("data_inicio"),
-					json.getString("data_final"), json.getLong("id_cidade"));
-			String gasolina = json.getString("gasolina");
+			
+			FuncionarioConsumo func = funcionarioDAO.findConsumoFuncByCpf(json.getString("cpf_funcionario"));
+			List<Rota> rotas = rotaRepository.findAllByFuncInInterval(func.getCpf(), json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
-				x.setGasolina(gasolina);
+				x.setConsumo(func.getConsumo());
 			});
 			rotaRepository.saveAll(rotas);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -150,15 +152,15 @@ public class RotasController {
 		}
 	}
 
-	@PostMapping(path = "/recalculo/consumo")
-	private ResponseEntity<HttpStatus> recalculoConsumo(@RequestBody String body) {
+	@PostMapping(path = "/recalculo/combustivel")
+	private ResponseEntity<HttpStatus> recalculo(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasOfSingleFuncInInterval(json.getString("data_inicio"),
-					json.getString("data_final"), json.getLong("id_funcionario"));
-			String consumo = json.getString("consumo");
+			List<Rota> rotas = rotaRepository.findRotasOfAllFuncsByCityInInterval(json.getString("data_inicio"),
+					json.getString("data_final"), json.getLong("id_cidade"));
+			String gasolina = json.getString("gasolina");
 			rotas.forEach(x -> {
-				x.setConsumo(consumo);
+				x.setGasolina(gasolina);
 			});
 			rotaRepository.saveAll(rotas);
 			return new ResponseEntity<>(HttpStatus.OK);
