@@ -174,21 +174,21 @@ public class RotasController {
 		}
 	}
 
-	@PostMapping(path = "/relatorio")
-	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
-		try {
-			// Obter rotas de um funcionário especifico em um dia especifico
-			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
-			List<RotaDTO> rotasDTO = new ArrayList<>();
-			rotas.forEach(x -> {
-				rotasDTO.add(new RotaDTO(x));
-			});
-			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@PostMapping(path = "/relatorio")
+//	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
+//		try {
+//			// Obter rotas de um funcionário especifico em um dia especifico
+//			JSONObject json = new JSONObject(body);
+//			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
+//			List<RotaDTO> rotasDTO = new ArrayList<>();
+//			rotas.forEach(x -> {
+//				rotasDTO.add(new RotaDTO(x));
+//			});
+//			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
+//		} catch (Exception e) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
 	@PostMapping(path = "/relatorio/combustivel")
 	private ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
@@ -318,7 +318,9 @@ public class RotasController {
 	public ResponseEntity<HttpStatus> validar(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
+			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
+
+			List<Rota> list = rotaRepository.findRotasByFuncAndData(formato.format(new Date()), json.getString("cpf_funcionario"));
 			int x = 0;
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getDescricao() != null) {
