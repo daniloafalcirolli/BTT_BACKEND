@@ -318,9 +318,7 @@ public class RotasController {
 	public ResponseEntity<HttpStatus> validar(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
-
-			List<Rota> list = rotaRepository.findRotasByFuncAndData(formato.format(new Date()), json.getString("cpf_funcionario"));
+			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getString("cpf_funcionario"));
 			int x = 0;
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getDescricao() != null) {
