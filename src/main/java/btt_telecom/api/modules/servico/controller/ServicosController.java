@@ -40,6 +40,7 @@ import btt_telecom.api.modules.provedores.repository.ImagensProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 import btt_telecom.api.modules.provedores.repository.ServicoProvedorRepository;
 import btt_telecom.api.modules.servico.dto.ServicoDTO;
+import btt_telecom.api.modules.servico.dto.ServicoResponse;
 import btt_telecom.api.modules.servico.dto.ServicoRubi;
 import btt_telecom.api.modules.servico.external.ServicoDAO;
 import btt_telecom.api.modules.servico.model.Servico;
@@ -103,6 +104,9 @@ public class ServicosController {
 	public ResponseEntity<Servico> findById(@PathVariable(name = "id") Long id){
 		try {
 			if(servicoRepository.existsById(id)) {
+				Servico s = servicoRepository.findById(id).get();
+				ServicoResponse servico = new ServicoResponse(s);
+				servico.setFuncionario(funcionarioDAO.findByCpfWithoutLatAndLng(s.getCpf_funcionario()));
 				return new ResponseEntity<>(servicoRepository.findById(id).get(), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
