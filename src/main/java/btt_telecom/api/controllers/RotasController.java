@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.dto.RotaDTO;
+import btt_telecom.api.models.Cidade;
 import btt_telecom.api.models.Rota;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioConsumo;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
+import btt_telecom.api.repositories.CidadeRepository;
 import btt_telecom.api.repositories.RotaRepository;
 
 @RestController
@@ -31,6 +33,9 @@ public class RotasController {
 
 	@Autowired
 	private RotaRepository rotaRepository;
+	
+	@Autowired
+	private CidadeRepository cidadeRepository;
 
 	private FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 
@@ -156,11 +161,11 @@ public class RotasController {
 	private ResponseEntity<HttpStatus> recalculo(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasOfAllFuncsByCityInInterval(json.getString("data_inicio"),
-					json.getString("data_final"), json.getLong("id_cidade"));
-			String gasolina = json.getString("gasolina");
+			Long id_cidade = json.getLong("id_cidade");
+			Cidade cidade = cidadeRepository.findById(id_cidade).get();
+			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getLong("id_cidade"), json.getString("data_inicio"), json.getString("data_final"));
 			rotas.forEach(x -> {
-				x.setGasolina(gasolina);
+				x.setGasolina(cidade.getPreco_gasolina());
 			});
 			rotaRepository.saveAll(rotas);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -218,8 +223,8 @@ public class RotasController {
 			// cidade, funcionario e data
 			JSONObject json = new JSONObject(body);
 			if (json.has("data_inicio") && json.has("data_final") && json.has("id")) {
-				List<Rota> rotas = rotaRepository.findRotasOfAllFuncsByCityInInterval(json.getString("data_inicio"),
-						json.getString("data_final"), json.getLong("id"));
+				List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getLong("id"), json.getString("data_inicio"),
+						json.getString("data_final"));
 				List<RotaDTO> rotasDTO = new ArrayList<>();
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
