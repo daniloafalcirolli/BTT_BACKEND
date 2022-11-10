@@ -1,6 +1,17 @@
 package btt_telecom.api.config.tasks;
 
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+@EnableScheduling
 public class TaskRelatorioSenior {
+
+	@Scheduled(cron = "0 30 22 * * *")
+	public void getPersonsAfterFifty() {
+		System.out.println("teste task agendada");
+	}
 
 //	private static Connection con;
 //	private static PreparedStatement ps;
