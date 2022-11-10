@@ -101,13 +101,13 @@ public class ServicosController {
 	}
 	
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<Servico> findById(@PathVariable(name = "id") Long id){
+	public ResponseEntity<ServicoResponse> findById(@PathVariable(name = "id") Long id){
 		try {
 			if(servicoRepository.existsById(id)) {
 				Servico s = servicoRepository.findById(id).get();
 				ServicoResponse servico = new ServicoResponse(s);
 				servico.setFuncionario(funcionarioDAO.findByCpfWithoutLatAndLng(s.getCpf_funcionario()));
-				return new ResponseEntity<>(servicoRepository.findById(id).get(), HttpStatus.OK);
+				return new ResponseEntity<>(servico, HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
