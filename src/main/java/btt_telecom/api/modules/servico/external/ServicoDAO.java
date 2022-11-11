@@ -44,7 +44,7 @@ public class ServicoDAO extends AbstractMethods{
 				+ "	INNER JOIN B2TTELECOM_DB.SERVICO_PROVEDOR b2tsp ON"
 				+ "		(b2tsp.ID = b2ts.SERVICO_PROVEDOR_ID)";
 		
-				if(!data_inicio.equals("") || !data_final.equals("") || !cpf_funcionario.equals("") || !status.equals("") || !status.equals("")) {
+				if(!data_inicio.equals("") || !data_final.equals("") || !cpf_funcionario.equals("") || !id_provedor.equals("") || !status.equals("")) {
 					query += " WHERE ";
 					
 					if(!data_inicio.equals("") && !data_final.equals("")) {
@@ -61,7 +61,7 @@ public class ServicoDAO extends AbstractMethods{
 					}
 					
 					if(!id_provedor.equals("")) {
-						query += " b2tp.ID = " + id_provedor + " AND";
+						query += " b2tp.ID = " + Long.parseLong(id_provedor) + " AND";
 					}
 				}
 				
@@ -70,7 +70,6 @@ public class ServicoDAO extends AbstractMethods{
 				}
 				
 				query += " ORDER BY b2ts.\"DATA\" ASC, b2ts.HORA_FINALIZACAO ASC "; 
-			
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
 		rs = ps.executeQuery();
