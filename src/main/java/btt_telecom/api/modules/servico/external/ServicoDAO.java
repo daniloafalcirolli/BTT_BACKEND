@@ -56,7 +56,7 @@ public class ServicoDAO extends AbstractMethods{
 						query += " b2ts.CPF_FUNCIONARIO = '" + cpf_funcionario + "' AND";
 					} 
 					
-					if(!status.equals("") && !cpf_funcionario.equals("")) {
+					if(!status.equals("")) {
 						query += " b2ts.STATUS = '" + status + "' AND";
 					}
 				}

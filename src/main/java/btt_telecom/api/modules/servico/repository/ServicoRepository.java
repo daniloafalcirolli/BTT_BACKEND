@@ -9,7 +9,7 @@ import btt_telecom.api.modules.servico.model.Servico;
 
 
 public interface ServicoRepository extends JpaRepository<Servico, Long>{
-	@Query(value = "select * from servico s where s.cpf_funcionario = ?1 and s.\"DATA\" = TO_DATE(?2, 'YYYY-MM-DD') order by s.data asc, s.hora asc", nativeQuery = true)
+	@Query(value = "select * from servico s where s.cpf_funcionario = ?1 and s.\"DATA\" = TO_DATE(?2, 'YYYY-MM-DD') and s.STATUS = 'em andamento' order by s.data asc, s.hora asc", nativeQuery = true)
 	List<Servico> findByFuncUsingSysdate(String cpf, String data);
 	
 }
