@@ -137,8 +137,9 @@ public class ServicosController {
 			String data_final = json.getString("data_final");
 			String cpf_funcionario = json.getString("cpf_funcionario");
 			String status = json.getString("status") ;
+			String id_provedor = json.getString("id_provedor");
 
-			List<ServicoRubi> list = servicoDAO.getServicos(data_inicio, data_final, cpf_funcionario, status);
+			List<ServicoRubi> list = servicoDAO.getServicos(data_inicio, data_final, cpf_funcionario, id_provedor, status);
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}catch(Exception e) {
 			System.out.println(e);

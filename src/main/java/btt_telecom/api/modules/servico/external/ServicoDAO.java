@@ -17,7 +17,7 @@ public class ServicoDAO extends AbstractMethods{
 	private ResultSet rs;
 	private ServicoRubi servico;
 	
-	public List<ServicoRubi> getServicos(String data_inicio, String data_final, String cpf_funcionario, String status) throws SQLException{
+	public List<ServicoRubi> getServicos(String data_inicio, String data_final, String cpf_funcionario, String id_provedor, String status) throws SQLException{
 		String query = ""
 				+ "SELECT "
 				+ " DISTINCT"
@@ -44,7 +44,7 @@ public class ServicoDAO extends AbstractMethods{
 				+ "	INNER JOIN B2TTELECOM_DB.SERVICO_PROVEDOR b2tsp ON"
 				+ "		(b2tsp.ID = b2ts.SERVICO_PROVEDOR_ID)";
 		
-				if(!data_inicio.equals("") || !data_final.equals("") || !cpf_funcionario.equals("") || !status.equals("")) {
+				if(!data_inicio.equals("") || !data_final.equals("") || !cpf_funcionario.equals("") || !status.equals("") || !status.equals("")) {
 					query += " WHERE ";
 					
 					if(!data_inicio.equals("") && !data_final.equals("")) {
@@ -58,6 +58,10 @@ public class ServicoDAO extends AbstractMethods{
 					
 					if(!status.equals("")) {
 						query += " b2ts.STATUS = '" + status + "' AND";
+					}
+					
+					if(!id_provedor.equals("")) {
+						query += " b2tp.ID = " + id_provedor + " AND";
 					}
 				}
 				
