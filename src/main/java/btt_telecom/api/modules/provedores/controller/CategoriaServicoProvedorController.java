@@ -1,12 +1,9 @@
 package btt_telecom.api.modules.provedores.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,14 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.provedores.model.CategoriaServicoProvedor;
 import btt_telecom.api.modules.provedores.repository.CategoriaServicoProvedorRepository;
 
 @RestController
 @RequestMapping(path = "/api/categoria/servico/provedor")
-public class CategoriaServicoProvedorController {
+public class CategoriaServicoProvedorController extends AbstractMethods{
 	@Autowired
 	private CategoriaServicoProvedorRepository categoriaRepository;
 	
@@ -37,21 +36,13 @@ public class CategoriaServicoProvedorController {
 	}
 	
 	@GetMapping(path = "/page")
-	private ResponseEntity<Page<CategoriaServicoProvedor>> findAllWithPage(Pageable pageable){
+	private ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page){
 		try {
-			return new ResponseEntity<>(categoriaRepository.findAll(pageable), HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(path = "/search")
-	private ResponseEntity<Page<CategoriaServicoProvedor>> search(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<CategoriaServicoProvedor> result = categoriaRepository.search(json.getString("value"));
-			Page<CategoriaServicoProvedor> page = new PageImpl<>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(categoriaRepository.findAll(), size, page), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(convertListToPage(categoriaRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
+			}	
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
