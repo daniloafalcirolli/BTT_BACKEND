@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
@@ -62,12 +63,12 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
-	@PostMapping(path = "/page/search/{value}")
-	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(Pageable pageable, @PathVariable(name = "value") String value) throws SQLException{
+	@PostMapping(path = "/page/search")
+	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
 			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
-			Page<FuncionarioRubiList> page = convertListToPage(result, pageable);
-			return new ResponseEntity<>(page, HttpStatus.OK);
+			Page<FuncionarioRubiList> pageResult = convertListToPage(result, size, page);
+			return new ResponseEntity<>(pageResult, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

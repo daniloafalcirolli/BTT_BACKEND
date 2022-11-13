@@ -25,6 +25,16 @@ public class AbstractMethods {
 		return new PageImpl<>(pageList, pageable, size);
 	}
 	
+	public <T> Page<T> convertListToPage(List<T> list, int pageSize, int pageNumber){		
+		List<T> pageList = list.stream()
+			.skip(pageSize * pageNumber)
+			.limit(pageSize)
+			.collect(Collectors.toList());
+		
+		Page<T> page = new PageImpl<>(pageList);
+		return page;
+	}
+	
 	public String getFormattedAddress(String tipo_logradouro, String rua, String numero, String bairro, String cidade, String estado, String cep) {		
 		switch(tipo_logradouro) {
 			case "R": 
