@@ -82,6 +82,7 @@ public class ServicoDAO extends AbstractMethods{
 			servico.setFuncionario(rs.getString("FUNCIONARIO"));
 			servico.setEmpresa(rs.getString("RAZSOC"));
 			servico.setCliente(rs.getString("CLIENTE"));
+			servico.setEndereco_cliente(rs.getString("ENDERECO_CLIENTE"));
 			servico.setContrato(rs.getString("CONTRATO"));
 			servico.setProtocolo(rs.getString("PROTOCOLO"));
 			servico.setProvedor(rs.getString("PROVEDOR"));
