@@ -13,10 +13,10 @@ import btt_telecom.api.config.external.Geocoder;
 
 public class AbstractMethods {
 	
-	public <T> Map<String, Object> convertListToPage(List<T> list, int pageSize, int pageNumber){			
+	public <T> Map<String, Object> convertListToPage(List<T> list, Long pageSize, Long pageNumber){			
 		PagedListHolder<T> page = new PagedListHolder<>(list);
-		page.setPage(pageNumber);
-		page.setPageSize(pageSize);
+		page.setPage(Integer.parseInt(String.valueOf(pageNumber)));
+		page.setPageSize(Integer.parseInt(String.valueOf(pageSize)));
 
 		Map<String, Object> response = new HashMap<>();
 		response.put("content", page.getPageList());
