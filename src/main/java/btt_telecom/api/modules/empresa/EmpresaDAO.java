@@ -34,4 +34,29 @@ public class EmpresaDAO {
 		return result;
 	}
 	
+	public List<EmpresaRubi> search(String value) throws SQLException{
+		String query = " "
+				+ " SELECT "
+				+ "	x.RAZSOC, "
+				+ "	x.NOMFIL "
+				+ " FROM RUBI.R030FIL x "
+				+ "	WHERE x.RAZSOC LIKE '%" + value.toUpperCase() + "%' OR"
+				+ " x.NOMFIL LIKE '%" + value.toUpperCase() + "%'"
+				+ "	ORDER BY x.RAZSOC";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		List<EmpresaRubi> result = new ArrayList<>();
+		while(rs.next()) {
+			empresa = new EmpresaRubi();
+			empresa.setNome(rs.getString("NOMFIL"));
+			empresa.setRazao_social(rs.getString("RAZSOC"));
+			result.add(empresa);
+		}
+
+		con.close();
+		return result;
+	}
 }

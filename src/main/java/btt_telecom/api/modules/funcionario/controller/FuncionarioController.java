@@ -45,19 +45,7 @@ public class FuncionarioController extends AbstractMethods{
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 	}
-	
-	@PostMapping(path = "/search")
-	private ResponseEntity<List<FuncionarioRubiList>> searchFindAll(@RequestBody String body) throws SQLException{
-		try {
-			JSONObject json = new JSONObject(body);
-			List<FuncionarioRubiList> result = funcionarioDAO.search(json.getString("value"));
-			return new ResponseEntity<>(result, HttpStatus.OK);
-		} catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	
+		
 	@GetMapping(path = "/page")
 	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page) throws SQLException{
 		try {
