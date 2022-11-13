@@ -1,11 +1,14 @@
 package btt_telecom.api.config.general;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,16 +29,17 @@ public class AbstractMethods {
 		return new PageImpl<>(pageList, pageable, size);
 	}
 	
-	public <T> Page<T> convertListToPage(List<T> list, int pageSize, int pageNumber){	
-		int totalSize = list.size();
-		PageRequest pageable = PageRequest.of(pageNumber, totalSize);
-
-		List<T> pageList = list.stream()
-			.skip(pageSize * pageNumber)
-			.limit(pageSize)
-			.collect(Collectors.toList());
+	public <T> PagedListHolder<T> convertListToPage(List<T> list, int pageSize, int pageNumber){	
 		
-		Page<T> page = new PageImpl<>(pageList, pageable, totalSize);
+//		List<T> pageList = list.stream()
+//			.skip(pageSize * pageNumber)
+//			.limit(pageSize)
+//			.collect(Collectors.toList());
+		
+		PagedListHolder<T> page = new PagedListHolder<>(list);
+		page.setPage(pageNumber);
+		page.setPageSize(pageSize);
+
 		return page;
 	}
 	

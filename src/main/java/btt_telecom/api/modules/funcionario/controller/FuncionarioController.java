@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -64,10 +65,10 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/page/search")
-	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
+	private ResponseEntity<PagedListHolder<FuncionarioRubiList>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
 			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
-			Page<FuncionarioRubiList> pageResult = convertListToPage(result, size, page);
+			PagedListHolder<FuncionarioRubiList> pageResult = convertListToPage(result, size, page);
 			return new ResponseEntity<>(pageResult, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
