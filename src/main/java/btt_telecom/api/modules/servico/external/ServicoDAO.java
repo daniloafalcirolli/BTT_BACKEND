@@ -25,6 +25,7 @@ public class ServicoDAO extends AbstractMethods{
 				+ "	rubi_emp.RAZSOC,"
 				+ " b2ts.ID,"
 				+ "	b2tc.NOME AS CLIENTE,"
+				+ "	b2tc.ENDERECO AS ENDERECO_CLIENTE,"
 				+ "	b2tc.CONTRATO,"
 				+ "	b2ts.PROTOCOLO,"
 				+ "	b2tp.NAME AS PROVEDOR,"

@@ -9,6 +9,8 @@ public class ServicoRubi {
 	
 	private String cliente;
 	
+	private String endereco_cliente;
+	
 	private String contrato;
 	
 	private String protocolo;
@@ -53,6 +55,14 @@ public class ServicoRubi {
 
 	public void setCliente(String cliente) {
 		this.cliente = cliente;
+	}
+
+	public String getEndereco_cliente() {
+		return endereco_cliente;
+	}
+
+	public void setEndereco_cliente(String endereco_cliente) {
+		this.endereco_cliente = endereco_cliente;
 	}
 
 	public String getContrato() {
