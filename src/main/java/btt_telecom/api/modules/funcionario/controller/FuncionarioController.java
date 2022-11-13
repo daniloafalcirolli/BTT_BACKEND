@@ -53,7 +53,7 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	
-	@PostMapping(path = "/page")
+	@GetMapping(path = "/page")
 	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page) throws SQLException{
 		try {
 			if(value.equals("")) {
