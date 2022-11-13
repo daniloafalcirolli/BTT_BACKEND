@@ -1,12 +1,8 @@
 package btt_telecom.api.controllers;
 
-import java.util.List;
+import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,39 +12,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.models.Cidade;
 import btt_telecom.api.repositories.CidadeRepository;
 
 @RestController
 @RequestMapping(path = "/api/cidade")
-public class CidadeController {
+public class CidadeController extends AbstractMethods{
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
 	@GetMapping("/page")
-	private ResponseEntity<Page<Cidade>> findAllWithPage(Pageable pageable){
+	private ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page){
 		try {
-			return new ResponseEntity<>(cidadeRepository.findAll(pageable), HttpStatus.OK);
-		}catch(Exception e) {
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(cidadeRepository.findAll(), size, page), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(convertListToPage(cidadeRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
+			} 
+		} catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PostMapping(path = "/search")
-	private ResponseEntity<Page<Cidade>> findAllWithPage(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<Cidade> result = cidadeRepository.search(json.getString("value"));
-			Page<Cidade> page = new PageImpl<>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-
 	@GetMapping(path = "/{id}")
 	private ResponseEntity<Cidade> findById(@PathVariable(name = "id") Long id){
 		try {
