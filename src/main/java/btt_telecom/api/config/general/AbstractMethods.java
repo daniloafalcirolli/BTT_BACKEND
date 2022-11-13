@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import btt_telecom.api.config.external.Geocoder;
@@ -25,13 +26,16 @@ public class AbstractMethods {
 		return new PageImpl<>(pageList, pageable, size);
 	}
 	
-	public <T> Page<T> convertListToPage(List<T> list, int pageSize, int pageNumber){		
+	public <T> Page<T> convertListToPage(List<T> list, int pageSize, int pageNumber){	
+		int totalSize = list.size();
+		PageRequest pageable = PageRequest.of(pageNumber, totalSize);
+
 		List<T> pageList = list.stream()
 			.skip(pageSize * pageNumber)
 			.limit(pageSize)
 			.collect(Collectors.toList());
 		
-		Page<T> page = new PageImpl<>(pageList);
+		Page<T> page = new PageImpl<>(pageList, pageable, totalSize);
 		return page;
 	}
 	
