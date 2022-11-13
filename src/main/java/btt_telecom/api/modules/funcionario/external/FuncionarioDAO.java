@@ -107,7 +107,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
 				+ "				a.TIPCOL= '1' and"
 				+ "				UPPER(a.NOMFUN) LIKE '%" + value.toUpperCase() + "%' OR"
-				+ "				a.NUMCPF LIKE '%" + value + "%'"
+				+ "				LPAD(a.NUMCPF, 11, '0') LIKE '%" + value + "%'"
 				+ "				ORDER BY a.NOMFUN ASC";
 		
 		con = ConnectionDB.getConnection();
