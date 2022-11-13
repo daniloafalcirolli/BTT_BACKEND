@@ -55,21 +55,24 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
-	@GetMapping(path = "/page")
-	private ResponseEntity<Page<FuncionarioRubiList>> findAllWithPage(Pageable pageable) throws SQLException{
-		try {
-			Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
-			return new ResponseEntity<>(page, HttpStatus.OK);
-		} catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
+//	@GetMapping(path = "/page")
+//	private ResponseEntity<Page<FuncionarioRubiList>> findAllWithPage(Pageable pageable) throws SQLException{
+//		try {
+//			Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
+//			return new ResponseEntity<>(page, HttpStatus.OK);
+//		} catch(Exception e) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
+//	}
 	
 	@PostMapping(path = "/page/search")
 	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
-			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
-			return new ResponseEntity<>(convertListToPage(result, size, page), HttpStatus.OK);
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(funcionarioDAO.findAll(), size, page), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(convertListToPage(funcionarioDAO.search(value), size, page), HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
