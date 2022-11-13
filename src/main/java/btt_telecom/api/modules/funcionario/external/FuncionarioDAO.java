@@ -106,7 +106,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "				f.CODEST = e.CODEST and"
 				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
 				+ "				a.TIPCOL= '1' and"
-				+ "				a.NOMFUN LIKE '%" + value + "%' OR"
+				+ "				UPPER(a.NOMFUN) LIKE '%" + value.toUpperCase() + "%' OR"
 				+ "				a.NUMCPF LIKE '%" + value + "%'"
 				+ "				ORDER BY a.NOMFUN ASC";
 		

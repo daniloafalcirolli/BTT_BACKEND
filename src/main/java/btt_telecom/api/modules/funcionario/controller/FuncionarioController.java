@@ -67,6 +67,8 @@ public class FuncionarioController extends AbstractMethods{
 	private ResponseEntity<Page<FuncionarioRubiList>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
 			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
+			//return new ResponseEntity<>(result, HttpStatus.OK);
+
 			Page<FuncionarioRubiList> pageResult = convertListToPage(result, size, page);
 			return new ResponseEntity<>(pageResult, HttpStatus.OK);
 		} catch (Exception e) {
