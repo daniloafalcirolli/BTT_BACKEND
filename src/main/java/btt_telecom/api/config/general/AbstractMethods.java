@@ -4,40 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 
 import btt_telecom.api.config.external.Geocoder;
 
 public class AbstractMethods {
-	
-//	public <T> Page<T> convertListToPage(List<T> list, int pageSize, int pageNumber){
-////		Integer size = list.size();
-////		
-////		List<T> pageList = list.stream()
-////			.skip(pageable.getPageSize() * pageable.getPageNumber())
-////			.limit(pageable.getPageSize())
-////			.collect(Collectors.toList());
-//		
-////		return new PageImpl<>(pageList, pageable, size);
-//		PagedListHolder<T> page = new PagedListHolder<>(list);
-//		page.setPage(pageable.get);
-//		page.setPageSize(pageSize);
-//
-//		Map<String, Object> response = new HashMap<>();
-//		response.put("content", page.getPageList());
-//		response.put("last", page.isLastPage());
-//		response.put("first", page.isFirstPage());
-//		response.put("number", page.getPage());
-//		response.put("totalPages", page.getPageCount());
-//		return response;
-//	}
 	
 	public <T> Map<String, Object> convertListToPage(List<T> list, int pageSize, int pageNumber){			
 		PagedListHolder<T> page = new PagedListHolder<>(list);

@@ -7,9 +7,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,18 +52,9 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
-//	@GetMapping(path = "/page")
-//	private ResponseEntity<Page<FuncionarioRubiList>> findAllWithPage(Pageable pageable) throws SQLException{
-//		try {
-//			Page<FuncionarioRubiList> page = convertListToPage(funcionarioDAO.findAll(), pageable);
-//			return new ResponseEntity<>(page, HttpStatus.OK);
-//		} catch(Exception e) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
 	
-	@PostMapping(path = "/page/search")
-	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
+	@PostMapping(path = "/page")
+	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
 			if(value.equals("")) {
 				return new ResponseEntity<>(convertListToPage(funcionarioDAO.findAll(), size, page), HttpStatus.OK);
