@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import btt_telecom.api.config.external.Geocoder;
@@ -29,18 +28,18 @@ public class AbstractMethods {
 		return new PageImpl<>(pageList, pageable, size);
 	}
 	
-	public <T> PagedListHolder<T> convertListToPage(List<T> list, int pageSize, int pageNumber){	
-		
-//		List<T> pageList = list.stream()
-//			.skip(pageSize * pageNumber)
-//			.limit(pageSize)
-//			.collect(Collectors.toList());
-		
+	public <T> Map<String, Object> convertListToPage(List<T> list, int pageSize, int pageNumber){			
 		PagedListHolder<T> page = new PagedListHolder<>(list);
 		page.setPage(pageNumber);
 		page.setPageSize(pageSize);
 
-		return page;
+		Map<String, Object> response = new HashMap<>();
+		response.put("content", page.getPageList());
+		response.put("last", page.isLastPage());
+		response.put("first", page.isFirstPage());
+		response.put("number", page.getPage());
+		response.put("totalPages", page.getPageCount());
+		return response;
 	}
 	
 	public String getFormattedAddress(String tipo_logradouro, String rua, String numero, String bairro, String cidade, String estado, String cep) {		

@@ -2,6 +2,7 @@ package btt_telecom.api.modules.funcionario.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,11 +66,10 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/page/search")
-	private ResponseEntity<PagedListHolder<FuncionarioRubiList>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
+	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value") String value, @RequestParam(name = "size") int size, @RequestParam(name = "page") int page) throws SQLException{
 		try {
 			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
-			PagedListHolder<FuncionarioRubiList> pageResult = convertListToPage(result, size, page);
-			return new ResponseEntity<>(pageResult, HttpStatus.OK);
+			return new ResponseEntity<>(convertListToPage(result, size, page), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
