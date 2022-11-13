@@ -29,19 +29,19 @@ public class StatusFuncController extends AbstractMethods{
 	
 	private StatusFuncionarioDAO statusDAO = new StatusFuncionarioDAO();
 	
-	@GetMapping("/rubi")
-	private ResponseEntity<List<StatusFunc>> findAllFromRubiWithoutPage(){
+	@GetMapping("/page")
+	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
 		try {
-			return new ResponseEntity<>(statusDAO.findAll(), HttpStatus.OK);
+			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/rubi")
-	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
+	private ResponseEntity<List<StatusFunc>> findAllFromRubiWithoutPage(){
 		try {
-			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
+			return new ResponseEntity<>(statusDAO.findAll(), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
