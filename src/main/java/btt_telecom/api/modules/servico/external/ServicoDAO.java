@@ -74,26 +74,29 @@ public class ServicoDAO extends AbstractMethods{
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
 		rs = ps.executeQuery();
-		
-		List<ServicoRubi> result = new ArrayList<>();
-		while(rs.next()) {
-			servico = new ServicoRubi();
-			servico.setId(rs.getLong("ID"));
-			servico.setFuncionario(rs.getString("FUNCIONARIO"));
-			servico.setEmpresa(rs.getString("RAZSOC"));
-			servico.setCliente(rs.getString("CLIENTE"));
-			servico.setEndereco_cliente(rs.getString("ENDERECO_CLIENTE"));
-			servico.setContrato(rs.getString("CONTRATO"));
-			servico.setProtocolo(rs.getString("PROTOCOLO"));
-			servico.setProvedor(rs.getString("PROVEDOR"));
-			servico.setServico_provedor(rs.getString("SERVICO"));
-			servico.setStatus(rs.getString("STATUS"));
-			servico.setData_inicio(rs.getString("DATA_INICIO").split(" ")[0]);
-			servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO") != null ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
-			result.add(servico);
+		try {
+			List<ServicoRubi> result = new ArrayList<>();
+
+			while(rs.next()) {
+				servico = new ServicoRubi();
+				servico.setId(rs.getLong("ID"));
+				servico.setFuncionario(rs.getString("FUNCIONARIO"));
+				servico.setEmpresa(rs.getString("RAZSOC"));
+				servico.setCliente(rs.getString("CLIENTE"));
+				servico.setEndereco_cliente(rs.getString("ENDERECO_CLIENTE"));
+				servico.setContrato(rs.getString("CONTRATO"));
+				servico.setProtocolo(rs.getString("PROTOCOLO"));
+				servico.setProvedor(rs.getString("PROVEDOR"));
+				servico.setServico_provedor(rs.getString("SERVICO"));
+				servico.setStatus(rs.getString("STATUS"));
+				servico.setData_inicio(rs.getString("DATA_INICIO").split(" ")[0]);
+				servico.setHora_finalizacao(rs.getString("HORA_FINALIZACAO") != null ? rs.getString("HORA_FINALIZACAO").split(" ")[1] : null);
+				result.add(servico);
+			}
+			
+			return result; 
+		} finally {
+			con.close();
 		}
-		
-		con.close();
-		return result; 
 	}
 }
