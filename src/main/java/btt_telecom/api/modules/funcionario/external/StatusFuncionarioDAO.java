@@ -55,8 +55,8 @@ public class StatusFuncionarioDAO {
 				+ "	FROM RUBI.R010SIT x "
 				+ "	WHERE x.CODSIT NOT IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf) ORDER BY x.CODSIT) "
 				+ "	WHERE CODSIT LIKE '%" + value + "%' OR "
-				+ " UPPER(DESSIT) LIKE '%" + value + "%' OR "
-				+ " UPPER(DESABR) LIKE '%" + value + "%'";
+				+ " UPPER(DESSIT) LIKE '%" + value.toUpperCase() + "%' OR "
+				+ " UPPER(DESABR) LIKE '%" + value.toUpperCase() + "%'";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
