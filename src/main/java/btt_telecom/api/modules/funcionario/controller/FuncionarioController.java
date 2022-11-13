@@ -36,9 +36,14 @@ public class FuncionarioController extends AbstractMethods{
 	private FuncionarioRepository funcionarioRepository;
 	
 	@GetMapping
-	private ResponseEntity<List<FuncionarioRubiList>> findAll() throws SQLException{
-		List<FuncionarioRubiList> result = funcionarioDAO.findAll();
-		return new ResponseEntity<>(result, HttpStatus.OK);
+	private ResponseEntity<List<FuncionarioRubiList>> findAll(@RequestParam(name = "value", defaultValue = "") String value) throws SQLException{
+		if(value.equals("")){
+			List<FuncionarioRubiList> result = funcionarioDAO.findAll();
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}else {
+			List<FuncionarioRubiList> result = funcionarioDAO.search(value);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping(path = "/search")
