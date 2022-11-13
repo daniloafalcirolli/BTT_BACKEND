@@ -45,4 +45,34 @@ public class StatusFuncionarioDAO {
 		con.close();
 		return result;
 	}
+	
+	public List<StatusFunc> search(String value) throws SQLException{
+		String query = ""
+				+ " SELECT * FROM ("
+				+ " SELECT x.CODSIT, "
+				+ "	x.DESSIT, "
+				+ "	x.DESABR "
+				+ "	FROM RUBI.R010SIT x "
+				+ "	WHERE x.CODSIT NOT IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf) ORDER BY x.CODSIT) "
+				+ "	WHERE CODSIT LIKE '%" + value + "%' OR "
+				+ " UPPER(DESSIT) LIKE '%" + value + "%' OR "
+				+ " UPPER(DESABR) LIKE '%" + value + "%'";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		List<StatusFunc> result = new ArrayList<>();
+		while(rs.next()) {
+			status = new StatusFunc();
+			status.setCodigo(rs.getLong("CODSIT"));
+			status.setDescricao(rs.getString("DESSIT"));
+			status.setAbreviatura(rs.getString("DESABR"));
+
+			result.add(status);
+		}
+
+		con.close();
+		return result;
+	}
 }

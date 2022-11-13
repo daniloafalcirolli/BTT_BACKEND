@@ -1,12 +1,9 @@
 package btt_telecom.api.modules.funcionario.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
@@ -40,30 +38,13 @@ public class StatusFuncController extends AbstractMethods{
 	}
 	
 	@GetMapping("/rubi/page")
-	private ResponseEntity<Page<StatusFunc>> findAllFromRubiWithPage(Pageable pageable){
+	private ResponseEntity<Map<String, Object>> findAllFromRubiWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page){
 		try {
-			return new ResponseEntity<>(convertListToPage(statusDAO.findAll(), pageable) , HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@GetMapping(path = "/page")
-	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
-		try {
-			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@PostMapping(path = "/search")
-	private ResponseEntity<Page<StatusFunc>> search(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<StatusFunc> result = statusFuncRepository.search(json.getString("value"));
-			Page<StatusFunc> page = new PageImpl<>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(statusDAO.findAll(), size, page) , HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(convertListToPage(statusDAO.search(value), size, page) , HttpStatus.OK);
+			}
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
