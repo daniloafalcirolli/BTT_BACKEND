@@ -2,8 +2,9 @@ package btt_telecom.api.modules.funcionario.controller;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +33,15 @@ public class StatusFuncController extends AbstractMethods{
 	private ResponseEntity<List<StatusFunc>> findAllFromRubiWithoutPage(){
 		try {
 			return new ResponseEntity<>(statusDAO.findAll(), HttpStatus.OK);
+		}catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/rubi")
+	private ResponseEntity<Page<StatusFunc>> findAllWithPage(Pageable pageable){
+		try {
+			return new ResponseEntity<>(statusFuncRepository.findAll(pageable), HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
