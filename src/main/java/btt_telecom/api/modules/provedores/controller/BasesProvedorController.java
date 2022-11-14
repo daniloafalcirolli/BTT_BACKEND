@@ -1,12 +1,9 @@
 package btt_telecom.api.modules.provedores.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,33 +13,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.provedores.model.BasesProvedor;
 import btt_telecom.api.modules.provedores.repository.BasesProvedorRepository;
 
 @RestController
 @RequestMapping(path = "/api/bases")
-public class BasesProvedorController {
+public class BasesProvedorController extends AbstractMethods{
 	@Autowired
 	private BasesProvedorRepository basesProvedorRepository;
 	
-	@GetMapping(path = "/page")
-	private ResponseEntity<Page<BasesProvedor>> findAllWithPage(Pageable pageable) {
+	@GetMapping
+	private ResponseEntity<List<BasesProvedor>> findAll() {
 		try {
-			return new ResponseEntity<>(basesProvedorRepository.findAll(pageable), HttpStatus.OK);
+			return new ResponseEntity<>(basesProvedorRepository.findAll(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@PostMapping(path = "/search")
-	private ResponseEntity<Page<BasesProvedor>> search(@RequestBody String body){
+	@GetMapping(path = "/page")
+	private ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page) {
 		try {
-			JSONObject json = new JSONObject(body);
-			List<BasesProvedor> result = basesProvedorRepository.search(json.getString("value"));
-			Page<BasesProvedor> page = new PageImpl<BasesProvedor>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(basesProvedorRepository.findAll(), size, page), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(convertListToPage(basesProvedorRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
+			}	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
