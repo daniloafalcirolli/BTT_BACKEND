@@ -10,6 +10,7 @@ import java.util.List;
 import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.config.external.ConnectionDB;
 import btt_telecom.api.modules.servico.dto.ServicoRubi;
+import btt_telecom.api.modules.servico.dto.ServicoUnifique;
 
 public class ServicoDAO extends AbstractMethods{
 	private Connection con;
@@ -98,5 +99,71 @@ public class ServicoDAO extends AbstractMethods{
 		} finally {
 			con.close();
 		}
+	}
+	
+	public List<ServicoUnifique> getRelatorioUnifique(List<Long> ids) throws SQLException{
+		String query = "";
+		con = ConnectionDB.getConnection();
+	
+		for(Long id: ids) {
+			 query = ""
+				+ " WITH campos AS ("
+				+ "	SELECT "
+				+ "		sca.SERVICO_ID,"
+				+ "		VALUE AS VALUE, "
+				+ "		cp.CAMPO AS NOME"
+				+ "		FROM SERVICO_CAMPOS_APLICADOS sca "
+				+ "		INNER JOIN CAMPOS_PROVEDOR_SERVICO cps ON"
+				+ "			(cps.ID = sca.CAMPOS_APLICADOS_ID)"
+				+ "		INNER JOIN CAMPOS_PROVEDOR cp ON"
+				+ "			(cp.ID = cps.CAMPO_PROVEDOR_ID)"
+				+ "		WHERE sca.SERVICO_ID = " + id
+				+ "	)"
+				+ " SELECT "
+				+ "	s.ID,"
+				+ "	EXTRACT(DAY FROM s.\"DATA\") AS DIA,"
+				+ "	TO_CHAR(s.\"DATA\", 'MONTH', 'NLS_DATE_LANGUAGE = PORTUGUESE') AS MES, "
+				+ "	EXTRACT(YEAR FROM s.\"DATA\") AS ANO,"
+				+ "	c.CONTRATO AS COD_CLIENTE,"
+				+ "	s.PROTOCOLO AS PROTOCOLO,"
+				+ "	UPPER(c.NOME) AS CLIENTE,"
+				+ "	UPPER(sp.SERVICO) AS TIPO_SERVICO,"
+				+ "	UPPER(csp.CATEGORIA) AS CATEGORIA,"
+				+ "	rubi.NOMFUN AS TEC_INSTALADOR,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'PONTO MESH VIA CABO') AS PONTO_MESH_VIA_CABO,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'METRAGEM LANÇADA') AS METRAGEM_LANCADA,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'ESPINAÇÃO DO CABO') AS ESPINACAO_CABO,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'PONTO DE TV') AS PONTO_TV,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'PONTO MESH VIA WIFI') AS PONTO_MESH_VIA_WIFI,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'SINAL dBm') AS SINAL,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'PORTA') AS PORTA,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'CAIXA') AS CAIXA,"
+				+ "	(SELECT c2.VALUE FROM campos c2 WHERE c2.NOME = 'FAST POINT') AS FAST_POINT"
+				+ "	FROM SERVICO s "
+				+ "	LEFT JOIN FUNCIONARIOS f ON"
+				+ "		(f.CPF = s.CPF_FUNCIONARIO)"
+				+ "	INNER JOIN CLIENTE c ON"
+				+ "		(c.ID = s.CLIENTE_ID)"
+				+ "	INNER JOIN PROVEDOR p ON"
+				+ "		(p.ID = s.PROVEDOR_ID)"
+				+ "	INNER JOIN SERVICO_PROVEDOR sp ON"
+				+ "		(sp.ID = s.SERVICO_PROVEDOR_ID)"
+				+ "	INNER JOIN RUBI.R034FUN rubi ON "
+				+ "		(rubi.NUMCPF = f.CPF)"
+				+ "	INNER JOIN CATEGORIAS_SERVICO_PROVEDOR csp ON"
+				+ "		(csp.ID = sp.CATEGORIA_ID)"
+				+ "	WHERE "
+				+ "	p.NAME = 'UNIFIQUE' AND"
+				+ "	s.ID = " + id
+				+ "	ORDER BY s.DATA ASC, s.HORA ASC";
+			 
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+		}
+		
+		
+		
+		
+		return null;
 	}
 }

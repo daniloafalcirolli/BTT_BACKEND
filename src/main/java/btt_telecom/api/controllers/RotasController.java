@@ -174,21 +174,20 @@ public class RotasController {
 		}
 	}
 
-//	@PostMapping(path = "/relatorio")
-//	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
-//		try {
-//			// Obter rotas de um funcionário especifico em um dia especifico
-//			JSONObject json = new JSONObject(body);
-//			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getLong("id_func"));
-//			List<RotaDTO> rotasDTO = new ArrayList<>();
-//			rotas.forEach(x -> {
-//				rotasDTO.add(new RotaDTO(x));
-//			});
-//			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
+	@PostMapping(path = "/individual")
+	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
+		try {
+			JSONObject json = new JSONObject(body);
+			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getString("cpf_funcionario"));
+			List<RotaDTO> rotasDTO = new ArrayList<>();
+			rotas.forEach(x -> {
+				rotasDTO.add(new RotaDTO(x));
+			});
+			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	@PostMapping(path = "/relatorio/combustivel")
 	private ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
