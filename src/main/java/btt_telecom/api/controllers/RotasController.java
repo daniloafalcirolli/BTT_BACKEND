@@ -160,8 +160,7 @@ public class RotasController {
 	private ResponseEntity<HttpStatus> recalculo(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			Long id_cidade = json.getLong("id_cidade");
-			Cidade cidade = cidadeRepository.findById(id_cidade).get();
+			Cidade cidade = cidadeRepository.findByCidade(json.getString("nome_cidade"));
 			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"), json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
 				x.setGasolina(cidade.getPreco_gasolina());
