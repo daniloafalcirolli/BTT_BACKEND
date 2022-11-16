@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -202,10 +201,10 @@ public class RotasController {
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
 				});
-				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
+//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+				return new ResponseEntity<>( HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 			}
@@ -227,10 +226,10 @@ public class RotasController {
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
 				});
-				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
+//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 			}
@@ -252,10 +251,10 @@ public class RotasController {
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
 				});
-				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
+//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+				return new ResponseEntity<>( HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 			}
@@ -276,10 +275,10 @@ public class RotasController {
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
 				});
-				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
+//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
@@ -300,10 +299,10 @@ public class RotasController {
 				rotas.forEach(x -> {
 					rotasDTO.add(new RotaDTO(x));
 				});
-				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
+//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+				return new ResponseEntity<>( HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
