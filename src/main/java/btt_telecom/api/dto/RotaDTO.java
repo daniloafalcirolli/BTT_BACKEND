@@ -21,6 +21,8 @@ public class RotaDTO {
 	
 	private String consumo;
 	
+	private Long id_cidade;
+	
 	private String nome_cidade;
 		
 	public RotaDTO(Rota rota) {
@@ -33,6 +35,7 @@ public class RotaDTO {
 		this.gasolina = rota.getGasolina();
 		this.consumo = rota.getConsumo();
 		this.nome_cidade = rota.getNome_cidade();
+		this.id_cidade = rota.getId_cidade();
 	}
 
 	public Long getId() {
@@ -105,5 +108,13 @@ public class RotaDTO {
 
 	public void setNome_cidade(String nome_cidade) {
 		this.nome_cidade = nome_cidade;
+	}
+
+	public Long getId_cidade() {
+		return id_cidade;
+	}
+
+	public void setId_cidade(Long id_cidade) {
+		this.id_cidade = id_cidade;
 	}
 }
