@@ -23,6 +23,6 @@ public interface RotaRepository extends JpaRepository<Rota, Long>{
 	@Query(value = "select * from rotas where data >= to_date(?1, 'yyyy-MM-dd') AND data <= to_date(?2, 'yyyy-MM-dd') and funcionario_id = ?3 order by funcionario_id, data asc, hora asc ", nativeQuery = true)
 	List<Rota> findRotasOfSingleFuncInInterval(String data_inicio, String data_final, Long id);
 	
-	@Query(value = "SELECT * FROM rotas r where r.ID_CIDADE = ?1 and r.\"DATA\" >= to_date(?2, 'yyyy-MM-dd') AND r.\"DATA\" <= to_date(?3, 'yyyy-MM-dd') order by data, hora", nativeQuery = true)
-	List<Rota> findAllFuncsByCityInInterval(Long id_cidade, String data_inicio,  String data_final);
+	@Query(value = "SELECT * FROM rotas r where r.NOME_CIDADE = ?1 and r.\"DATA\" >= to_date(?2, 'yyyy-MM-dd') AND r.\"DATA\" <= to_date(?3, 'yyyy-MM-dd') order by data, hora", nativeQuery = true)
+	List<Rota> findAllFuncsByCityInInterval(String nome_cidade, String data_inicio,  String data_final);
 }
