@@ -165,6 +165,7 @@ public class RotasController {
 			Cidade cidade = cidadeRepository.findByCidade(json.getString("nome_cidade"));
 			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"), json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
+				x.setId_cidade(cidade.getId());
 				x.setGasolina(cidade.getPreco_gasolina());
 			});
 			rotaRepository.saveAll(rotas);
