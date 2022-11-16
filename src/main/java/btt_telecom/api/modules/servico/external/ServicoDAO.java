@@ -47,7 +47,7 @@ public class ServicoDAO extends AbstractMethods{
 				+ "		(b2tsp.ID = b2ts.SERVICO_PROVEDOR_ID)";
 		
 				if(!data_inicio.equals("") || !data_final.equals("") || !cpf_funcionario.equals("") || !id_provedor.equals("") || !status.equals("")) {
-					query += " WHERE ";
+					query += " WHERE rubi_func.SITAFA IN (SELECT sf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC sf) AND";
 					
 					if(!data_inicio.equals("") && !data_final.equals("")) {
 						query += " b2ts.\"DATA\" >= TO_DATE('" + data_inicio + "', 'yyyy-MM-dd') AND ";
