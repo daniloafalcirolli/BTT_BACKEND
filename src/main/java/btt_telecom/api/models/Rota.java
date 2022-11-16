@@ -42,6 +42,8 @@ public class Rota {
 		
 	private Long id_cidade;
 	
+	private String nome_cidade;
+	
 	public Long getId() {
 		return id;
 	}
@@ -120,5 +122,13 @@ public class Rota {
 
 	public void setId_cidade(Long id_cidade) {
 		this.id_cidade = id_cidade;
+	}
+
+	public String getNome_cidade() {
+		return nome_cidade;
+	}
+
+	public void setNome_cidade(String nome_cidade) {
+		this.nome_cidade = nome_cidade;
 	}
 }

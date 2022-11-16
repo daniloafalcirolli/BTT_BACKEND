@@ -57,6 +57,7 @@ public class RotasController {
 			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
 			r.setId_cidade(fr.getId_cidade());
+			r.setNome_cidade(fr.getNome_cidade());
 			r.setGasolina(fr.getPreco_gasolina());
 
 			if (rotaRepository.save(r) != null) {

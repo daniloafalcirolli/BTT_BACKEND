@@ -472,6 +472,7 @@ public class FuncionarioDAO extends AbstractMethods{
 			if(rs.next()) {
 				funcionario.setCpf(rs.getString("NUMCPF"));
 				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
+				funcionario.setNome_cidade(rs.getString("NOMCID"));
 				funcionario.setId_cidade(rs.getLong("ID_CIDADE"));
 				funcionario.setConsumo(rs.getString("CONSUMO"));
 			}
