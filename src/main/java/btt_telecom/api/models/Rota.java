@@ -39,9 +39,7 @@ public class Rota {
 	private String gasolina;
 	
 	private String consumo;
-		
-	private Long id_cidade;
-	
+			
 	private String nome_cidade;
 	
 	public Long getId() {
@@ -114,14 +112,6 @@ public class Rota {
 
 	public void setConsumo(String consumo) {
 		this.consumo = consumo;
-	}
-
-	public Long getId_cidade() {
-		return id_cidade;
-	}
-
-	public void setId_cidade(Long id_cidade) {
-		this.id_cidade = id_cidade;
 	}
 
 	public String getNome_cidade() {
