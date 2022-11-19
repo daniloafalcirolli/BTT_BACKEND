@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.modules.materiais.model.MaterialAplicadoBase;
@@ -60,9 +61,16 @@ public class ProvedorController {
 	private CategoriaServicoProvedorRepository categoriaServicoProvedorRepository;
 
 	@GetMapping
-	public ResponseEntity<List<ProvedorDTO>> findAll(){
+	public ResponseEntity<List<ProvedorDTO>> findAll(@RequestParam(name = "value", defaultValue = "") String value){
 		try {
-			List<Provedor> result = provedorRepository.findAll();
+			List<Provedor> result = new ArrayList<>();
+			
+			if(value.equals("")){
+				result = provedorRepository.findAll();
+			}else {
+				result = provedorRepository.search(value);
+			}
+			
 			List<ProvedorDTO> provedores = new ArrayList<>();
 			result.forEach(x -> {
 				provedores.add(new ProvedorDTO(x));
