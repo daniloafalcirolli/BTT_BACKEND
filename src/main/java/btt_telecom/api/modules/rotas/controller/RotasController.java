@@ -1,4 +1,4 @@
-package btt_telecom.api.controllers;
+package btt_telecom.api.modules.rotas.controller;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.dto.RotaDTO;
-import btt_telecom.api.models.Cidade;
-import btt_telecom.api.models.Rota;
+import btt_telecom.api.modules.cidade.Cidade;
+import btt_telecom.api.modules.cidade.CidadeRepository;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioConsumo;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
-import btt_telecom.api.repositories.CidadeRepository;
-import btt_telecom.api.repositories.RotaRepository;
+import btt_telecom.api.modules.rotas.dto.RotaDTO;
+import btt_telecom.api.modules.rotas.external.RotaDAO;
+import btt_telecom.api.modules.rotas.model.Rota;
+import btt_telecom.api.modules.rotas.repository.RotaRepository;
 
 @RestController
 @RequestMapping(path = "/api/rotas")
@@ -192,22 +194,25 @@ public class RotasController {
 	}
 
 	@PostMapping(path = "/relatorio/combustivel")
-	private ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
-		// Obter rotas de todos os funcionarios em um certo intervalo de tempo
+	private ResponseEntity<Map<String, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
+		RotaDAO rotaRepo = new RotaDAO();
 		try {
 			JSONObject json = new JSONObject(body);
 
 			if (json.has("data_inicio") && json.has("data_final")) {
-				List<Rota> rotas = rotaRepository.findRotasOfAllFuncsInInterval(json.getString("data_inicio"),
-						json.getString("data_final"));
-				List<RotaDTO> rotasDTO = new ArrayList<>();
-				rotas.forEach(x -> {
-					rotasDTO.add(new RotaDTO(x));
-				});
-//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+				
+				
+				List<RotaDTO> rotas = rotaRepo.getRotas(
+											json.getString("data_inicio"),
+											json.getString("data_final"),
+											json.getLong("id_provedor"),
+											json.getString("nome_cidade"),
+											json.getString("cpf_funcionario")
+										);
+				Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
+						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>( HttpStatus.OK);
+				return new ResponseEntity<>(result, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
 			}

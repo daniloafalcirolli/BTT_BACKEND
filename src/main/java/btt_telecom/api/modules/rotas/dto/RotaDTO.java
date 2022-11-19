@@ -1,11 +1,13 @@
-package btt_telecom.api.dto;
+package btt_telecom.api.modules.rotas.dto;
 
 import java.util.Date;
 
-import btt_telecom.api.models.Rota;
+import btt_telecom.api.modules.rotas.model.Rota;
 
 public class RotaDTO {
 	private Long id;
+	
+	private String cpf_funcionario;
 	
 	private Date data;
 	
@@ -36,6 +38,7 @@ public class RotaDTO {
 		this.consumo = rota.getConsumo();
 		this.nome_cidade = rota.getNome_cidade();
 		this.id_cidade = rota.getId_cidade();
+		this.cpf_funcionario = rota.getCpf_funcionario();
 	}
 
 	public Long getId() {
@@ -116,5 +119,13 @@ public class RotaDTO {
 
 	public void setId_cidade(Long id_cidade) {
 		this.id_cidade = id_cidade;
+	}
+
+	public String getCpf_funcionario() {
+		return cpf_funcionario;
+	}
+
+	public void setCpf_funcionario(String cpf_funcionario) {
+		this.cpf_funcionario = cpf_funcionario;
 	}
 }

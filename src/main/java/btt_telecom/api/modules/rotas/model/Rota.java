@@ -1,4 +1,4 @@
-package btt_telecom.api.models;
+package btt_telecom.api.modules.rotas.model;
 
 import java.util.Date;
 

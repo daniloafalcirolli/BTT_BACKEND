@@ -1,4 +1,4 @@
-package btt_telecom.api.models;
+package btt_telecom.api.modules.cidade;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

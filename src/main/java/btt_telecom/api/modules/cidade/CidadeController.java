@@ -1,5 +1,7 @@
-package btt_telecom.api.controllers;
+package btt_telecom.api.modules.cidade;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +18,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
-import btt_telecom.api.models.Cidade;
-import btt_telecom.api.repositories.CidadeRepository;
 
 @RestController
 @RequestMapping(path = "/api/cidade")
 public class CidadeController extends AbstractMethods{
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@GetMapping
+	private ResponseEntity<List<Cidade>> findAll(@RequestParam(name = "value", defaultValue = "") String value){
+		try {
+			List<Cidade> result = new ArrayList<>();
+			if(value.equals("")){
+				result = cidadeRepository.findAll();
+			}else {
+				result = cidadeRepository.search(value);
+			}
+			
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	@GetMapping("/page")
 	private ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page){
