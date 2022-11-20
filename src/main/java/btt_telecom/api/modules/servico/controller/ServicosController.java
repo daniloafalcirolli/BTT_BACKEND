@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import btt_telecom.api.models.Cliente;
+import btt_telecom.api.modules.clientes.Cliente;
+import btt_telecom.api.modules.clientes.ClienteRepository;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
-import btt_telecom.api.modules.imagens.model.Imagem;
-import btt_telecom.api.modules.imagens.repository.ImagemRepository;
+import btt_telecom.api.modules.imagens.Imagem;
+import btt_telecom.api.modules.imagens.ImagemRepository;
 import btt_telecom.api.modules.materiais.model.MaterialAplicado;
 import btt_telecom.api.modules.materiais.model.MaterialRetirado;
 import btt_telecom.api.modules.materiais.repository.MaterialAplicadoBaseRepository;
@@ -45,7 +46,6 @@ import btt_telecom.api.modules.servico.dto.ServicoRubi;
 import btt_telecom.api.modules.servico.external.ServicoDAO;
 import btt_telecom.api.modules.servico.model.Servico;
 import btt_telecom.api.modules.servico.repository.ServicoRepository;
-import btt_telecom.api.repositories.ClienteRepository;
 
 @RestController
 @RequestMapping(path = "/api/servico")

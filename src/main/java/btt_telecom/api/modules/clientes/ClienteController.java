@@ -1,4 +1,4 @@
-package btt_telecom.api.controllers;
+package btt_telecom.api.modules.clientes;
 
 import java.util.List;
 
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.external.Geocoder;
-import btt_telecom.api.models.Cliente;
-import btt_telecom.api.repositories.ClienteRepository;
 
 @RestController
 @RequestMapping(path = "/api/cliente")

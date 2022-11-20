@@ -16,8 +16,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import btt_telecom.api.models.Cliente;
-import btt_telecom.api.modules.imagens.model.Imagem;
+import btt_telecom.api.modules.clientes.Cliente;
+import btt_telecom.api.modules.imagens.Imagem;
 import btt_telecom.api.modules.materiais.model.MaterialAplicado;
 import btt_telecom.api.modules.materiais.model.MaterialRetirado;
 import btt_telecom.api.modules.provedores.model.CamposProvedor;

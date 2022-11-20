@@ -1,12 +1,10 @@
-package btt_telecom.api.modules.meta.repository;
+package btt_telecom.api.modules.meta;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import btt_telecom.api.modules.meta.model.Meta;
 
 public interface MetaRepository extends JpaRepository<Meta, Long>{
 	

@@ -1,4 +1,4 @@
-package btt_telecom.api.modules.imagens.model;
+package btt_telecom.api.modules.imagens;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

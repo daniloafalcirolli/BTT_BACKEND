@@ -3,9 +3,9 @@ package btt_telecom.api.modules.servico.dto;
 import java.util.Date;
 import java.util.List;
 
-import btt_telecom.api.models.Cliente;
+import btt_telecom.api.modules.clientes.Cliente;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioRubi;
-import btt_telecom.api.modules.imagens.model.Imagem;
+import btt_telecom.api.modules.imagens.Imagem;
 import btt_telecom.api.modules.materiais.model.MaterialAplicado;
 import btt_telecom.api.modules.materiais.model.MaterialRetirado;
 import btt_telecom.api.modules.provedores.model.CamposProvedor;

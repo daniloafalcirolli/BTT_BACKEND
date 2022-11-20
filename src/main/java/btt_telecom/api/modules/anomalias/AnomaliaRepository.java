@@ -1,12 +1,10 @@
-package btt_telecom.api.repositories;
+package btt_telecom.api.modules.anomalias;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import btt_telecom.api.models.Anomalia;
 
 @Repository
 public interface AnomaliaRepository extends JpaRepository<Anomalia, Long>{
