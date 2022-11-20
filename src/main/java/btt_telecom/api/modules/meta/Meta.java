@@ -1,4 +1,4 @@
-package btt_telecom.api.modules.meta.model;
+package btt_telecom.api.modules.meta;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

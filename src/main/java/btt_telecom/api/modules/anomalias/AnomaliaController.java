@@ -1,4 +1,4 @@
-package btt_telecom.api.controllers;
+package btt_telecom.api.modules.anomalias;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import btt_telecom.api.models.Anomalia;
-import btt_telecom.api.repositories.AnomaliaRepository;
 
 @RestController
 @RequestMapping(path = "/api/anomalia")

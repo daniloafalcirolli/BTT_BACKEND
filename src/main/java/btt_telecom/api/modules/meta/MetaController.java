@@ -1,4 +1,4 @@
-package btt_telecom.api.modules.meta.controller;
+package btt_telecom.api.modules.meta;
 
 import java.util.Map;
 
@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
-import btt_telecom.api.modules.meta.model.Meta;
-import btt_telecom.api.modules.meta.repository.MetaRepository;
 
 @RestController
 @RequestMapping(path = "/api/meta")
