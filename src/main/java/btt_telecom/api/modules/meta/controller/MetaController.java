@@ -35,6 +35,7 @@ public class MetaController extends AbstractMethods{
 				return new ResponseEntity<>(convertListToPage(metaRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
 			}		
 		} catch(Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
