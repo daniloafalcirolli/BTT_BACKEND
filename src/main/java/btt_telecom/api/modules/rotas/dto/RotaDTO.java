@@ -26,7 +26,10 @@ public class RotaDTO {
 	private Long id_cidade;
 	
 	private String nome_cidade;
-		
+	
+	public RotaDTO() {
+	}
+	
 	public RotaDTO(Rota rota) {
 		this.id = rota.getId();
 		this.data = rota.getData();

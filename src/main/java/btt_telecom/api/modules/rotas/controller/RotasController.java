@@ -33,7 +33,7 @@ public class RotasController {
 
 	@Autowired
 	private RotaRepository rotaRepository;
-	
+
 	@Autowired
 	private CidadeRepository cidadeRepository;
 
@@ -146,9 +146,10 @@ public class RotasController {
 	private ResponseEntity<HttpStatus> recalculoConsumo(@RequestBody String body) throws SQLException {
 		try {
 			JSONObject json = new JSONObject(body);
-			
+
 			FuncionarioConsumo func = funcionarioDAO.findConsumoFuncByCpf(json.getString("cpf_funcionario"));
-			List<Rota> rotas = rotaRepository.findAllByFuncInInterval(func.getCpf(), json.getString("data_inicio"), json.getString("data_fim"));
+			List<Rota> rotas = rotaRepository.findAllByFuncInInterval(func.getCpf(), json.getString("data_inicio"),
+					json.getString("data_fim"));
 			rotas.forEach(x -> {
 				x.setConsumo(func.getConsumo());
 			});
@@ -165,7 +166,8 @@ public class RotasController {
 		try {
 			JSONObject json = new JSONObject(body);
 			Cidade cidade = cidadeRepository.findByCidade(json.getString("nome_cidade"));
-			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"), json.getString("data_inicio"), json.getString("data_fim"));
+			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"),
+					json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
 				x.setId_cidade(cidade.getId());
 				x.setGasolina(cidade.getPreco_gasolina());
@@ -182,7 +184,8 @@ public class RotasController {
 	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getString("cpf_funcionario"));
+			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"),
+					json.getString("cpf_funcionario"));
 			List<RotaDTO> rotasDTO = new ArrayList<>();
 			rotas.forEach(x -> {
 				rotasDTO.add(new RotaDTO(x));
@@ -194,78 +197,35 @@ public class RotasController {
 	}
 
 	@PostMapping(path = "/relatorio/combustivel")
-	private ResponseEntity<Map<String, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
+	private ResponseEntity<Map<String, Map<String, Map<Date, List<RotaDTO>>>>> relatorioCombustivelAll(
+			@RequestBody String body) {
 		RotaDAO rotaRepo = new RotaDAO();
 		try {
 			JSONObject json = new JSONObject(body);
+			String data_inicio = json.getString("data_inicio");
+			String data_final = json.getString("data_final");
+			String cpf_funcionario = json.getString("cpf_funcionario");
+			String nome_cidade = json.getString("nome_cidade");
+			Long id_provedor = json.getLong("id_provedor");
 
-			if (json.has("data_inicio") && json.has("data_final")) {
-				
-				
-				List<RotaDTO> rotas = rotaRepo.getRotas(
-											json.getString("data_inicio"),
-											json.getString("data_final"),
-											json.getLong("id_provedor"),
-											json.getString("nome_cidade"),
-											json.getString("cpf_funcionario")
-										);
-				Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
-						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData)));
+			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, id_provedor, nome_cidade, cpf_funcionario);
 
-				return new ResponseEntity<>(result, HttpStatus.OK);
+			Map<String, Map<String, Map<Date, List<RotaDTO>>>> result;
+
+			if (!nome_cidade.equals("")) {
+				// cidade, funcionario, data
+				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getNome_cidade,
+						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
+			} else if (!cpf_funcionario.equals("")) {
+				// funcionario, funcionario, data
+				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getCpf_funcionario,
+						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
 			} else {
-				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getCpf_funcionario,
+						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
 			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
 
-//	@PostMapping(path = "/relatorio/combustivel/cidade")
-//	private ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioCombustivelByCidade(@RequestBody String body) {
-//		try {
-//			// Obter rotas de todos os funcionarios de uma determinada cidade, agrupando em
-//			// cidade, funcionario e data
-//			JSONObject json = new JSONObject(body);
-//			if (json.has("data_inicio") && json.has("data_final") && json.has("id")) {
-//				List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getLong("id"), json.getString("data_inicio"),
-//						json.getString("data_final"));
-//				List<RotaDTO> rotasDTO = new ArrayList<>();
-//				rotas.forEach(x -> {
-//					rotasDTO.add(new RotaDTO(x));
-//				});
-////				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-////						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
-//
-//				return new ResponseEntity<>(HttpStatus.OK);
-//			} else {
-//				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-//			}
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
-
-	@PostMapping(path = "/relatorio/combustivel/funcionario")
-	private ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioCombustivelByFunc(@RequestBody String body) {
-		try {
-			// Obter rotas de um funcionario especifico em um certo intervalo de tempo
-			JSONObject json = new JSONObject(body);
-
-			if (json.has("data_inicio") && json.has("data_final") && json.has("id")) {
-				List<Rota> rotas = rotaRepository.findRotasOfSingleFuncInInterval(json.getString("data_inicio"),
-						json.getString("data_final"), json.getLong("id"));
-				List<RotaDTO> rotasDTO = new ArrayList<>();
-				rotas.forEach(x -> {
-					rotasDTO.add(new RotaDTO(x));
-				});
-//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
-
-				return new ResponseEntity<>( HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-			}
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -310,7 +270,7 @@ public class RotasController {
 //				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
 //						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
 
-				return new ResponseEntity<>( HttpStatus.OK);
+				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
@@ -324,7 +284,8 @@ public class RotasController {
 	public ResponseEntity<HttpStatus> validar(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getString("cpf_funcionario"));
+			List<Rota> list = rotaRepository.findRotasByFuncAndData(json.getString("data"),
+					json.getString("cpf_funcionario"));
 			int x = 0;
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getDescricao() != null) {
