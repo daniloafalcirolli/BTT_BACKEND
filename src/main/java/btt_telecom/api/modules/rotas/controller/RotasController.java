@@ -197,8 +197,7 @@ public class RotasController {
 	}
 
 	@PostMapping(path = "/relatorio/combustivel")
-	private ResponseEntity<Map<String, Map<String, Map<Date, List<RotaDTO>>>>> relatorioCombustivelAll(
-			@RequestBody String body) {
+	private ResponseEntity<Map<String, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
 		RotaDAO rotaRepo = new RotaDAO();
 		try {
 			JSONObject json = new JSONObject(body);
@@ -206,24 +205,18 @@ public class RotasController {
 			String data_final = json.getString("data_final");
 			String cpf_funcionario = json.getString("cpf_funcionario");
 			String nome_cidade = json.getString("nome_cidade");
-			Long id_provedor = json.getLong("id_provedor");
-
-			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, id_provedor, nome_cidade, cpf_funcionario);
-
-			Map<String, Map<String, Map<Date, List<RotaDTO>>>> result;
 
 			if (!nome_cidade.equals("")) {
-				// cidade, funcionario, data
-				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getNome_cidade,
-						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
+				cpf_funcionario = "";
 			} else if (!cpf_funcionario.equals("")) {
-				// funcionario, funcionario, data
-				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getCpf_funcionario,
-						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
-			} else {
-				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getCpf_funcionario,
-						Collectors.groupingBy(RotaDTO::getCpf_funcionario, Collectors.groupingBy(RotaDTO::getData))));
+				nome_cidade = "";
 			}
+			
+			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, nome_cidade, cpf_funcionario);
+
+			Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
+					Collectors.groupingBy(RotaDTO::getCpf_funcionario, 
+							Collectors.groupingBy(RotaDTO::getData)));
 
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {

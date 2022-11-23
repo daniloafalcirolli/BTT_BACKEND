@@ -17,7 +17,7 @@ public class RotaDAO extends AbstractMethods{
 	private ResultSet rs;
 	private RotaDTO rota;
 	
-	public List<RotaDTO> getRotas(String data_inicio, String data_final, Long id_provedor, String nome_cidade, String cpf_funcionario) throws SQLException{
+	public List<RotaDTO> getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
 				+ " SELECT * FROM ROTAS ";
 		
