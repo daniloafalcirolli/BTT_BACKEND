@@ -198,7 +198,7 @@ public class RotasController {
 
 	@PostMapping(path = "/relatorio/combustivel")
 	private ResponseEntity<Map<String, Map<String, Map<Date, List<RotaDTO>>>>> relatorioCombustivelAll(
-			@RequestBody String body) {
+			@RequestBody String body){
 		RotaDAO rotaRepo = new RotaDAO();
 		try {
 			JSONObject json = new JSONObject(body);
@@ -212,6 +212,7 @@ public class RotasController {
 
 			Map<String, Map<String, Map<Date, List<RotaDTO>>>> result;
 
+			
 			if (!nome_cidade.equals("")) {
 				// cidade, funcionario, data
 				result = rotas.stream().collect(Collectors.groupingBy(RotaDTO::getNome_cidade,
@@ -227,6 +228,7 @@ public class RotasController {
 
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
+			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}

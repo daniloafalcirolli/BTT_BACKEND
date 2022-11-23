@@ -19,15 +19,20 @@ public class RotaDAO extends AbstractMethods{
 	
 	public List<RotaDTO> getRotas(String data_inicio, String data_final, Long id_provedor, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
-				+ " SELECT * FROM ROTAS ";
+				+ " SELECT * FROM ROTAS r";
 		
 		if(!cpf_funcionario.equals("")) {
-			query += " WHERE CPF_FUNCIONARIO = '" + cpf_funcionario + "' AND";
+			query += " WHERE r.CPF_FUNCIONARIO = '" + cpf_funcionario + "' AND";
 
 		} else if(!nome_cidade.equals("")) {
-			query += " WHERE NOME_CIDADE = '" + nome_cidade + "' AND";
+			query += " WHERE r.NOME_CIDADE = '" + nome_cidade + "' AND";
 		} 
 
+		if(!data_inicio.equals("") && !data_final.equals("")) {
+			query += " r.\"DATA\" >= TO_DATE('" + data_inicio + "', 'yyyy-MM-dd') AND ";
+			query += " r.\"DATA\" <= TO_DATE('" + data_final + "', 'yyyy-MM-dd') AND";
+		} 
+		
 		if(query.endsWith("AND")) {
 			query = replaceLast("AND", "", query);
 		}
@@ -48,6 +53,7 @@ public class RotaDAO extends AbstractMethods{
 				rota.setNome_cidade(rs.getString("NOME_CIDADE"));
 				rota.setConsumo(rs.getString("CONSUMO"));
 				rota.setGasolina(rs.getString("GASOLINA"));
+				rota.setData(rs.getDate("DATA"));
 				result.add(rota);
 			}
 			
