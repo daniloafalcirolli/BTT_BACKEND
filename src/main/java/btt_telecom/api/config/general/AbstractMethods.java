@@ -1,7 +1,6 @@
 package btt_telecom.api.config.general;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +74,10 @@ public class AbstractMethods {
 	}
 	
 	public void insertLog(String msg) {
-		log.info(new Date().toString() + " - " + msg);
+		log.info(msg);
 	}
 
 	public void insertError(String msg) {
-		log.error(new Date().toString() + " - " + msg);
+		log.error(msg);
 	}
 }
