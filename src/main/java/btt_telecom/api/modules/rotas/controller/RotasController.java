@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +37,8 @@ public class RotasController extends AbstractMethods{
 	private CidadeRepository cidadeRepository;
 
 	private FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+
+	private RotaDAO rotaRepo = new RotaDAO();
 
 	@PostMapping(path = "/registrar")
 	public ResponseEntity<HttpStatus> register(@RequestBody String body) {
@@ -165,29 +165,17 @@ public class RotasController extends AbstractMethods{
 	}
 
 	@PostMapping(path = "/relatorio/combustivel")
-	private ResponseEntity<Map<String, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
-		RotaDAO rotaRepo = new RotaDAO();
+	private ResponseEntity<JSONObject> relatorioCombustivelAll(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
 			String data_inicio = json.getString("data_inicio");
 			String data_final = json.getString("data_final");
 			String cpf_funcionario = json.getString("cpf_funcionario");
 			String nome_cidade = json.getString("nome_cidade");
-
 			
-			if (!nome_cidade.equals("")) {
-				cpf_funcionario = "";
-			} else if (!cpf_funcionario.equals("")) {
-				nome_cidade = "";
-			}
-			
-			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, nome_cidade, cpf_funcionario);
+			JSONObject rotas = rotaRepo.getRotas(data_inicio, data_final, nome_cidade, cpf_funcionario);
 
-			Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
-					Collectors.groupingBy(RotaDTO::getCpf_funcionario,
-							Collectors.groupingBy(RotaDTO::getData)));
-
-			return new ResponseEntity<>(result, HttpStatus.OK);
+			return new ResponseEntity<>(rotas, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -5,7 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.json.JSONObject;
 
 import btt_telecom.api.config.external.ConnectionDB;
 import btt_telecom.api.config.general.AbstractMethods;
@@ -17,7 +22,7 @@ public class RotaDAO extends AbstractMethods{
 	private ResultSet rs;
 	private RotaDTO rota;
 	
-	public List<RotaDTO> getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
+	public JSONObject getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
 				+ " SELECT * FROM ROTAS r";
 		
@@ -57,7 +62,13 @@ public class RotaDAO extends AbstractMethods{
 				result.add(rota);
 			}
 			
-			return result;
+			Map<String, Map<Date, List<RotaDTO>>> maps = result.stream().collect(
+					Collectors.groupingBy(RotaDTO::getCpf_funcionario,
+							Collectors.groupingBy(RotaDTO::getData)));
+			
+			JSONObject rotas = new JSONObject(maps);
+			
+			return rotas;
 		} finally {
 			con.close();
 		}
