@@ -246,7 +246,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "	LEFT JOIN B2TTELECOM_DB.FUNCIONARIOS f2 ON"
 				+ "		(f2.CPF = vr.NUMCPF)"
 				+ " LEFT JOIN RUBI.R010SIT rs ON "
-				+ " 	(rs.CODSIT = a.SITAFA)"
+				+ " 	(rs.CODSIT = vr.SITAFA)"
 				+ "	ORDER BY NOMFUN";
 		
 		con = ConnectionDB.getConnection();
@@ -260,6 +260,8 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setNome(rs.getString("NOMFUN"));
 				funcionario.setUsername(rs.getString("NOMEXB"));
 				funcionario.setEmpresa(rs.getString("RAZSOC"));
+				funcionario.setStatus(rs.getString("SITAFA"));
+				funcionario.setCod_status(Long.parseLong(String.valueOf(rs.getInt("DESSIT"))));
 				funcionario.setTelefone(rs.getString("NUMTEL"));
 				funcionario.setCpf(rs.getString("NUMCPF"));
 				funcionario.setRg(rs.getString("NUMCID"));

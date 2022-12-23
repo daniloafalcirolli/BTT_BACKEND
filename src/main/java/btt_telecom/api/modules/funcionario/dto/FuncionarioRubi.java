@@ -15,6 +15,10 @@ public class FuncionarioRubi {
 	
 	private String empresa;
 
+	private String status;
+	
+	private Long cod_status;
+	
 	private String placa; 
 
 	private String consumo;
@@ -83,6 +87,22 @@ public class FuncionarioRubi {
 
 	public void setEmpresa(String empresa) {
 		this.empresa = empresa;
+	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Long getCod_status() {
+		return cod_status;
+	}
+
+	public void setCod_status(Long cod_status) {
+		this.cod_status = cod_status;
 	}
 
 	public String getPlaca() {
