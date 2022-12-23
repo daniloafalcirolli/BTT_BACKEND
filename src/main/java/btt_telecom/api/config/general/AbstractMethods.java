@@ -1,17 +1,21 @@
 package btt_telecom.api.config.general;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.support.PagedListHolder;
 
 import btt_telecom.api.config.external.Geocoder;
 
 public class AbstractMethods {
+	static final Logger log = LoggerFactory.getLogger(AbstractMethods.class);
 	
 	public <T> Map<String, Object> convertListToPage(List<T> list, Long pageSize, Long pageNumber){			
 		PagedListHolder<T> page = new PagedListHolder<>(list);
@@ -70,4 +74,11 @@ public class AbstractMethods {
 		return beginString + replace + endString;
 	}
 	
+	public void insertLog(String msg) {
+		log.info(new Date().toString() + " - " + msg);
+	}
+
+	public void insertError(String msg) {
+		log.error(new Date().toString() + " - " + msg);
+	}
 }

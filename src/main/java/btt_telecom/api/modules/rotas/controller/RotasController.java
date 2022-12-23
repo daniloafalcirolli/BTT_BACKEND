@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.cidade.Cidade;
 import btt_telecom.api.modules.cidade.CidadeRepository;
 import btt_telecom.api.modules.funcionario.dto.FuncionarioConsumo;
@@ -29,7 +30,7 @@ import btt_telecom.api.modules.rotas.repository.RotaRepository;
 
 @RestController
 @RequestMapping(path = "/api/rotas")
-public class RotasController {
+public class RotasController extends AbstractMethods{
 
 	@Autowired
 	private RotaRepository rotaRepository;
@@ -82,11 +83,14 @@ public class RotasController {
 			r.setGasolina(fr.getPreco_gasolina());
 
 			if (rotaRepository.save(r) != null) {
+				insertLog("[Rota] registrada com sucesso - CPF: " + r.getCpf_funcionario());
 				return new ResponseEntity<>(HttpStatus.CREATED);
 			} else {
+				insertError("[Rota] ocorreu um erro ao registrar uma rota - CPF: " + r.getCpf_funcionario());
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
+			insertError("[Rota] ocorreu um erro ao registrar uma rota - " + e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
