@@ -103,17 +103,21 @@ public class RotasController extends AbstractMethods{
 	private ResponseEntity<HttpStatus> recalculoConsumo(@RequestBody String body) throws SQLException {
 		try {
 			JSONObject json = new JSONObject(body);
-
 			FuncionarioConsumo func = funcionarioDAO.findConsumoFuncByCpf(json.getString("cpf_funcionario"));
 			List<Rota> rotas = rotaRepository.findAllByFuncInInterval(func.getCpf(), json.getString("data_inicio"), json.getString("data_fim"));
+
 			rotas.forEach(x -> {
 				x.setConsumo(func.getConsumo());
 			});
-			insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo consumo: " + func.getConsumo());
-			rotaRepository.saveAll(rotas);
-			return new ResponseEntity<>(HttpStatus.OK);
+						
+			if(rotaRepository.saveAll(rotas) != null) {
+				insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo consumo: " + func.getConsumo() + " - CPF: " + func.getCpf());
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				insertError("[Rota] Ocorreu um erro ao recalcular o consumo - CPF: " + func.getCpf());
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 		} catch (JSONException e) {
-			System.out.println(e);
 			insertError("[Rota] Ocorreu um erro ao recalcular o consumo - " + e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -124,15 +128,19 @@ public class RotasController extends AbstractMethods{
 		try {
 			JSONObject json = new JSONObject(body);
 			Cidade cidade = cidadeRepository.findByCidade(json.getString("nome_cidade"));
-			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"),
-					json.getString("data_inicio"), json.getString("data_fim"));
+			List<Rota> rotas = rotaRepository.findAllFuncsByCityInInterval(json.getString("nome_cidade"), json.getString("data_inicio"), json.getString("data_fim"));
 			rotas.forEach(x -> {
 				x.setId_cidade(cidade.getId());
 				x.setGasolina(cidade.getPreco_gasolina());
 			});
-			insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo valor do combustível: " + cidade.getPreco_gasolina() + " para a cidade de " + json.getString("nome_cidade"));
-			rotaRepository.saveAll(rotas);
-			return new ResponseEntity<>(HttpStatus.OK);
+
+			if(rotaRepository.saveAll(rotas) != null) {
+				insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo valor do combustível: " + cidade.getPreco_gasolina() + " para a cidade de " + json.getString("nome_cidade"));
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				insertError("[Rota] Ocorreu um erro ao recalcular o valor do combustível - Cidade: " + json.getString("nome_cidade") );
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 		} catch (JSONException e) {
 			insertError("[Rota] Ocorreu um erro ao recalcular o valor do combustível - " + e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -143,12 +151,13 @@ public class RotasController extends AbstractMethods{
 	public ResponseEntity<List<RotaDTO>> findByFuncAndDate(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"),
-					json.getString("cpf_funcionario"));
+			List<Rota> rotas = rotaRepository.findRotasByFuncAndData(json.getString("data"), json.getString("cpf_funcionario"));
 			List<RotaDTO> rotasDTO = new ArrayList<>();
+			
 			rotas.forEach(x -> {
 				rotasDTO.add(new RotaDTO(x));
 			});
+			
 			return new ResponseEntity<>(rotasDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
