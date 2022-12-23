@@ -56,75 +56,24 @@ public class RotasController {
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
 
-			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
-			r.setConsumo(fr.getConsumo());
-			r.setId_cidade(fr.getId_cidade());
-			r.setNome_cidade(fr.getNome_cidade());
-			r.setGasolina(fr.getPreco_gasolina());
-
-			if (rotaRepository.save(r) != null) {
-				return new ResponseEntity<>(HttpStatus.CREATED);
-			} else {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			switch (json.getInt("descricao")) {
+				case 0: {
+					r.setDescricao("rota");
+					break;
+				}
+				case 1: {
+					r.setDescricao("iniciou");
+					break;
+				}
+				case 2: {
+					r.setDescricao("finalizou");
+					break;
+				}
+				case 3: {
+					r.setDescricao("almoço");
+					break;
+				}
 			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@PostMapping(path = "/iniciar")
-	public ResponseEntity<HttpStatus> iniciarDia(@RequestBody String body) {
-		try {
-			JSONObject json = new JSONObject(body);
-
-			Rota r = new Rota();
-			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
-			Date dia = formato.parse(formato.format(new Date()));
-			r.setData(dia);
-
-			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
-			Date hora = formato2.parse(formato2.format(new Date()));
-			r.setHora(hora);
-			r.setCpf_funcionario(json.getString("cpf_funcionario"));
-			r.setLatitude(json.getString("latitude"));
-			r.setLongitude(json.getString("longitude"));
-			r.setDescricao("iniciou");
-
-			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
-			r.setConsumo(fr.getConsumo());
-			r.setId_cidade(fr.getId_cidade());
-			r.setNome_cidade(fr.getNome_cidade());
-			r.setGasolina(fr.getPreco_gasolina());
-
-			if (rotaRepository.save(r) != null) {
-				return new ResponseEntity<>(HttpStatus.CREATED);
-			} else {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@PostMapping(path = "/finalizar")
-	public ResponseEntity<HttpStatus> finalizarDia(@RequestBody String body) {
-		try {
-			JSONObject json = new JSONObject(body);
-
-			Rota r = new Rota();
-			SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy 00:00:00");
-			Date dia = formato.parse(formato.format(new Date()));
-			r.setData(dia);
-
-			SimpleDateFormat formato2 = new SimpleDateFormat("hh:mm:ss aa");
-			Date hora = formato2.parse(formato2.format(new Date()));
-			r.setHora(hora);
-
-			r.setCpf_funcionario(json.getString("cpf_funcionario"));
-			r.setLatitude(json.getString("latitude"));
-			r.setLongitude(json.getString("longitude"));
-			r.setDescricao("finalizou");
 
 			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
@@ -216,59 +165,10 @@ public class RotasController {
 			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, nome_cidade, cpf_funcionario);
 
 			Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
-					Collectors.groupingBy(RotaDTO::getCpf_funcionario, 
+					Collectors.groupingBy(RotaDTO::getCpf_funcionario,
 							Collectors.groupingBy(RotaDTO::getData)));
 
 			return new ResponseEntity<>(result, HttpStatus.OK);
-		} catch (Exception e) {
-			System.out.println(e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@PostMapping(path = "/relatorio/anomalia")
-	public ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioAnomaliaAll(@RequestBody String body) {
-		try {
-			JSONObject json = new JSONObject(body);
-
-			if (json.has("data_inicio") && json.has("data_final")) {
-				List<Rota> rotas = rotaRepository.findRotasOfAllFuncsInInterval(json.getString("data_inicio"),
-						json.getString("data_final"));
-				List<RotaDTO> rotasDTO = new ArrayList<>();
-				rotas.forEach(x -> {
-					rotasDTO.add(new RotaDTO(x));
-				});
-//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
-
-				return new ResponseEntity<>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	@PostMapping(path = "/relatorio/anomalia/funcionario")
-	public ResponseEntity<Map<Long, Map<Date, List<RotaDTO>>>> relatorioAnomaliaOfFunc(@RequestBody String body) {
-		try {
-			JSONObject json = new JSONObject(body);
-
-			if (json.has("data_inicio") && json.has("data_final") && json.has("id_funcionario")) {
-				List<Rota> rotas = rotaRepository.findRotasOfSingleFuncInInterval(json.getString("data_inicio"),
-						json.getString("data_final"), json.getLong("id_funcionario"));
-				List<RotaDTO> rotasDTO = new ArrayList<>();
-				rotas.forEach(x -> {
-					rotasDTO.add(new RotaDTO(x));
-				});
-//				Map<Long, Map<Date, List<RotaDTO>>> result = rotasDTO.stream().collect(
-//						Collectors.groupingBy(RotaDTO::getId_funcionario, Collectors.groupingBy(RotaDTO::getData)));
-
-				return new ResponseEntity<>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			}
 		} catch (Exception e) {
 			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -284,8 +184,7 @@ public class RotasController {
 			int x = 0;
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getDescricao() != null) {
-					if (list.get(i).getDescricao().equals("iniciou")
-							|| list.get(i).getDescricao().equals("finalizou")) {
+					if (list.get(i).getDescricao().equals("iniciou") || list.get(i).getDescricao().equals("finalizou")) {
 						x++;
 					}
 				}
@@ -298,7 +197,6 @@ public class RotasController {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
