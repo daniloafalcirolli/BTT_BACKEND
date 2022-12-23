@@ -63,14 +63,18 @@ public class RotasController extends AbstractMethods{
 					break;
 				}
 				case 1: {
-					r.setDescricao("iniciou");
+					r.setDescricao("base");
 					break;
 				}
 				case 2: {
-					r.setDescricao("finalizou");
+					r.setDescricao("iniciou");
 					break;
 				}
 				case 3: {
+					r.setDescricao("finalizou");
+					break;
+				}
+				case 4: {
 					r.setDescricao("almoço");
 					break;
 				}
