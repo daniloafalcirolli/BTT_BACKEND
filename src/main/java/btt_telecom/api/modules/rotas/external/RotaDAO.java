@@ -22,7 +22,7 @@ public class RotaDAO extends AbstractMethods{
 	private ResultSet rs;
 	private RotaDTO rota;
 	
-	public JSONObject getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
+	public List<RotaDTO> getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
 				+ " SELECT * FROM ROTAS r";
 		
@@ -62,13 +62,7 @@ public class RotaDAO extends AbstractMethods{
 				result.add(rota);
 			}
 			
-			Map<String, Map<Date, List<RotaDTO>>> maps = result.stream().collect(
-					Collectors.groupingBy(RotaDTO::getCpf_funcionario,
-							Collectors.groupingBy(RotaDTO::getData)));
-			
-			JSONObject rotas = new JSONObject(maps);
-			
-			return rotas;
+			return result;
 		} finally {
 			con.close();
 		}
