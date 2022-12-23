@@ -9,6 +9,8 @@ public class RotaDTO {
 	
 	private String cpf_funcionario;
 	
+	private String nome_funcionario;
+	
 	private Date data;
 	
 	private Date hora;
@@ -130,5 +132,13 @@ public class RotaDTO {
 
 	public void setCpf_funcionario(String cpf_funcionario) {
 		this.cpf_funcionario = cpf_funcionario;
+	}
+
+	public String getNome_funcionario() {
+		return nome_funcionario;
+	}
+
+	public void setNome_funcionario(String nome_funcionario) {
+		this.nome_funcionario = nome_funcionario;
 	}
 }

@@ -5,12 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.json.JSONObject;
 
 import btt_telecom.api.config.external.ConnectionDB;
 import btt_telecom.api.config.general.AbstractMethods;
@@ -24,7 +19,9 @@ public class RotaDAO extends AbstractMethods{
 	
 	public List<RotaDTO> getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
-				+ " SELECT * FROM ROTAS r";
+				+ " SELECT rfun.NOMFUN, r.* FROM ROTAS r "
+				+ " LEFT JOIN RUBI.R034FUN rfun ON "
+				+ " 	(LPAD(rfun.NUMCPF, 11, '0') = r.cpf_funcionario)";
 		
 		if(!cpf_funcionario.equals("")) {
 			query += " WHERE r.CPF_FUNCIONARIO = '" + cpf_funcionario + "' AND";
@@ -52,6 +49,7 @@ public class RotaDAO extends AbstractMethods{
 				rota = new RotaDTO();
 				rota.setId(rs.getLong("ID"));
 				rota.setCpf_funcionario(rs.getString("CPF_FUNCIONARIO"));
+				rota.setNome_funcionario(rs.getString("NOMFUN"));
 				rota.setLatitude(rs.getString("LATITUDE"));
 				rota.setLongitude(rs.getString("LONGITUDE"));
 				rota.setId_cidade(rs.getLong("ID_CIDADE"));
