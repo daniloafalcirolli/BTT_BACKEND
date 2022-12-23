@@ -260,8 +260,8 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setNome(rs.getString("NOMFUN"));
 				funcionario.setUsername(rs.getString("NOMEXB"));
 				funcionario.setEmpresa(rs.getString("RAZSOC"));
-				funcionario.setStatus(rs.getString("SITAFA"));
-				funcionario.setCod_status(Long.parseLong(String.valueOf(rs.getInt("DESSIT"))));
+				funcionario.setStatus(rs.getString("DESSIT"));
+				funcionario.setCod_status(rs.getLong("SITAFA"));
 				funcionario.setTelefone(rs.getString("NUMTEL"));
 				funcionario.setCpf(rs.getString("NUMCPF"));
 				funcionario.setRg(rs.getString("NUMCID"));
