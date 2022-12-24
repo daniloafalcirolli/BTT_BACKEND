@@ -167,7 +167,7 @@ public class RotasController extends AbstractMethods{
 	}
 
 	@PostMapping(path = "/relatorio/combustivel")
-	private ResponseEntity<List<Map<String, Map<Date, List<RotaDTO>>>>> relatorioCombustivelAll(@RequestBody String body) {
+	private ResponseEntity<Map<String, Map<Date, List<RotaDTO>>>> relatorioCombustivelAll(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
 			String data_inicio = json.getString("data_inicio");
@@ -176,15 +176,12 @@ public class RotasController extends AbstractMethods{
 			String nome_cidade = json.getString("nome_cidade");
 			
 			List<RotaDTO> rotas = rotaRepo.getRotas(data_inicio, data_final, nome_cidade, cpf_funcionario);
-			
-			List<Map<String, Map<Date, List<RotaDTO>>>> array = new ArrayList<>();
+
 			Map<String, Map<Date, List<RotaDTO>>> result = rotas.stream().collect(
 					Collectors.groupingBy(RotaDTO::getCpf_funcionario,
 							Collectors.groupingBy(RotaDTO::getData)));
 
-			array.add(result);
-			
-			return new ResponseEntity<>(array, HttpStatus.OK);
+			return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			System.out.println(e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
