@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
@@ -117,7 +116,7 @@ public class FuncionarioController extends AbstractMethods{
 				}
 			} else {
 				String username = json.getString("username");
-				if(funcionarioDAO.login(username, cpf)) {
+				if(funcionarioDAO.login(cpf, username)) {
 					return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
 				} else{
 					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
