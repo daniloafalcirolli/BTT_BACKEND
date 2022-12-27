@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.general.AbstractMethods;
@@ -95,26 +96,28 @@ public class FuncionarioController extends AbstractMethods{
 	private ResponseEntity<FuncionarioRubi> efetuarLogin(@RequestBody String body) throws SQLException {
 		try {
 			json = new JSONObject(body);
+			boolean hasPasswordRegistered = json.getBoolean("hasPassword");
 			String cpf = json.getString("cpf");
-			String password = json.getString("password").toLowerCase();
 
-			if(funcionarioRepository.existsByCpf(cpf)) {
-				Funcionario f = funcionarioRepository.findByCpf(cpf).get();
-				if(!f.getPassword().equals("") && f.getPassword() != null) {
-					if(password.equals(f.getPassword())) {
-						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-					} else {
+			if(hasPasswordRegistered) {
+				String password = json.getString("password");
+				if(funcionarioRepository.existsByCpf(cpf)) {
+					Funcionario f = funcionarioRepository.findByCpf(cpf).get();
+					if(!f.getPassword().equals("") && f.getPassword() != null) {
+						if(password.equals(f.getPassword())) {
+							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+						} else {
+							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+						}
+					}else {
 						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 					}
-				}else {
-					if(funcionarioDAO.login(cpf, password)) {
-						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-					} else{
-						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-					}
+				} else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			} else {
-				if(funcionarioDAO.login(cpf, password)) {
+				String username = json.getString("username");
+				if(funcionarioDAO.login(username, cpf)) {
 					return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
 				} else{
 					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
