@@ -95,24 +95,25 @@ public class FuncionarioController extends AbstractMethods{
 	private ResponseEntity<FuncionarioRubi> efetuarLogin(@RequestBody String body) throws SQLException {
 		try {
 			json = new JSONObject(body);
-			boolean hasPasswordRegistered = json.getBoolean("hasPassword");
 			String cpf = json.getString("cpf");
-
-			if(hasPasswordRegistered) {
+			
+			if(funcionarioRepository.existsByCpf(cpf)) {
+				Funcionario f = funcionarioRepository.findByCpf(cpf).get();
 				String password = json.getString("password");
-				if(funcionarioRepository.existsByCpf(cpf)) {
-					Funcionario f = funcionarioRepository.findByCpf(cpf).get();
-					if(!f.getPassword().equals("") && f.getPassword() != null) {
-						if(password.equals(f.getPassword())) {
-							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-						} else {
-							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-						}
-					}else {
+
+				if(!f.getPassword().equals("") && f.getPassword() != null) {
+					if(password.equals(f.getPassword())) {
+						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+					} else {
 						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 					}
-				} else {
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}else {
+					String username = json.getString("username");
+					if(funcionarioDAO.login(cpf, username)) {
+						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+					} else{
+						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					}
 				}
 			} else {
 				String username = json.getString("username");
