@@ -147,6 +147,28 @@ public class FuncionarioController extends AbstractMethods{
 		}
 	}
 	
+	@PostMapping(path = "/force/password")
+	public ResponseEntity<HttpStatus> forcePassword(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			Funcionario funcionario = new Funcionario();
+			funcionario.setCpf(json.getString("cpf"));
+			funcionario.setPassword(json.getString("password"));
+
+			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+				funcionario.setId(funcionarioRepository.findByCpf(funcionario.getCpf()).get().getId());
+			}
+
+			if(funcionarioRepository.save(funcionario) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@PostMapping(path = "/reset/password")
 	public ResponseEntity<HttpStatus> resetPassword(@RequestBody String body){
 		try {
