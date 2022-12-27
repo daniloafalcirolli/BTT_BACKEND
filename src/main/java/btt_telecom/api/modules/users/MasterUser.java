@@ -19,7 +19,7 @@ public class MasterUser {
 	
 	private String username;
 	
-	private String usuario;
+	private String email;
 	
 	private String password;
 
@@ -39,12 +39,12 @@ public class MasterUser {
 		this.username = username;
 	}
 
-	public String getUsuario() {
-		return usuario;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {

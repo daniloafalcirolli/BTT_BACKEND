@@ -81,7 +81,7 @@ public class MasterUserController extends AbstractMethods {
 		try {
 			JSONObject json = new JSONObject(body);
 			if(masterUserRepository.findByUsernameAndPassword(json.getString("email"), json.getString("password")) != null) {
-				return new ResponseEntity<>(masterUserRepository.findByUsernameAndPassword(json.getString("username"), json.getString("password")), HttpStatus.OK);
+				return new ResponseEntity<>(masterUserRepository.findByUsernameAndPassword(json.getString("email"), json.getString("password")), HttpStatus.OK);
 			}else{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
