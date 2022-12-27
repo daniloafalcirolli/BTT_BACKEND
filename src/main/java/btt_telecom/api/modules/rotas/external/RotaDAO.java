@@ -31,7 +31,7 @@ public class RotaDAO extends AbstractMethods{
 		} 
 
 		if(!data_inicio.equals("") && !data_final.equals("")) {
-			query += " r.\"DATA\" >= TO_DATE('" + data_inicio + "', 'yyyy-MM-dd') AND ";
+			query += " r.\"DATA\" >= TO_DATE('" + data_inicio + "', 'yyyy-MM-dd') AND";
 			query += " r.\"DATA\" <= TO_DATE('" + data_final + "', 'yyyy-MM-dd') AND";
 		} 
 		
