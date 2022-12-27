@@ -117,12 +117,7 @@ public class FuncionarioController extends AbstractMethods{
 						}
 					}
 				}else {
-					String username = json.getString("username");
-					if(funcionarioDAO.login(cpf, username)) {
-						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-					} else{
-						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-					}
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 				}
 			
 			} else {
