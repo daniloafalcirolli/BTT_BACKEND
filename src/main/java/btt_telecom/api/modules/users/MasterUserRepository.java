@@ -9,6 +9,6 @@ public interface MasterUserRepository extends JpaRepository<MasterUser, Long>{
 	@Query(value = "select * from master_users where username = ?1 and password = ?2", nativeQuery = true)
 	MasterUser findByUsernameAndPassword(String username, String password);
 	
-	@Query(value = "select * from master_users where username like %?1% or usuario like %?1%", nativeQuery = true)
+	@Query(value = "select * from master_users where UPPER(username) like %?1% or UPPER(usuario) like %?1%", nativeQuery = true)
 	List<MasterUser> search(String value);
 }
