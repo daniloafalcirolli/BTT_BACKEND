@@ -23,6 +23,8 @@ public class Funcionario {
 	private String placa;
 	
 	private String kilometragem_por_litro;
+
+	private String password;
 	
 	public Funcionario() {
 		
@@ -65,5 +67,13 @@ public class Funcionario {
 
 	public void setKilometragem_por_litro(String kilometragem_por_litro) {
 		this.kilometragem_por_litro = kilometragem_por_litro;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

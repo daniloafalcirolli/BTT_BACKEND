@@ -80,7 +80,7 @@ public class MasterUserController extends AbstractMethods {
 	private ResponseEntity<MasterUser> efetuarLogin(@RequestBody String body) {
 		try {
 			JSONObject json = new JSONObject(body);
-			if(masterUserRepository.findByUsernameAndPassword(json.getString("username"), json.getString("password")) != null) {
+			if(masterUserRepository.findByUsernameAndPassword(json.getString("email"), json.getString("password")) != null) {
 				return new ResponseEntity<>(masterUserRepository.findByUsernameAndPassword(json.getString("username"), json.getString("password")), HttpStatus.OK);
 			}else{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,6 +89,7 @@ public class MasterUserController extends AbstractMethods {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
+
 	@PutMapping
 	private ResponseEntity<HttpStatus> edit(@RequestBody MasterUser masterUser){
 		if(masterUserRepository.existsById(masterUser.getId())) {

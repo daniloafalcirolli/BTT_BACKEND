@@ -96,16 +96,102 @@ public class FuncionarioController extends AbstractMethods{
 		try {
 			json = new JSONObject(body);
 			String cpf = json.getString("cpf");
-			String username = json.getString("username").toLowerCase();
-			
-			if(funcionarioDAO.login(cpf, username)) {
-				return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-			} else{
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			String password = json.getString("password").toLowerCase();
+
+			if(funcionarioRepository.existsByCpf(cpf)) {
+				Funcionario f = funcionarioRepository.findByCpf(cpf).get();
+				if(!f.getPassword().equals("") && f.getPassword() != null) {
+					if(password.equals(f.getPassword())) {
+						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+					} else {
+						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					}
+				}else {
+					if(funcionarioDAO.login(cpf, password)) {
+						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+					} else{
+						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					}
+				}
+			} else {
+				if(funcionarioDAO.login(cpf, password)) {
+					return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+				} else{
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
 			}
 		} catch (JSONException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	
+	@PostMapping(path = "/register/password")
+	public ResponseEntity<HttpStatus> setPassword(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			Funcionario funcionario = new Funcionario();
+			funcionario.setCpf(json.getString("cpf"));
+			funcionario.setPassword(json.getString("password"));
+			
+			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+				funcionario.setId(funcionarioRepository.findByCpf(funcionario.getCpf()).get().getId());
+			}
+			
+			if(funcionarioRepository.save(funcionario) != null) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/reset/password")
+	public ResponseEntity<HttpStatus> resetPassword(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			Funcionario funcionario = new Funcionario();
+			funcionario.setCpf(json.getString("cpf"));
+			
+			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+				funcionario.setId(funcionarioRepository.findByCpf(funcionario.getCpf()).get().getId());
+				if(funcionario.getPassword().equals(json.getString("old_password"))) {
+					funcionario.setPassword(json.getString("new_password"));
+					if(funcionarioRepository.save(funcionario) != null) {
+						return new ResponseEntity<>(HttpStatus.OK);
+					} else {
+						return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+					}
+				} else {
+					return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+				}
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping(path = "/validate/password")
+	public ResponseEntity<HttpStatus> validatePasswordRegistered(@RequestBody String body){
+		try {
+			JSONObject json = new JSONObject(body);
+			Funcionario funcionario = new Funcionario();
+			funcionario.setCpf(json.getString("cpf"));
+			
+			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
+				if(!funcionario.getPassword().equals("") || funcionario.getPassword() != null) {
+					return new ResponseEntity<>(HttpStatus.OK);
+				} else {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+			} else {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+		} catch(Exception e) {
+			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
+		}
+	}
 }

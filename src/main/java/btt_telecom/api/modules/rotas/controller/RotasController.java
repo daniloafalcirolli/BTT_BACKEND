@@ -58,29 +58,38 @@ public class RotasController extends AbstractMethods{
 			r.setCpf_funcionario(json.getString("cpf_funcionario"));
 			r.setLatitude(json.getString("latitude"));
 			r.setLongitude(json.getString("longitude"));
-
-			switch (json.getInt("descricao")) {
-				case 0: {
-					r.setDescricao("rota");
-					break;
+			
+			if(json.has("descricao")) {
+				switch (json.getInt("descricao")) {
+					case 0: {
+						r.setDescricao("rota");
+						break;
+					}
+					case 1: {
+						r.setDescricao("base");
+						break;
+					}
+					case 2: {
+						r.setDescricao("iniciou");
+						break;
+					}
+					case 3: {
+						r.setDescricao("finalizou");
+						break;
+					}
+					case 4: {
+						r.setDescricao("almoço");
+						break;
+					}
+					default: {
+						r.setDescricao("");
+						break;
+					}
 				}
-				case 1: {
-					r.setDescricao("base");
-					break;
-				}
-				case 2: {
-					r.setDescricao("iniciou");
-					break;
-				}
-				case 3: {
-					r.setDescricao("finalizou");
-					break;
-				}
-				case 4: {
-					r.setDescricao("almoço");
-					break;
-				}
+			}else {
+				r.setDescricao("");
 			}
+			
 
 			FuncionarioConsumo fr = funcionarioDAO.findConsumoFuncByCpf(r.getCpf_funcionario());
 			r.setConsumo(fr.getConsumo());
