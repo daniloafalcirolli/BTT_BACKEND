@@ -8,9 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 @Entity
 @Table(name = "master_users")
 public class MasterUser {
@@ -22,9 +19,8 @@ public class MasterUser {
 	
 	private String username;
 	
-	private String usuario;
+	private String email;
 	
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	public Long getId() {
@@ -43,12 +39,12 @@ public class MasterUser {
 		this.username = username;
 	}
 
-	public String getUsuario() {
-		return usuario;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
