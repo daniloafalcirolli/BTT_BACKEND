@@ -99,13 +99,22 @@ public class FuncionarioController extends AbstractMethods{
 			
 			if(funcionarioRepository.existsByCpf(cpf)) {
 				Funcionario f = funcionarioRepository.findByCpf(cpf).get();
-				String password = json.getString("password");
+				if(json.has("password")) {
+					String password = json.getString("password");
 
-				if(!f.getPassword().equals("") && f.getPassword() != null) {
-					if(password.equals(f.getPassword())) {
-						return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-					} else {
-						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					if(!f.getPassword().equals("") && f.getPassword() != null) {
+						if(password.equals(f.getPassword())) {
+							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+						} else {
+							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+						}
+					}else {
+						String username = json.getString("username");
+						if(funcionarioDAO.login(cpf, username)) {
+							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+						} else{
+							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+						}
 					}
 				}else {
 					String username = json.getString("username");
@@ -115,6 +124,7 @@ public class FuncionarioController extends AbstractMethods{
 						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 					}
 				}
+			
 			} else {
 				String username = json.getString("username");
 				if(funcionarioDAO.login(cpf, username)) {
