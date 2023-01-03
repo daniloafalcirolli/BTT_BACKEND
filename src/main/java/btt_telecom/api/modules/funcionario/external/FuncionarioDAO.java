@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,6 +178,122 @@ public class FuncionarioDAO extends AbstractMethods{
 		}
 	}
 	
+	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException {
+		String query = ""
+				+ " SELECT "
+				+ "	vr.RAZSOC,"
+				+ "	vr.NOMFUN,"
+				+ "	vr.NOMEXB,"
+				+ "	vr.SITAFA,"
+				+ " rs.DESSIT,"
+				+ "	vr.NUMCPF,"
+				+ "	vr.NUMCID,"
+				+ "	vr.NUMPIS,"
+				+ "	vr.TIPLGR,"
+				+ "	vr.ENDRUA,"
+				+ "	vr.ENDNUM,"
+				+ "	vr.NOMBAI,"
+				+ "	vr.NOMCID,"
+				+ "	vr.ESTCID,"
+				+ "	vr.ENDCEP,"
+				+ "	vr.NUMTEL,"
+				+ " f2.PLACA,"
+				+ "	(CASE"
+				+ "		WHEN c2.PRECO_GASOLINA IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'preco_gasolina_padrao')"
+				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
+				+ "		END"
+				+ "	) AS PRECO_GASOLINA,"
+				+ " c2.ID AS ID_CIDADE,"
+				+ "	(CASE "
+				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'consumo_padrao')"
+				+ "		WHEN f2.KILOMETRAGEM_POR_LITRO IS NOT NULL THEN f2.KILOMETRAGEM_POR_LITRO"
+				+ "		END"
+				+ "	) AS CONSUMO"
+				+ " FROM ("
+				+ "	SELECT "
+				+ "	DISTINCT"
+				+ "		a.NUMEMP, h.RAZSOC, a.NOMFUN, a.SITAFA, "
+				+ "		LPAD(a.NUMCPF, 11, '0') AS NUMCPF, a.NUMPIS, e.NUMCID, a.NUMCAD, "
+				+ "		b.NOMEXB, c.DATCRE, e.TIPLGR, "
+				+ "		e.ENDRUA, e.ENDNUM, e.ENDCPL, "
+				+ "		'('|| e.DDDTEL || ') ' || e.NUMTEL AS NUMTEL, g.NOMBAI, "
+				+ "		f.NOMCID, f.ESTCID, e.ENDCEP "
+				+ "		FROM"
+				+ "			RUBI.R034FUN a, "
+				+ "			RUBI.R910ENT b, "
+				+ "			RUBI.R910USU c, "
+				+ "			RUBI.R034USU d, "
+				+ "			RUBI.R034CPL e, "
+				+ "			RUBI.R074CID f, "
+				+ "			RUBI.R074BAI g,"
+				+ "			RUBI.R030FIL h"
+				+ "		WHERE"
+				+ "			a.NUMEMP = h.NUMEMP and"
+				+ "			d.NUMEMP = a.NUMEMP and"
+				+ "			a.NUMEMP = e.NUMEMP and"
+				+ "					a.NUMCAD = d.NUMCAD and"
+				+ "					a.NUMCAD = e.NUMCAD and"
+				+ "					d.CODUSU = b.CODENT and"
+				+ "					c.CODENT = b.CODENT and"
+				+ "					f.CODCID = e.CODCID and"
+				+ "					f.CODCID = g.CODCID and"
+				+ "					g.CODBAI = e.CODBAI and"
+				+ "					f.CODEST = e.CODEST and"
+				+ "					(a.NUMEMP = '3' or a.NUMEMP= '4') and"
+				+ "					b.NOMEXB = '" + username + "' and"
+				+ "					a.TIPCOL= '1') vr"
+				+ "	LEFT JOIN B2TTELECOM_DB.CIDADES c2 ON"
+				+ "		(UPPER(c2.CIDADE) = UPPER(NOMCID))"
+				+ "	LEFT JOIN B2TTELECOM_DB.FUNCIONARIOS f2 ON"
+				+ "		(f2.CPF = vr.NUMCPF)"
+				+ " LEFT JOIN RUBI.R010SIT rs ON "
+				+ " 	(rs.CODSIT = vr.SITAFA)"
+				+ "	ORDER BY NOMFUN";
+		
+		con = ConnectionDB.getConnection();
+		ps = con.prepareStatement(query);
+		rs = ps.executeQuery();
+		
+		FuncionarioRubi funcionario = new FuncionarioRubi(); 
+		
+		try {
+			if(rs.next()) {
+				funcionario.setNome(rs.getString("NOMFUN"));
+				funcionario.setUsername(rs.getString("NOMEXB"));
+				funcionario.setEmpresa(rs.getString("RAZSOC"));
+				funcionario.setStatus(rs.getString("DESSIT"));
+				funcionario.setCod_status(rs.getLong("SITAFA"));
+				funcionario.setTelefone(rs.getString("NUMTEL"));
+				funcionario.setCpf(rs.getString("NUMCPF"));
+				funcionario.setRg(rs.getString("NUMCID"));
+				funcionario.setPis(rs.getString("NUMPIS"));
+				funcionario.setPreco_gasolina(rs.getString("PRECO_GASOLINA"));
+				funcionario.setId_cidade(rs.getLong("ID_CIDADE"));
+				funcionario.setConsumo(rs.getString("CONSUMO"));
+				funcionario.setPlaca(rs.getString("PLACA"));
+				funcionario.setPermission(rs.getString("PERMISSION"));
+
+				String formattedAddress = getFormattedAddress(
+						rs.getString("TIPLGR"), 
+						rs.getString("ENDRUA"), 
+						rs.getString("ENDNUM"),
+						rs.getString("NOMBAI"),
+						rs.getString("NOMCID"),
+						rs.getString("ESTCID"),
+						rs.getString("ENDCEP"));
+				JSONObject cords = getLatAndLng(formattedAddress);
+
+				funcionario.setEndereco(formattedAddress);
+				funcionario.setLatitude(cords.getString("lat"));
+				funcionario.setLongitude(cords.getString("lng"));
+			}
+			
+			return Optional.of(funcionario);
+		} finally {
+			con.close();
+		}	
+	}
+	
 	public FuncionarioRubi findByCpf(String cpf) throws SQLException, JSONException {
 		String query = ""
 				+ " SELECT "
@@ -291,6 +408,7 @@ public class FuncionarioDAO extends AbstractMethods{
 			con.close();
 		}
 	}
+	
 	
 	public FuncionarioRubi findByCpfWithoutGeo(String cpf) throws SQLException, JSONException {
 		String query = ""
@@ -491,7 +609,7 @@ public class FuncionarioDAO extends AbstractMethods{
 	public boolean login(String cpf, String username) throws SQLException {
 		String query = ""
 				+ " SELECT "
-				+ "DISTINCT"
+				+ " DISTINCT"
 				+ "	a.NOMFUN,"
 				+ "	a.SITAFA, "
 				+ "	e.NUMCID,"
@@ -521,13 +639,12 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "				a.TIPCOL= '1' AND "
 				+ "				a.NUMCPF = '" + cpf + "' AND "
 				+ "				b.NOMEXB = '" + username + "' AND "
-				+ "				a.SITAFA IN (SELECT b2tsf.CODIGO FROM B2TTELECOM_DB.STATUS_FUNC b2tsf)"
 				+ "				ORDER BY a.NOMFUN ASC";
 		
 		con = ConnectionDB.getConnection();
 		ps = con.prepareStatement(query);
 		rs = ps.executeQuery();
-		
+				
 		try {
 			if(!rs.isBeforeFirst()) {
 				return false;

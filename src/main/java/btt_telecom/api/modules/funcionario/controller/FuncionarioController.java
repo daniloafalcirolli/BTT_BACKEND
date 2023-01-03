@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +50,7 @@ public class FuncionarioController extends AbstractMethods{
 	@GetMapping(path = "/page")
 	private ResponseEntity<Map<String, Object>> searchWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page) throws SQLException{
 		try {
-			if(value.equals("")) {
+			if(value.equals("")) {			
 				return new ResponseEntity<>(convertListToPage(funcionarioDAO.findAll(), size, page), HttpStatus.OK);
 			}else {
 				return new ResponseEntity<>(convertListToPage(funcionarioDAO.search(value), size, page), HttpStatus.OK);
@@ -93,41 +94,43 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/login")
-	private ResponseEntity<FuncionarioRubi> efetuarLogin(@RequestBody String body) throws SQLException {
+	private ResponseEntity<FuncionarioRubi> efetuarLogin(@RequestBody String body) throws SQLException, Exception {
 		try {
 			json = new JSONObject(body);
-			String cpf = json.getString("cpf");
+			String username = json.getString("username");
 			
-			if(funcionarioRepository.existsByCpf(cpf)) {
-				Funcionario f = funcionarioRepository.findByCpf(cpf).get();
-				if(json.has("password")) {
-					String password = json.getString("password");
-
-					if(!f.getPassword().equals("") && f.getPassword() != null) {
-						if(password.equals(f.getPassword())) {
-							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
+			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Não Encontrado funcionário para o username informado."));
+			
+			if(funcRubi.getPermission().equals("Y")) {
+				if(funcionarioRepository.existsByCpf(username)) {
+					Funcionario func = funcionarioRepository.findByCpf(funcRubi.getCpf()).get();
+					
+					if(func.hasPassword()) {
+						String password = json.getString("password");
+						
+						if(password.equals(func.getPassword())){
+							return new ResponseEntity<>(funcRubi, HttpStatus.OK);
 						} else {
-							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+							throw new Exception("Senha informada incorreta.");
 						}
-					}else {
-						String username = json.getString("username");
-						if(funcionarioDAO.login(cpf, username)) {
-							return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-						} else{
-							return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					} else {
+						String cpf = json.getString("cpf");
+						if(cpf.equals(func.getCpf())){
+							return new ResponseEntity<>(funcRubi, HttpStatus.OK);
+						} else {
+							throw new Exception("CPF informado incorretamente.");
 						}
 					}
-				}else {
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				} else {
+					String cpf = json.getString("cpf");
+					if(funcionarioDAO.login(cpf, username)) {
+						return new ResponseEntity<>(funcRubi, HttpStatus.OK);
+					} else {
+						throw new Exception("CPF informado incorretamente.");
+					}
 				}
-			
 			} else {
-				String username = json.getString("username");
-				if(funcionarioDAO.login(cpf, username)) {
-					return new ResponseEntity<>(funcionarioDAO.findByCpf(cpf), HttpStatus.OK);
-				} else{
-					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-				}
+				throw new UsernameNotFoundException("Status do funcionário [ " + funcRubi.getCpf() + " ] não está habilitado a utilizar o aplicativo.");
 			}
 		} catch (JSONException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

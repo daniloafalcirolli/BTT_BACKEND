@@ -76,4 +76,11 @@ public class Funcionario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public boolean hasPassword() {
+		if(this.password != null && !this.password.equals("")) {
+			return true;
+		}
+		return false;
+	}
 }
