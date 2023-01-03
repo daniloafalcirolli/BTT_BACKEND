@@ -24,6 +24,7 @@ import btt_telecom.api.modules.funcionario.dto.FuncionarioRubiList;
 import btt_telecom.api.modules.funcionario.external.FuncionarioDAO;
 import btt_telecom.api.modules.funcionario.model.Funcionario;
 import btt_telecom.api.modules.funcionario.repository.FuncionarioRepository;
+import btt_telecom.api.modules.funcionario.response.ResponseLogin;
 
 
 @RestController
@@ -94,47 +95,60 @@ public class FuncionarioController extends AbstractMethods{
 	}
 	
 	@PostMapping(path = "/login")
-	private ResponseEntity<FuncionarioRubi> efetuarLogin(@RequestBody String body) throws SQLException, Exception {
+	private ResponseLogin efetuarLogin(@RequestBody String body) throws SQLException, Exception {
+		ResponseLogin response;
 		try {
 			json = new JSONObject(body);
 			String username = json.getString("username");
 			
 			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username).get();
 
-			if(funcRubi != null && funcRubi.getPermission().equals("Y")) {
-				if(funcionarioRepository.existsByCpf(username)) {
-					Funcionario func = funcionarioRepository.findByCpf(funcRubi.getCpf()).get();
-					
-					if(func.hasPassword()) {
-						String password = json.getString("password");
+			if(funcRubi != null) {
+				if(funcRubi.getPermission().equals("Y")) {
+					if(funcionarioRepository.existsByCpf(username)) {
+						Funcionario func = funcionarioRepository.findByCpf(funcRubi.getCpf()).get();
 						
-						if(password.equals(func.getPassword())){
-							return new ResponseEntity<>(funcRubi, HttpStatus.OK);
+						if(func.hasPassword()) {
+							String password = json.getString("password");
+							
+							if(password.equals(func.getPassword())){
+								response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
+								return response;
+							} else {
+								response = new ResponseLogin(403l, "Senha informada incorretamente.");
+							}
 						} else {
-							throw new Exception("Senha informada incorreta.");
+							String cpf = json.getString("cpf");
+							if(cpf.equals(func.getCpf())){
+								response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
+								return response;
+							} else {
+								response = new ResponseLogin(403l, "CPF informado incorretamente.");
+								return response;
+							}
 						}
 					} else {
 						String cpf = json.getString("cpf");
-						if(cpf.equals(func.getCpf())){
-							return new ResponseEntity<>(funcRubi, HttpStatus.OK);
+						if(funcionarioDAO.login(cpf, username)) {
+							response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
 						} else {
-							throw new Exception("CPF informado incorretamente.");
+							response = new ResponseLogin(403l, "CPF informado incorretamente.");
+							return response;
 						}
 					}
 				} else {
-					String cpf = json.getString("cpf");
-					if(funcionarioDAO.login(cpf, username)) {
-						return new ResponseEntity<>(funcRubi, HttpStatus.OK);
-					} else {
-						throw new Exception("CPF informado incorretamente.");
-					}
+					response = new ResponseLogin(403l, "Status do funcionário [ " + funcRubi.getCpf() + " ] não está habilitado a entrar no aplicativo.");
+					return response;
 				}
 			} else {
-				throw new UsernameNotFoundException("Status do funcionário [ " + funcRubi.getCpf() + " ] não está habilitado a utilizar o aplicativo.");
+				response = new ResponseLogin(403l, "Username do funcionário não encontrado");
+				return response;
 			}
 		} catch (JSONException e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			response = new ResponseLogin(500l, "Ocorreu um erro.");
+			return response;
 		}
+		return response;
 	}
 	
 	@PostMapping(path = "/register/password")
