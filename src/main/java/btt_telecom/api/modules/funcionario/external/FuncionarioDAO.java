@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.config.external.ConnectionDB;
@@ -178,7 +179,7 @@ public class FuncionarioDAO extends AbstractMethods{
 		}
 	}
 	
-	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException {
+	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException, Exception {
 		String query = ""
 				+ " SELECT "
 				+ "	vr.RAZSOC,"
@@ -198,6 +199,11 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "	vr.ENDCEP,"
 				+ "	vr.NUMTEL,"
 				+ " f2.PLACA,"
+				+ "	(CASE"
+				+ "		WHEN vr.SITAFA IN (SELECT sf.CODIGO FROM STATUS_FUNC sf) THEN 'Y'"
+				+ "		ELSE 'N'"
+				+ "		END"
+				+ "	) AS PERMISSION,"
 				+ "	(CASE"
 				+ "		WHEN c2.PRECO_GASOLINA IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'preco_gasolina_padrao')"
 				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
@@ -286,8 +292,10 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setEndereco(formattedAddress);
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
+			} else {
+				throw new UsernameNotFoundException("Não Encontrado funcionário para o username informado.");
 			}
-			
+		
 			return Optional.of(funcionario);
 		} finally {
 			con.close();
