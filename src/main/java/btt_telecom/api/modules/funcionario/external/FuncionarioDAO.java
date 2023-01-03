@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.config.external.ConnectionDB;
@@ -179,7 +178,7 @@ public class FuncionarioDAO extends AbstractMethods{
 		}
 	}
 	
-	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException, Exception {
+	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException {
 		String query = ""
 				+ " SELECT "
 				+ "	vr.RAZSOC,"
@@ -292,8 +291,6 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setEndereco(formattedAddress);
 				funcionario.setLatitude(cords.getString("lat"));
 				funcionario.setLongitude(cords.getString("lng"));
-			} else {
-				throw new UsernameNotFoundException("Não Encontrado funcionário para o username informado.");
 			}
 		
 			return Optional.of(funcionario);
