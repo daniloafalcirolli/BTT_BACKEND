@@ -32,6 +32,8 @@ public class FuncionarioRubi {
 	private String latitude;
 	
 	private String longitude;
+	
+	private String permission;
 
 	public String getNome() {
 		return nome;
@@ -159,5 +161,13 @@ public class FuncionarioRubi {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
 	}
 }
