@@ -99,9 +99,9 @@ public class FuncionarioController extends AbstractMethods{
 			json = new JSONObject(body);
 			String username = json.getString("username");
 			
-			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username).filter(f -> f.getPermission().equals("Y")).orElseThrow(() -> new UsernameNotFoundException("Não Encontrado funcionário para o username informado."));
-			
-			if(funcRubi.getPermission().equals("Y")) {
+			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username).get();
+
+			if(funcRubi != null && funcRubi.getPermission().equals("Y")) {
 				if(funcionarioRepository.existsByCpf(username)) {
 					Funcionario func = funcionarioRepository.findByCpf(funcRubi.getCpf()).get();
 					
