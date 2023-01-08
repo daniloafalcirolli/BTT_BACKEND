@@ -25,4 +25,7 @@ public interface RotaRepository extends JpaRepository<Rota, Long>{
 	
 	@Query(value = "SELECT * FROM rotas r where r.NOME_CIDADE = ?1 and r.\"DATA\" >= to_date(?2, 'yyyy-MM-dd') AND r.\"DATA\" <= to_date(?3, 'yyyy-MM-dd') order by data, hora", nativeQuery = true)
 	List<Rota> findAllFuncsByCityInInterval(String nome_cidade, String data_inicio,  String data_final);
+	
+	@Query(value = "SELECT * FROM ROTAS r WHERE r.DESCRICAO = 'almoco' AND r.DATA = to_date(?2, 'yyyy/mm/dd') AND CPF_FUNCIONARIO = ?1", nativeQuery = true)
+	List<Rota> findAlmocoByFuncionario(String cpf_funcionario, String data);
 }

@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,48 +95,63 @@ public class FuncionarioController extends AbstractMethods{
 	
 	@PostMapping(path = "/login")
 	private ResponseLogin efetuarLogin(@RequestBody String body) throws SQLException, Exception {
-		ResponseLogin response;
+		ResponseLogin response = new ResponseLogin();
+
 		try {
 			json = new JSONObject(body);
 			String username = json.getString("username");
-			
-			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username).get();
+
+			FuncionarioRubi funcRubi = funcionarioDAO.existsFuncionarioByUsername(username);
 
 			if(funcRubi != null) {
 				if(funcRubi.getPermission().equals("Y")) {
-					if(funcionarioRepository.existsByCpf(username)) {
+					if(funcionarioRepository.existsByCpf(funcRubi.getCpf())) {
 						Funcionario func = funcionarioRepository.findByCpf(funcRubi.getCpf()).get();
 						
-						if(func.hasPassword()) {
-							String password = json.getString("password");
-							
-							if(password.equals(func.getPassword())){
-								response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
-								return response;
+						if(func.getPassword() != null && !func.getPassword().equals("")) {
+							if(json.has("password")) {
+								String password = json.getString("password");
+								
+								if(func.getPassword().equals(password)){
+									response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
+									return response;
+								} else {
+									response = new ResponseLogin(403l, "Senha informada incorretamente.");
+									return response;
+								}
 							} else {
-								response = new ResponseLogin(403l, "Senha informada incorretamente.");
+								response = new ResponseLogin(403l, "Use a senha para realizar o login.");
 							}
+							
 						} else {
-							String cpf = json.getString("cpf");
-							if(cpf.equals(func.getCpf())){
+							if(json.has("cpf")) {
+								String cpf = json.getString("cpf");
+								if(cpf.equals(func.getCpf())){
+									response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
+									return response;
+								} else {
+									response = new ResponseLogin(403l, "CPF informado incorretamente.");
+									return response;
+								}
+							} else {
+								response = new ResponseLogin(403l, "Use o cpf para realizar o login.");
+							}
+						}
+					} else {
+						if(json.has("cpf")) {
+						String cpf = json.getString("cpf");
+							if(funcionarioDAO.login(cpf, username)) {
 								response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
-								return response;
 							} else {
 								response = new ResponseLogin(403l, "CPF informado incorretamente.");
 								return response;
 							}
-						}
-					} else {
-						String cpf = json.getString("cpf");
-						if(funcionarioDAO.login(cpf, username)) {
-							response = new ResponseLogin(200l, "Login realizado com sucesso", funcRubi);
 						} else {
-							response = new ResponseLogin(403l, "CPF informado incorretamente.");
-							return response;
+							response = new ResponseLogin(403l, "Use o cpf para realizar o login.");
 						}
 					}
 				} else {
-					response = new ResponseLogin(403l, "Status do funcionário [ " + funcRubi.getCpf() + " ] não está habilitado a entrar no aplicativo.");
+					response = new ResponseLogin(403l, "Status do funcionário [ " + funcRubi.getNome() + " ] não está habilitado a entrar no aplicativo.");
 					return response;
 				}
 			} else {
@@ -145,9 +159,11 @@ public class FuncionarioController extends AbstractMethods{
 				return response;
 			}
 		} catch (JSONException e) {
+			System.out.println(e);
 			response = new ResponseLogin(500l, "Ocorreu um erro.");
 			return response;
 		}
+	
 		return response;
 	}
 	

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -178,7 +177,7 @@ public class FuncionarioDAO extends AbstractMethods{
 		}
 	}
 	
-	public Optional<FuncionarioRubi> existsFuncionarioByUsername(String username) throws SQLException {
+	public FuncionarioRubi existsFuncionarioByUsername(String username) throws SQLException, JSONException {
 		String query = ""
 				+ " SELECT "
 				+ "	vr.RAZSOC,"
@@ -202,7 +201,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "		WHEN vr.SITAFA IN (SELECT sf.CODIGO FROM STATUS_FUNC sf) THEN 'Y'"
 				+ "		ELSE 'N'"
 				+ "		END"
-				+ "	) AS PERMISSION,"
+				+ "	) AS PERMICAO, "
 				+ "	(CASE"
 				+ "		WHEN c2.PRECO_GASOLINA IS NULL THEN (SELECT m.META_VALUE FROM B2TTELECOM_DB.META m WHERE m.META_KEY = 'preco_gasolina_padrao')"
 				+ "		WHEN c2.PRECO_GASOLINA IS NOT NULL THEN c2.PRECO_GASOLINA "
@@ -276,7 +275,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				funcionario.setId_cidade(rs.getLong("ID_CIDADE"));
 				funcionario.setConsumo(rs.getString("CONSUMO"));
 				funcionario.setPlaca(rs.getString("PLACA"));
-				funcionario.setPermission(rs.getString("PERMISSION"));
+				funcionario.setPermission(rs.getString("PERMICAO"));
 
 				String formattedAddress = getFormattedAddress(
 						rs.getString("TIPLGR"), 
@@ -287,13 +286,15 @@ public class FuncionarioDAO extends AbstractMethods{
 						rs.getString("ESTCID"),
 						rs.getString("ENDCEP"));
 				JSONObject cords = getLatAndLng(formattedAddress);
-
 				funcionario.setEndereco(formattedAddress);
-				funcionario.setLatitude(cords.getString("lat"));
-				funcionario.setLongitude(cords.getString("lng"));
+				funcionario.setLatitude(cords.get("lat").toString());
+				funcionario.setLongitude(cords.get("lng").toString());
+				
+			} else {
+				funcionario = null;
 			}
 		
-			return Optional.of(funcionario);
+			return funcionario;
 		} finally {
 			con.close();
 		}	
@@ -402,10 +403,9 @@ public class FuncionarioDAO extends AbstractMethods{
 						rs.getString("ESTCID"),
 						rs.getString("ENDCEP"));
 				JSONObject cords = getLatAndLng(formattedAddress);
-
 				funcionario.setEndereco(formattedAddress);
-				funcionario.setLatitude(cords.getString("lat"));
-				funcionario.setLongitude(cords.getString("lng"));
+				funcionario.setLatitude(cords.get("lat").toString());
+				funcionario.setLongitude(cords.get("lng").toString());
 			}
 			
 			return funcionario;
@@ -643,7 +643,7 @@ public class FuncionarioDAO extends AbstractMethods{
 				+ "				(a.NUMEMP = '3' or a.NUMEMP= '4') and"
 				+ "				a.TIPCOL= '1' AND "
 				+ "				a.NUMCPF = '" + cpf + "' AND "
-				+ "				b.NOMEXB = '" + username + "' AND "
+				+ "				b.NOMEXB = '" + username + "' "
 				+ "				ORDER BY a.NOMFUN ASC";
 		
 		con = ConnectionDB.getConnection();

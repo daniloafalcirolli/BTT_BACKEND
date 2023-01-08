@@ -33,13 +33,13 @@ public class AbstractMethods {
 	public String getFormattedAddress(String tipo_logradouro, String rua, String numero, String bairro, String cidade, String estado, String cep) {		
 		switch(tipo_logradouro) {
 			case "R": 
-				tipo_logradouro = "RUA ";
+				tipo_logradouro = "RUA";
 				break;
 			case "AV":
-				tipo_logradouro = "AVENIDA ";
+				tipo_logradouro = "AVENIDA";
 				break;
 			case "EST":
-				tipo_logradouro = "ESTRADA ";
+				tipo_logradouro = "ESTRADA";
 				break;
 		}
 		
