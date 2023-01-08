@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.exception.ApplicationException;
 import btt_telecom.api.modules.materiais.model.MaterialAplicadoBase;
 import btt_telecom.api.modules.materiais.repository.MaterialAplicadoBaseRepository;
 
@@ -97,6 +99,20 @@ public class MaterialAplicadoBaseController {
 			}
 		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.PRECONDITION_FAILED);
+		}
+	}
+	
+	@DeleteMapping(path = "/{id}")
+	private ResponseEntity<HttpStatus> deleteMaterial(@PathVariable(name = "id") Long id) throws ApplicationException{
+		try {
+			if(aplicadoBaseRepository.existsById(id)) {
+				aplicadoBaseRepository.deleteById(id);
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				throw new ApplicationException(HttpStatus.BAD_REQUEST, "Material não existente");
+			}
+		} catch (Exception e) {
+			throw new ApplicationException(HttpStatus.BAD_REQUEST, "Ocorreu um erro.");
 		}
 	}
 
