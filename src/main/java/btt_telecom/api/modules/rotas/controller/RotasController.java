@@ -45,7 +45,6 @@ public class RotasController extends AbstractMethods{
 	@PostMapping(path = "/registrar")
 	public ResponseEntity<HttpStatus> register(@RequestBody String body) {
 		try {
-			System.out.println(body);
 			JSONObject json = new JSONObject(body);
 			
 			Rota r = new Rota();
