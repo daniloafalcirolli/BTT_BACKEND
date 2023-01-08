@@ -98,10 +98,10 @@ public class RotasController extends AbstractMethods{
 			r.setGasolina(fr.getPreco_gasolina());
 
 			if (rotaRepository.save(r) != null) {
-				insertLog("[Rota] Registrada com sucesso - CPF: " + r.getCpf_funcionario());
+				insertLog("[Rota] Registrada com sucesso - " + fr.getNome());
 				return new ResponseEntity<>(HttpStatus.CREATED);
 			} else {
-				insertError("[Rota] Ocorreu um erro ao registrar uma rota - CPF: " + r.getCpf_funcionario());
+				insertError("[Rota] Ocorreu um erro ao registrar uma rota - " + fr.getNome());
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
@@ -122,10 +122,10 @@ public class RotasController extends AbstractMethods{
 			});
 						
 			if(rotaRepository.saveAll(rotas) != null) {
-				insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo consumo: " + func.getConsumo() + " - CPF: " + func.getCpf());
+				insertLog("[Rota] " + String.valueOf(rotas.size()) + " rotas alteradas com sucesso! - Novo consumo: " + func.getConsumo() + " - " + func.getNome());
 				return new ResponseEntity<>(HttpStatus.OK);
 			} else {
-				insertError("[Rota] Ocorreu um erro ao recalcular o consumo - CPF: " + func.getCpf());
+				insertError("[Rota] Ocorreu um erro ao recalcular o consumo - " + func.getNome());
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
 		} catch (JSONException e) {
