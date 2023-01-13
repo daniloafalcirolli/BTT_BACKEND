@@ -193,11 +193,11 @@ public class FuncionarioController extends AbstractMethods{
 	public ResponseEntity<HttpStatus> resetPassword(@RequestBody String body){
 		try {
 			JSONObject json = new JSONObject(body);
+			String cpf = json.getString("cpf");
 			Funcionario funcionario = new Funcionario();
-			funcionario.setCpf(json.getString("cpf"));
 			
-			if(funcionarioRepository.existsByCpf(funcionario.getCpf())) {
-				funcionario.setId(funcionarioRepository.findByCpf(funcionario.getCpf()).get().getId());
+			if(funcionarioRepository.existsByCpf(cpf)) {
+				funcionario = funcionarioRepository.findByCpf(cpf).get();
 				if(funcionario.getPassword().equals(json.getString("old_password"))) {
 					funcionario.setPassword(json.getString("new_password"));
 					if(funcionarioRepository.save(funcionario) != null) {
@@ -212,6 +212,7 @@ public class FuncionarioController extends AbstractMethods{
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<HttpStatus>(HttpStatus.BAD_REQUEST);
 		}
 	}

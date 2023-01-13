@@ -98,7 +98,7 @@ public class RotasController extends AbstractMethods{
 			r.setGasolina(fr.getPreco_gasolina());
 
 			if (rotaRepository.save(r) != null) {
-				insertLog("[Rota] Registrada com sucesso - " + fr.getNome());
+				insertLog("[Rota] Registrada [ " + r.getDescricao() + " ] com sucesso - " + fr.getNome());
 				return new ResponseEntity<>(HttpStatus.CREATED);
 			} else {
 				insertError("[Rota] Ocorreu um erro ao registrar uma rota - " + fr.getNome());
@@ -228,7 +228,8 @@ public class RotasController extends AbstractMethods{
 			JSONObject json = new JSONObject(body);
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
 			String date = formatoData.format(new Date());
-			List<Rota> list = rotaRepository.findAlmocoByFuncionario(json.getString("cpf_funcionario"), date);
+			System.out.println(date);
+			List<Rota> list = rotaRepository.findAlmocoByFuncionario(date, json.getString("cpf_funcionario"));
 			if(list.size() == 0) {				
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}else if(list.size() > 1) {
