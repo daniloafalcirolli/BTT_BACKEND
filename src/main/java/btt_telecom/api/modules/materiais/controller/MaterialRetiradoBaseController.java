@@ -98,10 +98,15 @@ public class MaterialRetiradoBaseController extends AbstractMethods {
 	private ResponseEntity<HttpStatus> deleteMaterial(@PathVariable(name = "id") Long id) throws ApplicationException{
 		try {
 			if(retiradoBaseRepository.existsById(id)) {
-				retiradoBaseRepository.deleteById(id);
-				return new ResponseEntity<>(HttpStatus.OK);
+				MaterialRetiradoBase material = retiradoBaseRepository.findById(id).get();
+				material.setDelt_flg(true);
+				if(retiradoBaseRepository.save(material) != null) {
+					return new ResponseEntity<>(HttpStatus.OK);
+				} else {
+					throw new ApplicationException(HttpStatus.BAD_REQUEST, "Ocorreu um erro ao excluir o material.");
+				}
 			} else {
-				throw new ApplicationException(HttpStatus.BAD_REQUEST, "Material não existe");
+				throw new ApplicationException(HttpStatus.BAD_REQUEST, "Material não existente");
 			}
 		} catch (Exception e) {
 			throw new ApplicationException(HttpStatus.BAD_REQUEST, "Ocorreu um erro.");

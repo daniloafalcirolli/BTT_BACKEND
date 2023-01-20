@@ -21,6 +21,8 @@ public class MaterialRetiradoBase {
 	
 	private String id_senior;
 	
+	private boolean delt_flg;
+	
 	@Column(nullable = true)
 	private boolean has_serial;
 
@@ -46,6 +48,14 @@ public class MaterialRetiradoBase {
 
 	public void setId_senior(String id_senior) {
 		this.id_senior = id_senior;
+	}
+	
+	public boolean isDelt_flg() {
+		return delt_flg;
+	}
+
+	public void setDelt_flg(boolean delt_flg) {
+		this.delt_flg = delt_flg;
 	}
 
 	public boolean isHas_serial() {
