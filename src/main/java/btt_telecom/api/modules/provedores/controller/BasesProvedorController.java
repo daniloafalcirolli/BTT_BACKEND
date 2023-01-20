@@ -41,7 +41,7 @@ public class BasesProvedorController extends AbstractMethods{
 			if(value.equals("")) {
 				return new ResponseEntity<>(convertListToPage(basesProvedorRepository.findAll(), size, page), HttpStatus.OK);
 			}else {
-				return new ResponseEntity<>(convertListToPage(basesProvedorRepository.search(value), size, page), HttpStatus.OK);
+				return new ResponseEntity<>(convertListToPage(basesProvedorRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
 			}	
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

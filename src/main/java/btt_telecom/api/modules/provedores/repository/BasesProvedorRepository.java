@@ -9,6 +9,6 @@ import btt_telecom.api.modules.provedores.model.BasesProvedor;
 
 public interface BasesProvedorRepository extends JpaRepository<BasesProvedor, Long>{
 	
-	@Query(value = "select * from bases_provedor where UPPER(nome) like UPPER(%?1%) or UPPER(endereco) like UPPER(%?1%)", nativeQuery = true)
+	@Query(value = "select * from bases_provedor where UPPER(nome) like %?1% or UPPER(endereco) like %?1%", nativeQuery = true)
 	List<BasesProvedor> search(String value);
 }

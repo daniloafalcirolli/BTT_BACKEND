@@ -12,7 +12,7 @@ public interface StatusFuncRepository extends JpaRepository<StatusFunc, Long>{
 	
 	StatusFunc findByCodigo(Long codigo);
 	
-	@Query(value = "select * from status_func where UPPER(abreviatura) like UPPER(%?1%) or UPPER(descricao) like UPPER(%?1%) or codigo like UPPER(%?1%) order by codigo", nativeQuery = true)
+	@Query(value = "select * from status_func where UPPER(abreviatura) like %?1% or UPPER(descricao) like %?1% or codigo like %?1% order by codigo", nativeQuery = true)
 	List<StatusFunc> search(String value);
 	
 	@Query(value = "select * from status_func order by codigo", nativeQuery = true)

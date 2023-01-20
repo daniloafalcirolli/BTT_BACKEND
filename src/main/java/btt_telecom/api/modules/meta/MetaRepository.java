@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface MetaRepository extends JpaRepository<Meta, Long>{
 	
-	@Query(value = "SELECT * FROM META WHERE UPPER(META_KEY) LIKE UPPER(%?1%) OR UPPER(META_VALUE) LIKE UPPER(%?1%) OR UPPER(DESCRIPTION) LIKE UPPER(%?1%)", nativeQuery = true)
+	@Query(value = "SELECT * FROM META WHERE UPPER(META_KEY) LIKE %?1% OR UPPER(META_VALUE) LIKE %?1%", nativeQuery = true)
 	List<Meta> search(String value);
 	
 	boolean existsByMetaKey(String meta_key);

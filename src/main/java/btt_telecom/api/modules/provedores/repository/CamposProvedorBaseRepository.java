@@ -9,6 +9,6 @@ import btt_telecom.api.modules.provedores.model.CamposProvedorBase;
 
 public interface CamposProvedorBaseRepository extends JpaRepository<CamposProvedorBase, Long>{
 	
-	@Query(value = "select * from campos_provedor where UPPER(campo) like UPPER(%?1%)", nativeQuery = true)
+	@Query(value = "select * from campos_provedor where UPPER(campo) like %?1%", nativeQuery = true)
 	List<CamposProvedorBase> search(String value);
 }

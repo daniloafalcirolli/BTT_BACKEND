@@ -11,6 +11,6 @@ public interface MaterialRetiradoBaseRepository extends JpaRepository<MaterialRe
 	@Query(value = "SELECT * FROM MATERIAIS_RETIRADOS WHERE DELT_FLG = 0", nativeQuery = true)
 	List<MaterialRetiradoBase> findAll();	
 	
-	@Query(value = "SELECT * FROM MATERIAIS_RETIRADOS WHERE (UPPER(MATERIAL) LIKE UPPER(%?1%) OR UPPER(ID_SENIOR) LIKE UPPER(%?1%)) AND DELT_FLG = 0", nativeQuery = true)
+	@Query(value = "SELECT * FROM MATERIAIS_RETIRADOS WHERE (UPPER(MATERIAL) LIKE %?1% OR UPPER(ID_SENIOR) LIKE %?1%) AND DELT_FLG = 0", nativeQuery = true)
 	List<MaterialRetiradoBase> search(String value);	
 }

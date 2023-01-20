@@ -13,7 +13,7 @@ public interface MaterialAplicadoBaseRepository extends JpaRepository<MaterialAp
 	List<MaterialAplicadoBase> findAll();	
 
 	
-	@Query(value = "SELECT * FROM MATERIAIS_APLICADOS WHERE (UPPER(MATERIAL) LIKE UPPER(%?1%) OR UPPER(ID_SENIOR) like UPPER(%?1%)) AND DELT_FLG = 0", nativeQuery = true)
+	@Query(value = "SELECT * FROM MATERIAIS_APLICADOS WHERE (UPPER(MATERIAL) LIKE %?1% OR UPPER(ID_SENIOR) LIKE %?1%) AND DELT_FLG = 0", nativeQuery = true)
 	List<MaterialAplicadoBase> search(String value);	
 
 }

@@ -58,7 +58,7 @@ public class CamposProvedorController extends AbstractMethods {
 			if(value.equals("")) {
 				return new ResponseEntity<>(convertListToPage(camposRepository.findAll(), size, page), HttpStatus.OK);
 			}else {
-				return new ResponseEntity<>(convertListToPage(camposRepository.search(value), size, page), HttpStatus.OK);
+				return new ResponseEntity<>(convertListToPage(camposRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
 			}			}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

@@ -59,7 +59,7 @@ public class ImagensProvedorController extends AbstractMethods{
 			if(value.equals("")) {
 				return new ResponseEntity<>(convertListToPage(imagensProvedorRepository.findAll(), size, page), HttpStatus.OK);
 			}else {
-				return new ResponseEntity<>(convertListToPage(imagensProvedorRepository.search(value), size, page), HttpStatus.OK);
+				return new ResponseEntity<>(convertListToPage(imagensProvedorRepository.search(value.toUpperCase()), size, page), HttpStatus.OK);
 			}		} catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

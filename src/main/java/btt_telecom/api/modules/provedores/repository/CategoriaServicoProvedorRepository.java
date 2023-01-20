@@ -9,6 +9,6 @@ import btt_telecom.api.modules.provedores.model.CategoriaServicoProvedor;
 
 public interface CategoriaServicoProvedorRepository extends JpaRepository<CategoriaServicoProvedor, Long>{
 	
-	@Query(value = "SELECT * FROM CATEGORIAS_SERVICO_PROVEDOR WHERE UPPER(CATEGORIA) LIKE UPPER(%?1%)", nativeQuery = true)
+	@Query(value = "SELECT * FROM CATEGORIAS_SERVICO_PROVEDOR WHERE UPPER(CATEGORIA) LIKE %?1%", nativeQuery = true)
 	List<CategoriaServicoProvedor> search(String value);
 }
