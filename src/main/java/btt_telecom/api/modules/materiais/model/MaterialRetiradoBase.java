@@ -21,6 +21,7 @@ public class MaterialRetiradoBase {
 	
 	private String id_senior;
 	
+	@Column(nullable = true)
 	private boolean delt_flg;
 	
 	@Column(nullable = true)
