@@ -41,8 +41,8 @@ public class EmpresaDAO {
 				+ "	x.NOMFIL "
 				+ " FROM RUBI.R030FIL x "
 				+ "	WHERE "
-				+ " UPPER(x.RAZSOC) LIKE '%" + value.toUpperCase() + "%' OR"
-				+ " UPPER(x.NOMFIL) LIKE '%" + value.toUpperCase() + "%'"
+				+ " UPPER(x.RAZSOC) LIKE UPPER('%" + value + "%') OR"
+				+ " UPPER(x.NOMFIL) LIKE UPPER('%" + value + "%') "
 				+ "	ORDER BY x.RAZSOC";
 		
 		con = ConnectionDB.getConnection();

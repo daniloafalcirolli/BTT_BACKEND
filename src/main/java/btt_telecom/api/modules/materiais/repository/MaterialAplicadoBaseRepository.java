@@ -9,7 +9,7 @@ import btt_telecom.api.modules.materiais.model.MaterialAplicadoBase;
 
 public interface MaterialAplicadoBaseRepository extends JpaRepository<MaterialAplicadoBase, Long>{
 	
-	@Query(value = "select * from materiais_aplicados where UPPER(material) like %?1% or UPPER(id_senior) like %?1%", nativeQuery = true)
+	@Query(value = "select * from materiais_aplicados where UPPER(material) like UPPER(%?1%) or UPPER(id_senior) like UPPER(%?1%)", nativeQuery = true)
 	List<MaterialAplicadoBase> search(String value);	
 
 }

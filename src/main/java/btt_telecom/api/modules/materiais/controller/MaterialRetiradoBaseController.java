@@ -1,13 +1,10 @@
 package btt_telecom.api.modules.materiais.controller;
 
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,15 +14,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import btt_telecom.api.config.exception.ApplicationException;
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.materiais.model.MaterialRetiradoBase;
 import btt_telecom.api.modules.materiais.repository.MaterialRetiradoBaseRepository;
 
 @RestController
 @RequestMapping(path = "/api/material/retirado")
-public class MaterialRetiradoBaseController {
+public class MaterialRetiradoBaseController extends AbstractMethods {
 	
 	@Autowired
 	private MaterialRetiradoBaseRepository retiradoBaseRepository;
@@ -51,23 +50,13 @@ public class MaterialRetiradoBaseController {
 	}
 	
 	@GetMapping(path = "/page")
-	public ResponseEntity<Page<MaterialRetiradoBase>> findAllWithPage(Pageable pageable) {
+	public ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page) {
 		try {
-			return new ResponseEntity<>(retiradoBaseRepository.findAll(pageable), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-
-	@PostMapping(path = "/search")
-	public ResponseEntity<Page<MaterialRetiradoBase>> search(@RequestBody String body) {
-		try {
-			JSONObject json = new JSONObject(body);
-			List<MaterialRetiradoBase> result = retiradoBaseRepository.search(json.getString("value"));
-			Page<MaterialRetiradoBase> page = new PageImpl<>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
-
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(retiradoBaseRepository.findAll(), size, page), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(convertListToPage(retiradoBaseRepository.search(value), size, page), HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

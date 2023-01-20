@@ -11,6 +11,6 @@ public interface CidadeRepository extends JpaRepository<Cidade, Long>{
 	
 	Cidade findByCidade(String cidade);
 	
-	@Query(value = "select * from cidades where UPPER(cidade) like %?1%", nativeQuery = true)
+	@Query(value = "select * from cidades where UPPER(cidade) like UPPER(%?1%)", nativeQuery = true)
 	List<Cidade> search(String value);
 }

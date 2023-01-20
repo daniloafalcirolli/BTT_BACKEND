@@ -1,12 +1,10 @@
 package btt_telecom.api.modules.provedores.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import btt_telecom.api.config.general.AbstractMethods;
 import btt_telecom.api.modules.provedores.model.CamposProvedorBase;
 import btt_telecom.api.modules.provedores.model.Provedor;
 import btt_telecom.api.modules.provedores.repository.CamposProvedorBaseRepository;
@@ -25,7 +25,7 @@ import btt_telecom.api.modules.provedores.repository.ProvedorRepository;
 
 @RestController
 @RequestMapping(path = "/api/campos/provedor")
-public class CamposProvedorController {
+public class CamposProvedorController extends AbstractMethods {
 	@Autowired
 	private CamposProvedorBaseRepository camposRepository;
 
@@ -53,23 +53,13 @@ public class CamposProvedorController {
 	}
 	
 	@GetMapping(path = "/page")
-	private ResponseEntity<Page<CamposProvedorBase>> findAllWithPage(Pageable pageable){
+	private ResponseEntity<Map<String, Object>> findAllWithPage(@RequestParam(name = "value", defaultValue = "") String value, @RequestParam(name = "size") Long size, @RequestParam(name = "page") Long page){
 		try {
-			return new ResponseEntity<>(camposRepository.findAll(pageable), HttpStatus.OK);
-		}catch(Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-
-	@PostMapping(path = "/search")
-	private ResponseEntity<Page<CamposProvedorBase>> search(@RequestBody String body){
-		try {
-			JSONObject json = new JSONObject(body);
-			List<CamposProvedorBase> result = camposRepository.search(json.getString("value"));
-			Page<CamposProvedorBase> page = new PageImpl<>(result);
-			return new ResponseEntity<>(page, HttpStatus.OK);
-		}catch(Exception e) {
+			if(value.equals("")) {
+				return new ResponseEntity<>(convertListToPage(camposRepository.findAll(), size, page), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(convertListToPage(camposRepository.search(value), size, page), HttpStatus.OK);
+			}			}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
