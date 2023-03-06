@@ -19,7 +19,7 @@ public class RotaDAO extends AbstractMethods{
 	
 	public List<RotaDTO> getRotas(String data_inicio, String data_final, String nome_cidade, String cpf_funcionario) throws SQLException{
 		String query = ""
-				+ " SELECT rfun.NOMFUN, r.* FROM ROTAS r "
+				+ " SELECT DISTINCT rfun.NOMFUN, r.* FROM ROTAS r "
 				+ " LEFT JOIN RUBI.R034FUN rfun ON "
 				+ " 	(LPAD(rfun.NUMCPF, 11, '0') = r.cpf_funcionario)";
 		
